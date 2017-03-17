@@ -6,6 +6,8 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
+    protected $table = 'users';
+
     /**
      * Run the migrations.
      *
@@ -13,11 +15,15 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->integer('taiga_id')->unique()->nullable()->default(null);
+            $table->integer('github_id')->unique()->nullable()->default(null);
+            $table->string('email')->unique()->nullable()->default(null);
+            $table->string('username')->nullable()->default(null);
+            $table->string('name')->nullable()->default(null);
+            $table->string('bio', 160)->nullable()->default('I am human.');
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -30,6 +36,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists($this->table);
     }
 }
