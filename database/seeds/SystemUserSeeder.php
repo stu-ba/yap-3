@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class SystemUserSeeder extends Seeder
 {
+    public $attributes = [];
     /**
      * Run the database seeds.
      *
@@ -11,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-        $this->call(SystemUserSeeder::class);
+        factory(Yap\Models\User::class, 'system')->create();
     }
 }

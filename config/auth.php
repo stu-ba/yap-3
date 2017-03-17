@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Yap\User::class,
+            'model' => Yap\Models\User::class,
         ],
 
         // 'users' => [

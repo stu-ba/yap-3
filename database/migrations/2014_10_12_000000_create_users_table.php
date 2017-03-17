@@ -20,9 +20,10 @@ class CreateUsersTable extends Migration
             $table->integer('taiga_id')->unique()->nullable()->default(null);
             $table->integer('github_id')->unique()->nullable()->default(null);
             $table->string('email')->unique()->nullable()->default(null);
-            $table->string('username')->nullable()->default(null);
+            $table->string('username')->unique()->nullable()->default(null);
             $table->string('name')->nullable()->default(null);
             $table->string('bio', 160)->nullable()->default('I am human.');
+            $table->string('avatar')->nullable()->default(null);
             $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();

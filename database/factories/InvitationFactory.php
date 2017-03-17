@@ -1,0 +1,27 @@
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(Yap\Models\Invitation::class, function (Faker\Generator $faker) {
+    $system = systemAccount();
+    return [
+        'user_id'     => factory(Yap\Models\User::class)->create()->id,
+        'created_by'  => $system->id,
+        'email'       => $faker->unique()->safeEmail,
+        'token'       => base64_encode(str_random(64)),
+        'is_depleted' => false,
+        'valid_until' => \Carbon\Carbon::now()->addWeek(),
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->defineAs(Yap\Models\Invitation::class, 'empty', function (Faker\Generator $faker) {
+    $system = systemAccount();
+    return [
+        'user_id'     => factory(Yap\Models\User::class, 'empty')->create()->id,
+        'created_by'  => $system->id,
+        'email'       => $faker->unique()->safeEmail,
+        'token'       => base64_encode(str_random(64)),
+        'is_depleted' => false,
+        'valid_until' => \Carbon\Carbon::now()->addWeek(),
+    ];
+});
