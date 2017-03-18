@@ -2,60 +2,34 @@
 
 namespace Yap\Http\Controllers\Auth;
 
-use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Yap\Models\Invitation;
 use Yap\User;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     */
-    public function __construct()
+    public function redirectToGithub(Socialite $socialite)
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        return $socialite->driver('github')->redirect();
     }
 
-    /**
-     * Redirect the user to the GitHub authentication page.
-     *
-     * @return Response
-     */
-    public function redirectToGithub()
+    public function handleGithubCallback(string $token = null, Invitation $invitation, Socialite $socialite)
     {
-        return Socialite::driver('github')->redirect();
-    }
+        $user = $socialite->driver('github')->user();
+        dd($user, $token, decrypt($token), $invitation->isTokenValid($token), $invitation->isTokenValid(decrypt($token)));
 
-    /**
-     * Obtain the user information from GitHub.
-     *
-     * @return Response
-     */
-    public function handleGithubCallback()
-    {
-        $user = Socialite::driver('github')->scopes(['user:email'])->user();
-        dd($user);
+        if ($token === null) {
+            //trying to login
+        } else {
+            //trying to login for first time
+            $token = decrypt($token);
+            if ($invitation->isTokenValid($token)) {
+
+            }
+        }
+
+        return redirect()->route('home');
     }
 }
