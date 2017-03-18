@@ -19,8 +19,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/some', function() {
-    \Illuminate\Support\Facades\Log::alert('something happened');
+Route::get('/home', function() {
+    dd(Auth::user());
+})->name('home');
+
+Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'middleware' => ['guest']], function () {
+    // Controllers Within The "App\Http\Controllers\Auth" Namespace
+    Route::get('register/{token}', 'RegisterController@register');
+    //Route::get('register', 'RegisterController@showRegisterForm');
+    //Route::post('register', );
+
+
+    Route::get('login/github', 'LoginController@redirectToGithub')->name('login');
+    Route::get('login/github/callback/{token?}', 'LoginController@handleGithubCallback');
 });
-Route::get('auth/login/github', 'Auth\LoginController@redirectToGithub');
-Route::get('auth/login/github/callback', 'Auth\LoginController@handleGithubCallback');
