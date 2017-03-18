@@ -23,7 +23,10 @@ $factory->define(Yap\Models\User::class, function (Faker\Generator $faker) {
         'username'       => $faker->userName,
         'name'           => $faker->firstName.' '.$faker->lastName,
         'bio'            => \Illuminate\Foundation\Inspiring::quote(),
+        'ban_reason'     => null,
         'is_admin'       => false,
+        'is_banned'      => false,
+        'is_confirmed'   => true,
         'remember_token' => str_random(64),
     ];
 });
@@ -42,12 +45,33 @@ $factory->defineAs(Yap\Models\User::class, 'system', function () {
         'username'       => 'Neo',
         'name'           => 'Thomas A. Anderson',
         'bio'            => 'I followed the white rabbit.',
+        'ban_reason'     => 'You invited yourself.',
         'is_admin'       => true,
+        'is_banned'      => false,
+        'is_confirmed'   => true,
         'remember_token' => null,
     ];
 });
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->defineAs(Yap\Models\User::class, 'empty', function () {
     return [];
+});
+
+$factory->state(Yap\Models\User::class, 'admin', function () {
+    return [
+        'admin' => true,
+    ];
+});
+
+$factory->state(Yap\Models\User::class, 'banned', function () {
+    return [
+        'is_banned'  => true,
+        'ban_reason' => 'Because factory said so!'
+    ];
+});
+
+$factory->state(Yap\Models\User::class, 'confirmed', function () {
+    return [
+        'is_confirmed' => true,
+    ];
 });

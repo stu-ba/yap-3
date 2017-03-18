@@ -2,8 +2,8 @@
 
 namespace Yap\Models;
 
-use Yap\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Yap\Foundation\Auth\User as Authenticatable;
 
 /**
  * Yap\Models\User
@@ -15,19 +15,25 @@ use Illuminate\Notifications\Notifiable;
  * @property string $username
  * @property string $name
  * @property string $bio
+ * @property string $ban_reason
  * @property string $avatar
  * @property bool $is_admin
+ * @property bool $is_banned
+ * @property bool $is_confirmed
  * @property string $remember_token
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBio($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereEmail($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereGithubId($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsBanned($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsConfirmed($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereTaigaId($value)
@@ -52,8 +58,11 @@ class User extends Authenticatable
         'username',
         'name',
         'bio',
+        'ban_reason',
         'avatar',
-        'is_admin'
+        'is_admin',
+        'is_banned',
+        'is_confirmed'
     ];
 
     /**
@@ -69,9 +78,13 @@ class User extends Authenticatable
 
     protected $casts = [
         'is_admin' => 'boolean',
+        'is_banned' => 'boolean',
+        'is_confirmed' => 'boolean',
     ];
 
-    public function system() {
+
+    public function system()
+    {
         return $this->whereTaigaId('0')->whereGithubId('0')->whereIsAdmin(true)->first();
     }
 }
