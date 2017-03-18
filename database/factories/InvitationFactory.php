@@ -28,3 +28,10 @@ $factory->defineAs(Yap\Models\Invitation::class, 'empty', function (Faker\Genera
         'valid_until' => \Carbon\Carbon::now()->addWeek(),
     ];
 });
+
+$factory->state(Yap\Models\Invitation::class, 'depleted', function () {
+    return [
+        'is_depleted' => true,
+        'depleted_at' => \Carbon\Carbon::now()->subDay()
+    ];
+});
