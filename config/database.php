@@ -40,8 +40,9 @@ return [
         ],
 
         'testing' => [
-            'driver' => 'sqlite',
-            'database' => ':memory:'
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
         ],
 
         'mysql' => [
