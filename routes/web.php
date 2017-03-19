@@ -1,35 +1,24 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::get('/l', function () {
-    return view('auth.login');
-});
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function() {
-    dd(Auth::user());
-})->name('home');
+Route::get('home', function() {
+    d('logged-in:', Auth::user(), Cookie::get('github_token'));
+})->name('home')->middleware('auth');
 
-Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'middleware' => ['guest']], function () {
+Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
     // Controllers Within The "App\Http\Controllers\Auth" Namespace
-    Route::get('register/{token}', 'RegisterController@register');
-    //Route::get('register', 'RegisterController@showRegisterForm');
-    //Route::post('register', );
+    Route::group(['middleware' => ['guest']], function() {
+        Route::get('register/{token}', 'RegisterController@register');
+        Route::get('github/callback/{token}', 'RegisterController@handle');
 
+        Route::get('login', 'LoginController@showPage')->name('login');
+        Route::get('login/github', 'LoginController@login')->name('login.github')->middleware(['throttle:5,1']);
+        Route::get('github/callback', 'LoginController@handle');
+    });
 
-    Route::get('login/github', 'LoginController@redirectToGithub')->name('login');
-    Route::get('login/github/callback/{token?}', 'LoginController@handleGithubCallback');
+    Route::get('logout', 'LogoutController@logout')->name('logout')->middleware(['auth']);
 });
