@@ -3,49 +3,78 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
-use Tests\TestCase;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 use Yap\Models\Invitation;
 use Yap\Models\User;
 
 class InvitationTest extends TestCase
 {
+
     use DatabaseMigrations;
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testIsTokenValid()
+    public function testInvitationThrowsExceptionIfTokenDoesNotExists()
     {
-        /** @var Invitation $invitation */
-        /** @var Invitation $factoryInv */
+        $this->expectException(ModelNotFoundException::class);
         $invitation = resolve(Invitation::class);
+        $invitation->whereToken('abc')->firstOrFail();
+    }
 
-        //Test non-existing token
-        $this->assertFalse($invitation->isTokenValid('abc'));
-
+    public function testTokenIsNotValidBecauseCreatorIsBanned() {
         /** @var User $bannedUser */
         $bannedUser = factory(User::class)->states('banned')->create();
-        $factoryInv = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
-        $this->assertFalse($invitation->isTokenValid($factoryInv->token));
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
+        $this->assertFalse($invitation->isTokenValid());
+    }
 
-        //Test depleted, this state never exists in app
-        $factoryInv = factory(Invitation::class, 'empty')->states('depleted')->create();
-        $this->assertFalse($invitation->isTokenValid($factoryInv->token));
+    public function testTokenIsNotValidBecauseItsDepleted() {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $this->assertFalse($invitation->isTokenValid());
 
-        //Test depleted
-        $factoryInv = factory(Invitation::class)->create();
-        $this->assertFalse($invitation->isTokenValid($factoryInv->token));
+        $invitation = factory(Invitation::class)->create();
+        $this->assertFalse($invitation->isTokenValid());
+    }
 
-        //Test valid until
-        $factoryInv = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
-        $this->assertFalse($invitation->isTokenValid($factoryInv->token));
+    public function testTokenIsNotValidBecauseItExpired()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
+        $this->assertFalse($invitation->isTokenValid());
+    }
 
-        //Test token is valid
-        $factoryInv = factory(Invitation::class, 'empty')->create();
-        $this->assertTrue($invitation->isTokenValid($factoryInv->token));
+    public function testTokenIsValid()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $this->assertTrue($invitation->isTokenValid());
+
+    }
+
+
+    public function testInvitationHasCreator()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $this->assertInstanceOf(User::class, $invitation->creator);
+    }
+
+
+    public function testInvitationHasUser()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $this->assertInstanceOf(User::class, $invitation->user);
+    }
+
+    public function testInvitationInvalidation()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $invitation->invalidate();
+
+        $this->assertTrue($invitation->is_depleted);
     }
 }
