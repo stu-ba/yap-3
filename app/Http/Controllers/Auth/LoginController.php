@@ -3,33 +3,37 @@
 namespace Yap\Http\Controllers\Auth;
 
 use Laravel\Socialite\Contracts\Factory as Socialite;
+use Yap\Foundation\Auth\Authenticable;
 use Yap\Http\Controllers\Controller;
-use Yap\Models\Invitation;
-use Yap\User;
+use Yap\Models\User;
 
 class LoginController extends Controller
 {
+    use Authenticable;
 
-    public function redirectToGithub(Socialite $socialite)
+    protected $redirectTo = 'home';
+
+    public function showPage()
+    {
+        return view('auth.login');
+    }
+
+
+    public function login(Socialite $socialite)
     {
         return $socialite->driver('github')->redirect();
     }
 
-    public function handleGithubCallback(string $token = null, Invitation $invitation, Socialite $socialite)
+
+    public function handle(User $user, Socialite $socialite)
     {
-        $user = $socialite->driver('github')->user();
-        dd($user, $token, decrypt($token), $invitation->isTokenValid($token), $invitation->isTokenValid(decrypt($token)));
+        $githubUser = $socialite->driver('github')->user();
+        $user = $user->firstByGithubIdOrFail($githubUser->getId());
 
-        if ($token === null) {
-            //trying to login
-        } else {
-            //trying to login for first time
-            $token = decrypt($token);
-            if ($invitation->isTokenValid($token)) {
-
-            }
+        if ($user->logginable()) {
+            $this->grant($user, $githubUser->token);
         }
 
-        return redirect()->route('home');
+        return $this->response();
     }
 }

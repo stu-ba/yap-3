@@ -35,15 +35,24 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
+
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception               $exception
+     *
      * @return \Illuminate\Http\Response
+     * @throws Exception
      */
     public function render($request, Exception $exception)
     {
+        if (app()->environment() === 'test') throw $exception;
+
+        if ($exception instanceof UserBannedException) {
+            return $this->banned($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 
@@ -61,5 +70,11 @@ class Handler extends ExceptionHandler
         }
 
         return redirect()->guest(route('login'));
+    }
+
+    protected function banned($request, UserBannedException $exception)
+    {
+        dd('user banned');
+        return 'user banned';
     }
 }

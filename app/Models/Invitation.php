@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Yap\Models\Invitation
  *
- * @property int                   $id
- * @property int                   $user_id
- * @property int                   $created_by
- * @property string                $email
- * @property string                $token
- * @property bool                  $is_depleted
- * @property \Carbon\Carbon        $depleted_at
- * @property \Carbon\Carbon        $valid_until
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
+ * @property int $id
+ * @property int $user_id
+ * @property int $created_by
+ * @property string $email
+ * @property string $token
+ * @property bool $is_depleted
+ * @property \Carbon\Carbon $depleted_at
+ * @property \Carbon\Carbon $valid_until
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $creator
  * @property-read \Yap\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
@@ -56,7 +56,6 @@ class Invitation extends Model
         'is_depleted' => 'boolean',
     ];
 
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -69,18 +68,20 @@ class Invitation extends Model
     }
 
 
-    public function isTokenValid(string $token): bool
+    public function isTokenValid(): bool
     {
-        /** @var Invitation $invitation */
-        $invitation = $this->whereToken($token)->first();
-
-        if ($invitation === null ||
-            $invitation->creator->is_banned ||
-            $invitation->is_depleted ||
-            $invitation->valid_until->lessThan(Carbon::now())) {
+        if ($this->creator->is_banned ||
+            $this->is_depleted ||
+            $this->valid_until->lessThan(Carbon::now())) {
             return false;
         }
 
         return true;
+    }
+
+    public function invalidate(): bool
+    {
+        $this->is_depleted = true;
+        return $this->save();
     }
 }
