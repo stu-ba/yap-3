@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('taiga_id')->unique()->nullable()->default(null);
-            $table->integer('github_id')->unique()->nullable()->default(null);
+            $table->unsignedInteger('taiga_id')->unique()->nullable()->default(null);
+            $table->unsignedInteger('github_id')->unique()->nullable()->default(null);
             $table->string('email')->unique()->nullable()->default(null);
             $table->string('username')->unique()->nullable()->default(null);
             $table->string('name')->nullable()->default(null);
