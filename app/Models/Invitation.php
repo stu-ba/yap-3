@@ -53,6 +53,8 @@ class Invitation extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'int',
+        'created_by' => 'int',
         'is_depleted' => 'boolean',
     ];
 

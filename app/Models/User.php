@@ -79,7 +79,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $attributes;
+
     protected $casts = [
+        'taiga_id'     => 'int',
+        'github_id'    => 'int',
         'is_admin'     => 'boolean',
         'is_banned'    => 'boolean',
         'is_confirmed' => 'boolean',
@@ -94,7 +98,7 @@ class User extends Authenticatable
 
     public function system()
     {
-        return $this->whereTaigaId('0')->whereGithubId('0')->whereIsAdmin(true)->first();
+        return $this->find(1);
     }
 
 
@@ -116,6 +120,7 @@ class User extends Authenticatable
     {
         $this->is_confirmed = true;
         $this->save();
+
         return $this;
     }
 
@@ -124,6 +129,7 @@ class User extends Authenticatable
     {
         $this->is_confirmed = false;
         $this->save();
+
         return $this;
     }
 
@@ -133,6 +139,7 @@ class User extends Authenticatable
         $this->is_banned = false;
         $this->ban_reason = null;
         $this->save();
+
         return $this;
     }
 
@@ -142,6 +149,7 @@ class User extends Authenticatable
         $this->is_banned = true;
         $this->ban_reason = str_limit($reason, 250, '...');
         $this->save();
+
         return $this;
     }
 

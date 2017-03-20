@@ -4,13 +4,8 @@ if ( ! function_exists('systemAccount')) {
     function systemAccount()
     {
         $user = resolve(Yap\Models\User::class);
-        $system = $user->system();
 
-        if ($system === null) {
-            $system = factory(Yap\Models\User::class, 'system')->create();
-        }
-
-        return $system;
+        return $user->system() ?? factory(Yap\Models\User::class, 'system')->create();
     }
 }
 
@@ -34,13 +29,14 @@ $factory->define(Yap\Models\User::class, function (Faker\Generator $faker) {
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->defineAs(Yap\Models\User::class, 'system', function () {
     $user = resolve(Yap\Models\User::class);
+
     if ($user->system()) {
         throw new Exception('System account already exits.');
     }
 
     return [
-        'taiga_id'       => 0,
-        'github_id'      => 0,
+        'taiga_id'       => null,
+        'github_id'      => null,
         'email'          => Config::get('mail.from.address'),
         'username'       => 'Neo',
         'name'           => 'Thomas A. Anderson',
