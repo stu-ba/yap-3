@@ -14,6 +14,7 @@ class InvitationTest extends TestCase
 
     use DatabaseMigrations;
 
+
     public function testInvitationThrowsExceptionIfTokenDoesNotExists()
     {
         $this->expectException(ModelNotFoundException::class);
@@ -21,7 +22,9 @@ class InvitationTest extends TestCase
         $invitation->whereToken('abc')->firstOrFail();
     }
 
-    public function testTokenIsNotValidBecauseCreatorIsBanned() {
+
+    public function testTokenIsNotValidBecauseCreatorIsBanned()
+    {
         /** @var User $bannedUser */
         $bannedUser = factory(User::class)->states('banned')->create();
         /** @var Invitation $invitation */
@@ -29,7 +32,9 @@ class InvitationTest extends TestCase
         $this->assertFalse($invitation->isTokenValid());
     }
 
-    public function testTokenIsNotValidBecauseItsDepleted() {
+
+    public function testTokenIsNotValidBecauseItsDepleted()
+    {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
         $this->assertFalse($invitation->isTokenValid());
@@ -38,12 +43,14 @@ class InvitationTest extends TestCase
         $this->assertFalse($invitation->isTokenValid());
     }
 
+
     public function testTokenIsNotValidBecauseItExpired()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
         $this->assertFalse($invitation->isTokenValid());
     }
+
 
     public function testTokenIsValid()
     {
@@ -69,11 +76,12 @@ class InvitationTest extends TestCase
         $this->assertInstanceOf(User::class, $invitation->user);
     }
 
-    public function testInvitationInvalidation()
+
+    public function testInvitationDepletion()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
-        $invitation->invalidate();
+        $invitation->deplete();
 
         $this->assertTrue($invitation->is_depleted);
     }

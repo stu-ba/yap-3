@@ -81,9 +81,12 @@ class Invitation extends Model
         return true;
     }
 
-    public function invalidate(): bool
+    public function deplete(): self
     {
         $this->is_depleted = true;
-        return $this->save();
+        $this->depleted_at = Carbon::now();
+        $this->save();
+
+        return $this;
     }
 }
