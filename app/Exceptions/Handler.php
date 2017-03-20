@@ -4,6 +4,7 @@ namespace Yap\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -47,10 +48,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
         if (app()->environment() === 'test') throw $exception;
 
         if ($exception instanceof UserBannedException) {
             return $this->banned($request, $exception);
+        } elseif ($exception instanceof UserNotConfirmedException) {
+            return abort(403);
+        } elseif ($exception instanceof DecryptException) {
+            return abort(400);
         }
 
         return parent::render($request, $exception);
@@ -74,6 +80,7 @@ class Handler extends ExceptionHandler
 
     protected function banned($request, UserBannedException $exception)
     {
+        //todo: todo banned
         dd('user banned');
         return 'user banned';
     }
