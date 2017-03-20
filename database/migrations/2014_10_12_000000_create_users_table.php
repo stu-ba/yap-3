@@ -27,10 +27,10 @@ class CreateUsersTable extends Migration
             $table->string('bio', 160)->nullable()->default('I am human.');
             $table->string('ban_reason')->nullable()->default('No one invited you.');
             $table->string('avatar')->nullable()->default(null);
+            $table->rememberToken();
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_banned')->default(false);
             $table->boolean('is_confirmed')->default(false);
-            $table->rememberToken();
             $table->timestamps();
         });
     }
