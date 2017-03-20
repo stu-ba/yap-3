@@ -20,10 +20,10 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
  * @property string $bio
  * @property string $ban_reason
  * @property string $avatar
+ * @property string $remember_token
  * @property bool $is_admin
  * @property bool $is_banned
  * @property bool $is_confirmed
- * @property string $remember_token
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereAvatar($value)

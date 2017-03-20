@@ -28,8 +28,10 @@ class LoginController extends Controller
     public function handle(User $user, Socialite $socialite)
     {
         $githubUser = $socialite->driver('github')->user();
-        $user = $user->firstByGithubIdOrFail($githubUser->getId());
 
+        $user = $user->byGithubUserOrCreate($githubUser);
+
+        //TODO: rewrite me to whatever->attempt()
         if ($user->logginable()) {
             $this->grant($user, $githubUser->token);
         }

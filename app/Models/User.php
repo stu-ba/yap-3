@@ -2,6 +2,7 @@
 
 namespace Yap\Models;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Socialite\Two\User as GithubUser;
 use Yap\Exceptions\UserBannedException;
@@ -20,10 +21,10 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property string $bio
  * @property string $ban_reason
  * @property string $avatar
+ * @property string $remember_token
  * @property bool $is_admin
  * @property bool $is_banned
  * @property bool $is_confirmed
- * @property string $remember_token
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -79,8 +80,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $attributes;
-
     protected $casts = [
         'taiga_id'     => 'int',
         'github_id'    => 'int',
@@ -90,15 +89,21 @@ class User extends Authenticatable
     ];
 
 
-    public function firstByGithubIdOrFail(int $githubId)
+    public function byGithubUserOrCreate(GithubUser $githubUser): self
     {
-        return $this->whereGithubId($githubId)->firstOrFail();
+        try {
+            $user = $this->whereGithubId($githubUser->getId())->firstOrFail();
+        } catch (ModelNotFoundException $exception) {
+            $user = $this->newInstance()->create($this->githubUserData($githubUser));
+        }
+
+        return $user;
     }
 
 
     public function system()
     {
-        return $this->find(1);
+        return $this->whereGithubId(0)->whereTaigaId(0)->whereIsAdmin(true)->first();
     }
 
 
@@ -157,18 +162,29 @@ class User extends Authenticatable
     public function syncWith(GithubUser $user): self
     {
         if ($this->github_id === null) {
-            $this->update([
-                'github_id' => $user->getId(),
-                'email'     => $user->getEmail(),
-                'nickname'  => $user->getNickname(),
-                'name'      => $user->getName(),
-                'avatar'    => $user->getAvatar(),
-                'bio'       => $user->user['bio'],
-            ]);
+            $this->update($this->githubUserData($user));
         } else {
             //TODO: sync if not first time sync...
+            dd('sync if not first time');
         }
-
         return $this;
+    }
+
+
+    /**
+     * @param GithubUser $user
+     *
+     * @return array
+     */
+    protected function githubUserData(GithubUser $user): array
+    {
+        return [
+            'github_id' => $user->getId(),
+            'email'     => $user->getEmail(),
+            'nickname'  => $user->getNickname(),
+            'name'      => $user->getName(),
+            'avatar'    => $user->getAvatar(),
+            'bio'       => $user->user['bio'],
+        ];
     }
 }

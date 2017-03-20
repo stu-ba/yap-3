@@ -2,18 +2,27 @@
 
 namespace Yap\Foundation\Auth;
 
-use Laravel\Socialite\Two\User as GithubUser;
 use Yap\Models\User;
 
-trait Authenticable {
+trait Authenticable
+{
 
     protected $githubTokenCookie;
 
-    protected function grant(User $user, string $token) {
-        $cookie = resolve('cookie');
-        $this->githubTokenCookie = $cookie->forever('github_token', $token);
+
+    protected function grant(User $user, string $token)
+    {
+        $this->setGithubTokenCookie($token);
         auth()->loginUsingId($user->id, true);
     }
+
+
+    protected function setGithubTokenCookie(string $token)
+    {
+        $cookie = resolve('cookie');
+        $this->githubTokenCookie = $cookie->forever('github_token', $token);
+    }
+
 
     protected function response()
     {

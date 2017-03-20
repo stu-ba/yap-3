@@ -2,6 +2,7 @@
 
 namespace Yap\Http\Controllers\Auth;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
 use Yap\Http\Controllers\Controller;
@@ -36,9 +37,8 @@ class RegisterController extends Controller
 
             return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])->redirect();
         }
-
-        //token not valid
-        return $token;
+        //todo: maybe inform user that token has expired or been used
+        return redirect()->route('login');
     }
 
     public function handle(string $encryptedToken, Socialite $socialite)
@@ -49,10 +49,12 @@ class RegisterController extends Controller
         if ($invitation->isTokenValid()) {
             $githubUser = $socialite->driver('github')->user();
             $user = $invitation->user;
+
             $user->syncWith($githubUser)->confirm();
             $this->grant($user, $githubUser->token);
-            $invitation->invalidate();
+            $invitation->deplete();
         }
+
 
         return $this->response();
     }

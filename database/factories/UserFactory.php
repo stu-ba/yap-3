@@ -35,8 +35,8 @@ $factory->defineAs(Yap\Models\User::class, 'system', function () {
     }
 
     return [
-        'taiga_id'       => null,
-        'github_id'      => null,
+        'taiga_id'       => 0,
+        'github_id'      => 0,
         'email'          => Config::get('mail.from.address'),
         'username'       => 'Neo',
         'name'           => 'Thomas A. Anderson',
