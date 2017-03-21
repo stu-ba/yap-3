@@ -2,6 +2,7 @@
 
 namespace Yap\Foundation\Auth;
 
+use Laravel\Socialite\Two\User as GithubUser;
 use Yap\Models\User;
 
 trait Authenticable
@@ -9,23 +10,38 @@ trait Authenticable
 
     protected $githubTokenCookie;
 
-
-    protected function grant(User $user, string $token)
+    /**
+     * Grant user log in.
+     * @param User   $user
+     */
+    public function grant(User $user): void
     {
-        $this->setGithubTokenCookie($token);
+        auth()->attempt()
         auth()->loginUsingId($user->id, true);
     }
 
 
-    protected function setGithubTokenCookie(string $token)
+    /**
+     * Attempt to log in user
+     * @param User       $user
+     */
+    public function attempt(User $user): void
+    {
+        if ($user->logginable()) {
+            $this->grant($user);
+        }
+    }
+
+
+    public function setGithubTokenCookie(string $token): void
     {
         $cookie = resolve('cookie');
         $this->githubTokenCookie = $cookie->forever('github_token', $token);
     }
 
 
-    protected function response()
+    public function response()
     {
-        return redirect()->route($this->redirectTo ?? 'home')->cookie($this->githubTokenCookie ?? null);
+        return redirect()->route($this->redirectTo ?? 'home')->cookie($this->githubTokenCookie);
     }
 }

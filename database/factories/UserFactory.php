@@ -21,7 +21,7 @@ $factory->define(Yap\Models\User::class, function (Faker\Generator $faker) {
         'ban_reason'     => null,
         'is_admin'       => false,
         'is_banned'      => false,
-        'is_confirmed'   => true,
+        'is_confirmed'   => false,
         'remember_token' => str_random(64),
     ];
 });

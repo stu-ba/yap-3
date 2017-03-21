@@ -2,7 +2,6 @@
 
 namespace Yap\Http\Controllers\Auth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
 use Yap\Http\Controllers\Controller;
@@ -47,14 +46,15 @@ class RegisterController extends Controller
 
         //TODO: try to beautify
         if ($invitation->isTokenValid()) {
+
             $githubUser = $socialite->driver('github')->user();
             $user = $invitation->user;
 
             $user->syncWith($githubUser)->confirm();
-            $this->grant($user, $githubUser->token);
+            $this->grant($user);
+            $this->setGithubTokenCookie($githubUser->token);
             $invitation->deplete();
         }
-
 
         return $this->response();
     }

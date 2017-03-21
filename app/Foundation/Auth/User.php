@@ -3,27 +3,27 @@
 namespace Yap\Foundation\Auth;
 
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
 /**
  * Yap\Foundation\Auth\User
  *
- * @property int $id
- * @property int $taiga_id
- * @property int $github_id
- * @property string $email
- * @property string $username
- * @property string $name
- * @property string $bio
- * @property string $ban_reason
- * @property string $avatar
- * @property string $remember_token
- * @property bool $is_admin
- * @property bool $is_banned
- * @property bool $is_confirmed
+ * @property int            $id
+ * @property int            $taiga_id
+ * @property int            $github_id
+ * @property string         $email
+ * @property string         $username
+ * @property string         $name
+ * @property string         $bio
+ * @property string         $ban_reason
+ * @property string         $avatar
+ * @property string         $remember_token
+ * @property bool           $is_admin
+ * @property bool           $is_banned
+ * @property bool           $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereAvatar($value)
@@ -43,9 +43,8 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereUsername($value)
  * @mixin \Eloquent
  */
-class User extends Model implements
-    AuthenticatableContract,
-    AuthorizableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
+
     use Authenticatable, Authorizable;
 }

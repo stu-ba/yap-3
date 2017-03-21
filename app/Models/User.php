@@ -88,6 +88,11 @@ class User extends Authenticatable
         'is_confirmed' => 'boolean',
     ];
 
+    public function invitation()
+    {
+        return $this->hasOne(Invitation::class);
+    }
+
 
     public function byGithubUserOrCreate(GithubUser $githubUser): self
     {
@@ -101,6 +106,10 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Get system User instance.
+     * @return array|\Illuminate\Database\Eloquent\Model|null|\stdClass|static
+     */
     public function system()
     {
         return $this->whereGithubId(0)->whereTaigaId(0)->whereIsAdmin(true)->first();
@@ -159,19 +168,23 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Synchronize User with GitHub data.
+     *
+     * @param GithubUser $user
+     *
+     * @return User
+     */
     public function syncWith(GithubUser $user): self
     {
-        if ($this->github_id === null) {
-            $this->update($this->githubUserData($user));
-        } else {
-            //TODO: sync if not first time sync...
-            dd('sync if not first time');
-        }
+        $this->update($this->githubUserData($user));
         return $this;
     }
 
 
     /**
+     * Format Github user data to array.
+     *
      * @param GithubUser $user
      *
      * @return array
@@ -181,7 +194,7 @@ class User extends Authenticatable
         return [
             'github_id' => $user->getId(),
             'email'     => $user->getEmail(),
-            'nickname'  => $user->getNickname(),
+            'username'  => $user->getNickname(),
             'name'      => $user->getName(),
             'avatar'    => $user->getAvatar(),
             'bio'       => $user->user['bio'],

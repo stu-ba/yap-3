@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,7 +13,6 @@ class InvitationTest extends TestCase
 {
 
     use DatabaseMigrations;
-
 
     public function testInvitationThrowsExceptionIfTokenDoesNotExists()
     {

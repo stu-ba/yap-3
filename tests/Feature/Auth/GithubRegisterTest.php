@@ -51,7 +51,7 @@ class GithubRegisterTest extends TestCase
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
-            'id'       => rand(1, 10),
+            'id'       => rand(4, 32),
             'token'    => $githubToken,
             'email'    => $faker->safeEmail,
             'nickname' => $faker->userName,
@@ -67,8 +67,8 @@ class GithubRegisterTest extends TestCase
         $this->assertTrue($invitation->is_depleted);
         $this->assertTrue($invitation->user->is_confirmed);
         $this->seeIsAuthenticatedAs($invitation->user);
-        $this->assertResponseStatus(302);
         $this->seeCookie('github_token', $githubToken);
+        $this->assertResponseStatus(302);
     }
 
 
