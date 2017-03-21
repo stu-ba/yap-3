@@ -56,7 +56,13 @@ class InvitationTest extends TestCase
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $this->assertTrue($invitation->isTokenValid());
+    }
 
+    public function testTokenIsValidForever()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => null]);
+        $this->assertTrue($invitation->isTokenValid());
     }
 
 

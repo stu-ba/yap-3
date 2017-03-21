@@ -4,6 +4,7 @@ namespace Yap\Http\Controllers\Auth;
 
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
+use Yap\Foundation\Auth\UserRegistrar;
 use Yap\Http\Controllers\Controller;
 use Yap\Models\Invitation;
 
@@ -40,21 +41,15 @@ class RegisterController extends Controller
         return redirect()->route('login');
     }
 
-    public function handle(string $encryptedToken, Socialite $socialite)
+    public function handle(string $encryptedToken, Socialite $socialite, UserRegistrar $registrar)
     {
         $invitation = $this->invitation->whereToken(decrypt($encryptedToken))->firstOrFail();
+        $githubUser = $socialite->driver('github')->user();
 
-        //TODO: try to beautify
-        if ($invitation->isTokenValid()) {
+        $user = $registrar->register($invitation, $githubUser);
 
-            $githubUser = $socialite->driver('github')->user();
-            $user = $invitation->user;
-
-            $user->syncWith($githubUser)->confirm();
-            $this->grant($user);
-            $this->setGithubTokenCookie($githubUser->token);
-            $invitation->deplete();
-        }
+        $this->grant($user);
+        $this->setGithubTokenCookie($githubUser->token);
 
         return $this->response();
     }

@@ -92,11 +92,14 @@ trait GithubMock
         return $socialiteUser;
     }
 
+
     /**
+     *
+     * @param array $attributes
      *
      * @return array
      */
-    private function dummyGithubUserData(): array
+    private function dummyGithubUserData(array $attributes = []): array
     {
         $faker = Factory::create();
         $data = [
@@ -109,7 +112,7 @@ trait GithubMock
             'user'     => ['bio' => 'abc']
         ];
 
-        return $data;
+        return array_merge($data, $attributes);
     }
 
     /**
@@ -127,12 +130,15 @@ trait GithubMock
         return $data;
     }
 
+
     /**
+     * @param array $attributes
+     *
      * @return array
      */
-    private function generateDummyUserDataAndGithubUser(): array
+    private function generateDummyUserDataAndGithubUser(array $attributes = []): array
     {
-        $githubUserData = $this->dummyGithubUserData();
+        $githubUserData = $this->dummyGithubUserData($attributes);
         $githubUser = $this->mockSocialiteUser($githubUserData);
         $userData = $this->transformUserData($githubUserData);
 

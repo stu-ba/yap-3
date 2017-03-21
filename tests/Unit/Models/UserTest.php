@@ -14,23 +14,6 @@ class UserTest extends TestCase
 
     use DatabaseMigrations, GithubMock;
 
-
-    public function testUserIsSyncedWithGithubData()
-    {
-
-        /** @var User $user */
-        $user = factory(User::class, 'empty')->create();
-
-        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
-
-        $user->syncWith($githubUser);
-
-        foreach ($userData as $key => $value) {
-            $this->assertEquals($value, $user->{$key});
-        }
-    }
-
-
     public function testUserIsLoginable()
     {
         $user = factory(User::class)->states('confirmed')->create();

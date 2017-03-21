@@ -2,9 +2,7 @@
 
 namespace Yap\Models;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Socialite\Two\User as GithubUser;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
@@ -27,6 +25,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property bool $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property-read \Yap\Models\Invitation $invitation
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
@@ -47,7 +46,6 @@ use Yap\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
-
     use Notifiable;
 
     /**
@@ -88,21 +86,10 @@ class User extends Authenticatable
         'is_confirmed' => 'boolean',
     ];
 
+
     public function invitation()
     {
         return $this->hasOne(Invitation::class);
-    }
-
-
-    public function byGithubUserOrCreate(GithubUser $githubUser): self
-    {
-        try {
-            $user = $this->whereGithubId($githubUser->getId())->firstOrFail();
-        } catch (ModelNotFoundException $exception) {
-            $user = $this->newInstance()->create($this->githubUserData($githubUser));
-        }
-
-        return $user;
     }
 
 
@@ -122,7 +109,7 @@ class User extends Authenticatable
             throw new UserBannedException();
         }
 
-        if ( ! $this->is_confirmed) {
+        if (! $this->is_confirmed) {
             throw new UserNotConfirmedException();
         }
 
@@ -171,33 +158,16 @@ class User extends Authenticatable
     /**
      * Synchronize User with GitHub data.
      *
-     * @param GithubUser $user
+     * @param array $githubUserData
      *
      * @return User
+     * @internal param GithubUser $user
+     *
      */
-    public function syncWith(GithubUser $user): self
+    public function syncWith(array $githubUserData): self
     {
-        $this->update($this->githubUserData($user));
+        $this->update($githubUserData);
+
         return $this;
-    }
-
-
-    /**
-     * Format Github user data to array.
-     *
-     * @param GithubUser $user
-     *
-     * @return array
-     */
-    protected function githubUserData(GithubUser $user): array
-    {
-        return [
-            'github_id' => $user->getId(),
-            'email'     => $user->getEmail(),
-            'username'  => $user->getNickname(),
-            'name'      => $user->getName(),
-            'avatar'    => $user->getAvatar(),
-            'bio'       => $user->user['bio'],
-        ];
     }
 }
