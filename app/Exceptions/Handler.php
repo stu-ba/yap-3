@@ -80,8 +80,6 @@ class Handler extends ExceptionHandler
 
     protected function banned($request, UserBannedException $exception)
     {
-        //todo: todo banned
-        dd('user banned');
-        return 'user banned';
+        return abort(403);
     }
 }
