@@ -9,27 +9,28 @@ trait Authenticable
 
     protected $githubTokenCookie;
 
-    /**
-     * Grant user log in.
-     * @param User   $user
-     */
-    public function grant(User $user): void
-    {
-        auth()->loginUsingId($user->id, true);
-    }
-
-
-
 
     /**
      * Attempt to log in user
-     * @param User       $user
+     *
+     * @param User $user
      */
     public function attempt(User $user): void
     {
         if ($user->logginable()) {
             $this->grant($user);
         }
+    }
+
+
+    /**
+     * Grant user log in.
+     *
+     * @param User $user
+     */
+    public function grant(User $user): void
+    {
+        auth()->loginUsingId($user->id, true);
     }
 
 
