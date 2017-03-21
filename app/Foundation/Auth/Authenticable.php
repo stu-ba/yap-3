@@ -2,7 +2,6 @@
 
 namespace Yap\Foundation\Auth;
 
-use Laravel\Socialite\Two\User as GithubUser;
 use Yap\Models\User;
 
 trait Authenticable
@@ -16,9 +15,10 @@ trait Authenticable
      */
     public function grant(User $user): void
     {
-        auth()->attempt()
         auth()->loginUsingId($user->id, true);
     }
+
+
 
 
     /**
