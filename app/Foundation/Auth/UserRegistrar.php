@@ -19,8 +19,11 @@ class UserRegistrar
     /** @var User $user */
     private $user;
 
+    /** @var User $userByGithub */
+    private $userByGithub;
 
-    function __construct(Invitation $invitation, User $user)
+
+    public function __construct(Invitation $invitation, User $user)
     {
         $this->invitation = $invitation;
         $this->user = $user;
@@ -31,6 +34,8 @@ class UserRegistrar
     {
         if (func_num_args() === 1 && is_a($args[0], GithubUser::class)) {
             $this->githubUser = $args[0];
+
+            $this->userByGithub = $this->user->whereGithubId($this->githubUser->getId())->first();
 
             return $this->registerByGithubUser();
         } elseif (func_num_args() === 2) {
@@ -44,6 +49,8 @@ class UserRegistrar
                 throw new InvalidArgumentException('Unrecognized type of argument.');
             }
 
+            $this->userByGithub = $this->user->whereGithubId($this->githubUser->getId())->first();
+
             return $this->registerByInvitation();
         }
 
@@ -53,13 +60,16 @@ class UserRegistrar
 
     private function registerByGithubUser(): User
     {
-        $this->invitation = $this->invitation->whereEmail($this->githubUser->email)->first();
-
+        $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
         if ($this->invitation === null) {
-            return $this->user->create($this->githubUserData());
+            if ($this->userByGithub === null) {
+                return $this->user->create($this->githubUserData());
+            }
+
+            return $user->syncWith($this->githubUserData());
         }
 
-        return $this->registerByInvitation();
+        return $this->createByInvitation();
     }
 
 
@@ -81,20 +91,63 @@ class UserRegistrar
     }
 
 
-    private function registerByInvitation(): User
+    private function createByInvitation(): User
     {
-        $this->user = $this->invitation->user;
-        $this->user->syncWith($this->githubUserData());
+        $user = $this->invitation->user;
+
+        $user->syncWith($this->githubUserData());
 
         if ($this->invitation->isTokenValid()) {
-            $this->user->confirm();
+            $user->confirm();
             $this->invitation->deplete();
         } else {
-            $this->user->unconfirm();
+            $user->unconfirm();
             $this->invitation->deplete();
         }
 
-        return $this->user;
+        return $user;
     }
 
+
+    private function registerByInvitation(): User
+    {
+        if (! is_null($this->userByGithub) && is_null($this->invitation->user->email) && $this->invitation->isTokenValid()) {
+            if (!is_null($this->userByGithub->invitation)) {
+                return $this->userByGithub;
+            }
+            $this->swapUsers($this->userByGithub);
+            return $this->createByInvitation();
+        } elseif (! is_null($this->userByGithub) && $this->invitation->user->email !== $this->githubUser->email) {
+            return $this->userByGithub;
+        } elseif ((is_null($this->userByGithub) && ! $this->invitation->isTokenValid()) || ! is_null($this->invitation->user->email)) {
+            return $this->newInstance()->registerByGithubUser();
+        }
+
+        return $this->createByInvitation();
+    }
+
+
+    /**
+     * @param $user
+     *
+     * @return mixed
+     */
+    private function swapUsers(User $user)
+    {
+        $userOld = $this->invitation->user;
+        $this->invitation->user_id = $user->id;
+        $this->invitation->save();
+        $this->invitation = $this->invitation->fresh();
+        $userOld->delete();
+        return $user;
+    }
+
+
+    private function newInstance(): self
+    {
+        $this->invitation = $this->invitation->newInstance();
+        $this->user = $this->user->newInstance();
+
+        return $this;
+    }
 }

@@ -5,7 +5,7 @@ Route::get('/', function () {
 });
 
 Route::get('home', function () {
-    //d('logged-in:', Auth::user(), Cookie::get('github_token'));
+    d('logged-in:', Auth::user(), Cookie::get('github_token'));
 })->name('home')->middleware('auth');
 
 Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {

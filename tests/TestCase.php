@@ -8,7 +8,6 @@ use Yap\Exceptions\Handler;
 
 abstract class TestCase extends BaseTestCase
 {
-
     use CreatesApplication;
 
     public $baseUrl = 'http://test.dev';
@@ -21,9 +20,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function disableExceptionHandling()
     {
-        app()->instance(Handler::class, new class extends Handler
-        {
-
+        app()->instance(Handler::class, new class extends Handler {
             public function __construct()
             {
             }

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,15 +49,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-
-        if (app()->environment() === 'test') throw $exception;
-
         if ($exception instanceof UserBannedException) {
             return $this->banned($request, $exception);
         } elseif ($exception instanceof UserNotConfirmedException) {
             return abort(403);
         } elseif ($exception instanceof DecryptException) {
             return abort(400);
+        } elseif ($exception instanceof InvalidStateException) {
+            return redirect()->guest(route('login'));
         }
 
         return parent::render($request, $exception);

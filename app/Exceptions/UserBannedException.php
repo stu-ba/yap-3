@@ -4,4 +4,6 @@ namespace Yap\Exceptions;
 
 use Exception;
 
-class UserBannedException extends Exception {}
+class UserBannedException extends Exception
+{
+}

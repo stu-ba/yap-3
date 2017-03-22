@@ -2,6 +2,7 @@
 
 namespace Yap\Http\Controllers\Auth;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
 use Yap\Foundation\Auth\UserRegistrar;
@@ -10,7 +11,6 @@ use Yap\Models\User;
 
 class LoginController extends Controller
 {
-
     use Authenticable;
 
     protected $redirectTo = 'home';
@@ -53,7 +53,6 @@ class LoginController extends Controller
     public function handle(User $user, Socialite $socialite, UserRegistrar $registrar)
     {
         $githubUser = $socialite->driver('github')->user();
-
         try {
             $user = $user->whereGithubId($githubUser->getId())->firstOrFail();
         } catch (ModelNotFoundException $exception) {

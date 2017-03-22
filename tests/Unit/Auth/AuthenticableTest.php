@@ -12,7 +12,6 @@ use Yap\Models\User;
 
 class AuthenticableTest extends TestCase
 {
-
     use DatabaseMigrations, GithubMock;
 
     /** @var ControllerStub $authenticable */
@@ -60,7 +59,7 @@ class AuthenticableTest extends TestCase
         $user = factory(User::class)->states('banned')->create($userData);
 
         $this->authenticable->attempt($user, $githubUser);
-        $this->dontSeeIsAuthenticated($user);
+        $this->dontSeeIsAuthenticated();
     }
 
 
@@ -72,7 +71,7 @@ class AuthenticableTest extends TestCase
         $user = factory(User::class)->create($userData);
 
         $this->authenticable->attempt($user, $githubUser);
-        $this->dontSeeIsAuthenticated($user);
+        $this->dontSeeIsAuthenticated();
     }
 
 
@@ -85,5 +84,4 @@ class AuthenticableTest extends TestCase
         $this->seeStatusCode(302);
         $this->assertRedirectedTo('home');
     }
-
 }

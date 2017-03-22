@@ -22,7 +22,7 @@ class RegisterController extends Controller
     private $invitation;
 
 
-    function __construct(Invitation $invitation)
+    public function __construct(Invitation $invitation)
     {
         $this->invitation = $invitation;
     }
@@ -48,7 +48,7 @@ class RegisterController extends Controller
 
         $user = $registrar->register($invitation, $githubUser);
 
-        $this->grant($user);
+        $this->attempt($user);
         $this->setGithubTokenCookie($githubUser->token);
 
         return $this->response();

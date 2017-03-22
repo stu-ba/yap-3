@@ -6,7 +6,6 @@ use Yap\Models\User;
 
 trait Authenticable
 {
-
     protected $githubTokenCookie;
 
 

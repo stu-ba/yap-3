@@ -11,7 +11,6 @@ use Yap\Models\User;
 
 class UserTest extends TestCase
 {
-
     use DatabaseMigrations, GithubMock;
 
     public function testUserIsLoginable()

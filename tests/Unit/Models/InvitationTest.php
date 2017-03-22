@@ -11,7 +11,6 @@ use Yap\Models\User;
 
 class InvitationTest extends TestCase
 {
-
     use DatabaseMigrations;
 
     public function testInvitationThrowsExceptionIfTokenDoesNotExists()

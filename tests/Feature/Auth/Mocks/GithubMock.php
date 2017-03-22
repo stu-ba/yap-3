@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Auth\Mocks;
 
+use Faker\Factory;
 use Laravel\Socialite\Contracts\Factory as SocialiteOriginal;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Faker\Factory;
 
 trait GithubMock
 {
@@ -20,7 +20,6 @@ trait GithubMock
      */
     public function mockSocialiteFacade(array $attributes = [])
     {
-
         $socialiteUser = $this->mockSocialiteUser($attributes);
 
         $provider = $this->createMock(GithubProvider::class);
@@ -84,7 +83,7 @@ trait GithubMock
         $socialiteUser = $this->createMock(User::class);
         foreach ($attributes as $attribute => $value) {
             $socialiteUser->{$attribute} = $value;
-            if ( ! in_array($attribute, ['user', 'token'])) {
+            if (! in_array($attribute, ['user', 'token'])) {
                 $socialiteUser->expects($this->any())->method('get'.$attribute)->willReturn($value);
             }
         }
