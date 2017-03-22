@@ -23,7 +23,7 @@ class UserRegistrar
     private $userByGithub;
 
 
-    public function __construct(Invitation $invitation, User $user)
+    function __construct(Invitation $invitation, User $user)
     {
         $this->invitation = $invitation;
         $this->user = $user;
@@ -61,12 +61,8 @@ class UserRegistrar
     private function registerByGithubUser(): User
     {
         $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
-        if ($this->invitation === null) {
-            if ($this->userByGithub === null) {
-                return $this->user->create($this->githubUserData());
-            }
-
-            return $user->syncWith($this->githubUserData());
+        if ($this->invitation === null && $this->userByGithub === null) {
+            return $this->user->create($this->githubUserData());
         }
 
         return $this->createByInvitation();
@@ -111,13 +107,14 @@ class UserRegistrar
 
     private function registerByInvitation(): User
     {
-        if (! is_null($this->userByGithub) && is_null($this->invitation->user->email) && $this->invitation->isTokenValid()) {
-            if (!is_null($this->userByGithub->invitation)) {
+        if ( ! is_null($this->userByGithub) && is_null($this->invitation->user->email) && $this->invitation->isTokenValid()) {
+
+            if(!is_null($this->userByGithub->invitation)) {
                 return $this->userByGithub;
             }
             $this->swapUsers($this->userByGithub);
             return $this->createByInvitation();
-        } elseif (! is_null($this->userByGithub) && $this->invitation->user->email !== $this->githubUser->email) {
+        } elseif ( ! is_null($this->userByGithub) && $this->invitation->user->email !== $this->githubUser->email) {
             return $this->userByGithub;
         } elseif ((is_null($this->userByGithub) && ! $this->invitation->isTokenValid()) || ! is_null($this->invitation->user->email)) {
             return $this->newInstance()->registerByGithubUser();
@@ -150,4 +147,5 @@ class UserRegistrar
 
         return $this;
     }
+
 }
