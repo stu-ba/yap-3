@@ -57,7 +57,7 @@ class UserRegistrarTest extends TestCase
     }
 
 
-    public function testRegisterByInvalidInvitation()
+    public function testRegisterByDepletedInvitation()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
@@ -67,6 +67,20 @@ class UserRegistrarTest extends TestCase
 
         $this->assertFalse($user->is_confirmed);
 
+        foreach ($userData as $key => $value) {
+            $this->assertEquals($value, $user->{$key});
+        }
+    }
+
+    public function testRegisterByDepletedInvitationWithSameEmails()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['email' => $invitation->email]);
+        /** @var User $user */
+        $user = $this->registrar->register($invitation, $githubUser)->fresh();
+
+        $this->assertFalse($user->is_confirmed);
         foreach ($userData as $key => $value) {
             $this->assertEquals($value, $user->{$key});
         }

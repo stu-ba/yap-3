@@ -35,7 +35,7 @@ class UserRegistrar
         if (func_num_args() === 1 && is_a($args[0], GithubUser::class)) {
             $this->githubUser = $args[0];
 
-            $this->userByGithub = $this->user->whereGithubId($this->githubUser->getId())->first();
+            $this->userByGithub = null;
 
             return $this->registerByGithubUser();
         } elseif (func_num_args() === 2) {
@@ -61,11 +61,14 @@ class UserRegistrar
     private function registerByGithubUser(): User
     {
         $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
+
         if ($this->invitation === null && $this->userByGithub === null) {
             return $this->user->create($this->githubUserData());
+        } elseif ($this->invitation !== null) {
+            return $this->createByInvitation();
         }
 
-        return $this->createByInvitation();
+        return $this->userByGithub;
     }
 
 
@@ -74,7 +77,7 @@ class UserRegistrar
      *
      * @return array
      */
-    protected function githubUserData(): array
+    private function githubUserData(): array
     {
         return [
             'github_id' => $this->githubUser->getId(),
@@ -107,17 +110,19 @@ class UserRegistrar
 
     private function registerByInvitation(): User
     {
+        //invitation is always present, //$this->invitation NOT NULL
         if ( ! is_null($this->userByGithub) && is_null($this->invitation->user->email) && $this->invitation->isTokenValid()) {
-
-            if(!is_null($this->userByGithub->invitation)) {
+            if ( ! is_null($this->userByGithub->invitation)) {
                 return $this->userByGithub;
             }
+
             $this->swapUsers($this->userByGithub);
+
             return $this->createByInvitation();
         } elseif ( ! is_null($this->userByGithub) && $this->invitation->user->email !== $this->githubUser->email) {
             return $this->userByGithub;
         } elseif ((is_null($this->userByGithub) && ! $this->invitation->isTokenValid()) || ! is_null($this->invitation->user->email)) {
-            return $this->newInstance()->registerByGithubUser();
+            return $this->registerByGithubUser();
         }
 
         return $this->createByInvitation();
@@ -129,23 +134,10 @@ class UserRegistrar
      *
      * @return mixed
      */
-    private function swapUsers(User $user)
+    private function swapUsers(User $user): void
     {
-        $userOld = $this->invitation->user;
-        $this->invitation->user_id = $user->id;
-        $this->invitation->save();
+        $this->invitation->user->swapWith($user);
         $this->invitation = $this->invitation->fresh();
-        $userOld->delete();
-        return $user;
-    }
-
-
-    private function newInstance(): self
-    {
-        $this->invitation = $this->invitation->newInstance();
-        $this->user = $this->user->newInstance();
-
-        return $this;
     }
 
 }

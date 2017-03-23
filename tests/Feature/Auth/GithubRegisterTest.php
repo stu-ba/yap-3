@@ -144,7 +144,7 @@ class GithubRegisterTest extends TestCase
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
-        $this->seeIsAuthenticatedAs($user->fresh());
+        $this->seeIsAuthenticatedAs($invitation->user->fresh());
         $this->assertResponseStatus(302);
     }
 

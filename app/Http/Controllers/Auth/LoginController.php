@@ -53,6 +53,7 @@ class LoginController extends Controller
     public function handle(User $user, Socialite $socialite, UserRegistrar $registrar)
     {
         $githubUser = $socialite->driver('github')->user();
+
         try {
             $user = $user->whereGithubId($githubUser->getId())->firstOrFail();
         } catch (ModelNotFoundException $exception) {
