@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
+
     protected $fillable = [
         'user_id',
         'created_by',
@@ -70,15 +71,14 @@ class Invitation extends Model
     }
 
 
-    public function isTokenValid(): bool
+    public function isDepleted(): bool
     {
         if ($this->creator->is_banned || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
-
 
     public function deplete(): self
     {

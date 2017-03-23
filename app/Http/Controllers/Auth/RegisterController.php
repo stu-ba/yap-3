@@ -32,7 +32,7 @@ class RegisterController extends Controller
     {
         $invitation = $this->invitation->whereToken($token)->firstOrFail();
 
-        if ($invitation->isTokenValid()) {
+        if (! $invitation->isDepleted()) {
             $redirect_uri = config('services.github.redirect').'/'.encrypt($token);
 
             return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])->redirect();

@@ -27,18 +27,18 @@ class InvitationTest extends TestCase
         $bannedUser = factory(User::class)->states('banned')->create();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
-        $this->assertFalse($invitation->isTokenValid());
+        $this->assertTrue($invitation->isDepleted());
     }
 
 
-    public function testTokenIsNotValidBecauseItsDepleted()
+    public function testTokenIsDepleted()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
-        $this->assertFalse($invitation->isTokenValid());
+        $this->assertTrue($invitation->isDepleted());
 
         $invitation = factory(Invitation::class)->create();
-        $this->assertFalse($invitation->isTokenValid());
+        $this->assertTrue($invitation->isDepleted());
     }
 
 
@@ -46,7 +46,7 @@ class InvitationTest extends TestCase
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
-        $this->assertFalse($invitation->isTokenValid());
+        $this->assertTrue($invitation->isDepleted());
     }
 
 
@@ -54,14 +54,14 @@ class InvitationTest extends TestCase
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
-        $this->assertTrue($invitation->isTokenValid());
+        $this->assertFalse($invitation->isDepleted());
     }
 
     public function testTokenIsValidForever()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => null]);
-        $this->assertTrue($invitation->isTokenValid());
+        $this->assertFalse($invitation->isDepleted());
     }
 
 

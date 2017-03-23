@@ -96,7 +96,7 @@ class UserRegistrar
 
         $user->syncWith($this->githubUserData());
 
-        if ($this->invitation->isTokenValid()) {
+        if (!$this->invitation->isDepleted()) {
             $user->confirm();
             $this->invitation->deplete();
         } else {
@@ -110,18 +110,16 @@ class UserRegistrar
 
     private function registerByInvitation(): User
     {
-        //invitation is always present, //$this->invitation NOT NULL
-        if ( ! is_null($this->userByGithub) && is_null($this->invitation->user->email) && $this->invitation->isTokenValid()) {
-            if ( ! is_null($this->userByGithub->invitation)) {
+        if ( ! is_null($this->userByGithub)) {
+            if (is_null($this->invitation->user->email) && !$this->invitation->isDepleted()) {
+                $this->swapUsers($this->userByGithub);
+
+                return $this->createByInvitation();
+            }
+            if ($this->invitation->user->email !== $this->githubUser->email) {
                 return $this->userByGithub;
             }
-
-            $this->swapUsers($this->userByGithub);
-
-            return $this->createByInvitation();
-        } elseif ( ! is_null($this->userByGithub) && $this->invitation->user->email !== $this->githubUser->email) {
-            return $this->userByGithub;
-        } elseif ((is_null($this->userByGithub) && ! $this->invitation->isTokenValid()) || ! is_null($this->invitation->user->email)) {
+        } elseif ( $this->invitation->isDepleted() || ! is_null($this->invitation->user->email)) {
             return $this->registerByGithubUser();
         }
 
