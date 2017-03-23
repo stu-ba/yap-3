@@ -62,9 +62,9 @@ class UserRegistrar
     {
         $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
 
-        if ($this->invitation === null && $this->userByGithub === null) {
+        if (is_null($this->invitation) && is_null($this->userByGithub)) {
             return $this->user->create($this->githubUserData());
-        } elseif ($this->invitation !== null) {
+        } elseif (!is_null($this->invitation)) {
             return $this->createByInvitation();
         }
 
