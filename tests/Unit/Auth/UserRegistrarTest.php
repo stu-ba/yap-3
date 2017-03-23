@@ -60,7 +60,7 @@ class UserRegistrarTest extends TestCase
     public function testRegisterByDepletedInvitation()
     {
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
         /** @var User $user */
         $user = $this->registrar->register($invitation, $githubUser)->fresh();
@@ -75,7 +75,7 @@ class UserRegistrarTest extends TestCase
     public function testRegisterByDepletedInvitationWithSameEmails()
     {
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['email' => $invitation->email]);
         /** @var User $user */
         $user = $this->registrar->register($invitation, $githubUser)->fresh();
@@ -123,7 +123,7 @@ class UserRegistrarTest extends TestCase
     public function testRegisterByGithubUserGivenInvalidInvitationExistsWithSameEmails()
     {
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['email' => $invitation->email]);
 
         /** @var User $user */
@@ -171,7 +171,7 @@ class UserRegistrarTest extends TestCase
         ]);
 
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
 
         /** @var User $user */
         $user = $this->registrar->register($invitation, $githubUser)->fresh();
@@ -179,24 +179,29 @@ class UserRegistrarTest extends TestCase
         $this->assertFalse($user->is_confirmed);
     }
 
-    //public function testRegisterByInvitationDifferentThanMine()
-    //{
-    //    /** @var Invitation $invitation2 */
-    //    $invitation2 = factory(Invitation::class)->create();
-    //    /** @var Invitation $invitation */
-    //    $invitation = factory(Invitation::class)->states('!depleted')->create();
-    //
-    //    list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser([
-    //        'email'    => $invitation2->user->email,
-    //        'id'       => $invitation2->user->github_id,
-    //    ]);
-    //
-    //    $this->registrar->register($invitation, $githubUser);
-    //
-    //    $this->assertEquals($invitation->user->)
-    //    $this->seeIsAuthenticatedAs($invitation2->fresh()->user);
-    //
-    //}
+    public function testRegisterByInvitationDifferentThanMine()
+    {
+        /** @var Invitation $invitation2 */
+        $invitation2 = factory(Invitation::class)->create();
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+
+        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser([
+            'id'       => $invitation2->user->github_id,
+            'email'    => $invitation2->user->email,
+        ]);
+
+        $this->registrar->register($invitation, $githubUser);
+
+        $invitation = $invitation->fresh();
+        $invitation2 = $invitation2->fresh();
+
+        $this->assertTrue($invitation2->isDepleted(), 'Invitation 2 is not depleted.');
+        $this->assertFalse($invitation->isDepleted(), 'Invitation is depleted.');
+
+        $this->assertTrue($invitation2->user->is_confirmed);
+
+    }
 
     //Registrar should not Swap
     public function testRegisterNotIfAlreadyRegistered()
