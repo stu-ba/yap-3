@@ -7,6 +7,7 @@ use Yap\User;
 
 class LogoutController extends Controller
 {
+
     public function logout()
     {
         //redirect to taiga /

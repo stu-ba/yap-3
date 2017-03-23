@@ -2,7 +2,6 @@
 
 namespace Yap\Http\Controllers\Auth;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
 use Yap\Foundation\Auth\UserRegistrar;
@@ -11,9 +10,21 @@ use Yap\Models\User;
 
 class LoginController extends Controller
 {
+
     use Authenticable;
 
     protected $redirectTo = 'home';
+
+    protected $user;
+
+    protected $registrar;
+
+
+    public function __construct(User $user, UserRegistrar $registrar)
+    {
+        $this->user = $user;
+        $this->registrar = $registrar;
+    }
 
 
     /**
@@ -34,7 +45,7 @@ class LoginController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function login(Socialite $socialite)
+    public function redirect(Socialite $socialite)
     {
         return $socialite->driver('github')->redirect();
     }
@@ -43,26 +54,18 @@ class LoginController extends Controller
     /**
      * Handle GitHub callback redirect.
      *
-     * @param User          $user
-     * @param Socialite     $socialite
-     *
-     * @param UserRegistrar $registrar
+     * @param Socialite $socialite
      *
      * @return $this
+     * @internal param User $user
+     * @internal param UserRegistrar $registrar
      */
-    public function handle(User $user, Socialite $socialite, UserRegistrar $registrar)
+    public function handle(Socialite $socialite)
     {
         /** @var \Laravel\Socialite\Two\User $githubUser */
         $githubUser = $socialite->driver('github')->user();
 
-        try {
-            $user = $user->whereGithubId($githubUser->getId())->firstOrFail();
-        } catch (ModelNotFoundException $exception) {
-            $user = $registrar->register($githubUser);
-        }
-
-        $this->attempt($user);
-        $this->setGithubTokenCookie($githubUser->token);
+        $this->login($githubUser);
 
         return $this->response();
     }

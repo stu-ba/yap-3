@@ -29,17 +29,6 @@ class AuthenticableTest extends TestCase
         parent::setUp();
     }
 
-
-    public function testUserIsGranted()
-    {
-        /** @var User $user */
-        $user = factory(User::class)->create();
-
-        $this->authenticable->grant($user);
-        $this->seeIsAuthenticatedAs($user);
-    }
-
-
     public function testUserIsLoggedIn()
     {
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();

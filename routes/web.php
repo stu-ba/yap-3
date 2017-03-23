@@ -14,11 +14,11 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
         Route::get('/', function () {
             return redirect()->route('login');
         });
-        Route::get('register/{token}', 'RegisterController@register')->name('register');
+        Route::get('register/{token}', 'RegisterController@redirect')->name('register');
         Route::get('github/callback/{token}', 'RegisterController@handle')->name('register.callback');
 
         Route::get('login', 'LoginController@showPage')->name('login');
-        Route::get('login/github', 'LoginController@login')->name('login.github')->middleware(['throttle:2,2']);
+        Route::get('login/github', 'LoginController@redirect')->name('login.github')->middleware(['throttle:2,2']);
         Route::get('github/callback', 'LoginController@handle')->name('login.callback');
     });
 

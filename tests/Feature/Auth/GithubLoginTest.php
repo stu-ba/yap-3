@@ -93,7 +93,7 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(403);
     }
 
-    public function testNewGithubUserIsLoggedIfInvitationIsValidAndEmailMatches()
+    public function testNewGithubUserIsLoggedInIfInvitationIsNotDepletedAndEmailMatches()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
@@ -131,6 +131,49 @@ class GithubLogin extends TestCase
             'id'       => $faker->randomNumber(9, true),
             'token'    => $githubToken,
             'email'    => $invitation->email,
+            'nickname' => $faker->userName,
+            'name'     => $faker->firstName.' '.$faker->lastName,
+            'avatar'   => $faker->imageUrl(),
+            'user'     => ['bio' => 'abc']
+        ]);
+
+        $this->get(route('login.callback'));
+
+        $this->dontSeeIsAuthenticated();
+        $this->assertResponseStatus(403);
+    }
+
+    public function testNewGithubUserIsNotLoggedInIfInvitationIsNotDepletedAndEmailDoesNotMatch() {
+        factory(Invitation::class, 'empty')->create();
+        $faker = Factory::create();
+
+        $githubToken = str_random(24);
+        $this->mockSocialiteFacade([
+            'id'       => $faker->randomNumber(9, true),
+            'token'    => $githubToken,
+            'email'    => $faker->safeEmail,
+            'nickname' => $faker->userName,
+            'name'     => $faker->firstName.' '.$faker->lastName,
+            'avatar'   => $faker->imageUrl(),
+            'user'     => ['bio' => 'abc']
+        ]);
+
+        $this->get(route('login.callback'));
+
+        $this->dontSeeIsAuthenticated();
+        $this->assertResponseStatus(403);
+    }
+
+    public function testNewGithubUserIsNotLoggedInIfInvitationIsDepletedAndEmailDoesNotMatch()
+    {
+        factory(Invitation::class, 'empty')->states(['depleted'])->create();
+        $faker = Factory::create();
+
+        $githubToken = str_random(24);
+        $this->mockSocialiteFacade([
+            'id'       => $faker->randomNumber(9, true),
+            'token'    => $githubToken,
+            'email'    => $faker->safeEmail,
             'nickname' => $faker->userName,
             'name'     => $faker->firstName.' '.$faker->lastName,
             'avatar'   => $faker->imageUrl(),

@@ -11,6 +11,7 @@ use Yap\Models\User;
 
 class GithubRegisterTest extends TestCase
 {
+
     use DatabaseMigrations, GithubMock;
 
 
@@ -71,6 +72,7 @@ class GithubRegisterTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+
     //Hopefully this will NEVER happen
     public function testUserIsRegisteredAndNotLoggedInBecauseRegistrationTokenUsedByDifferentRegisteredUser()
     {
@@ -96,6 +98,7 @@ class GithubRegisterTest extends TestCase
         $this->dontSeeIsAuthenticated();
         $this->assertResponseStatus(403);
     }
+
 
     public function testUserIsRegisteredAndLoggedInWhenInvitationIsNotDepletedAndEmailDoesNotMatchInvitedUser()
     {
@@ -123,6 +126,7 @@ class GithubRegisterTest extends TestCase
         $this->seeCookie('github_token', $githubToken);
         $this->assertResponseStatus(302);
     }
+
 
     public function testUserIsRegisteredAndLoggedInGivenValidNonDepletedInvitationIsProvided()
     {

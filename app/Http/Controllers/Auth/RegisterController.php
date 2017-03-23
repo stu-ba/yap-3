@@ -12,6 +12,7 @@ use Yap\Models\Invitation;
 
 class RegisterController extends Controller
 {
+
     use Authenticable;
 
     protected $redirectTo = 'home';
@@ -19,37 +20,42 @@ class RegisterController extends Controller
     /**
      * @var Invitation
      */
-    private $invitation;
+    protected $invitation;
+
+    /**
+     * @var UserRegistrar
+     */
+    protected $registrar;
 
 
-    public function __construct(Invitation $invitation)
+    public function __construct(Invitation $invitation, UserRegistrar $registrar)
     {
         $this->invitation = $invitation;
+        $this->registrar = $registrar;
     }
 
 
-    public function register(string $token, Socialite $socialite)
+    public function redirect(string $token, Socialite $socialite)
     {
         $invitation = $this->invitation->whereToken($token)->firstOrFail();
 
-        if (! $invitation->isDepleted()) {
+        if ( ! $invitation->isDepleted()) {
             $redirect_uri = config('services.github.redirect').'/'.encrypt($token);
 
             return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])->redirect();
         }
+
         //todo: maybe inform user that token has expired or been used
         return redirect()->route('login');
     }
 
-    public function handle(string $encryptedToken, Socialite $socialite, UserRegistrar $registrar)
+
+    public function handle(string $encryptedToken, Socialite $socialite)
     {
         $invitation = $this->invitation->whereToken(decrypt($encryptedToken))->firstOrFail();
         $githubUser = $socialite->driver('github')->user();
 
-        $user = $registrar->register($invitation, $githubUser);
-
-        $this->attempt($user);
-        $this->setGithubTokenCookie($githubUser->token);
+        $this->register($invitation, $githubUser);
 
         return $this->response();
     }

@@ -11,19 +11,19 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 /**
  * Yap\Foundation\Auth\User
  *
- * @property int $id
- * @property int $taiga_id
- * @property int $github_id
- * @property string $email
- * @property string $username
- * @property string $name
- * @property string $bio
- * @property string $ban_reason
- * @property string $avatar
- * @property string $remember_token
- * @property bool $is_admin
- * @property bool $is_banned
- * @property bool $is_confirmed
+ * @property int            $id
+ * @property int            $taiga_id
+ * @property int            $github_id
+ * @property string         $email
+ * @property string         $username
+ * @property string         $name
+ * @property string         $bio
+ * @property string         $ban_reason
+ * @property string         $avatar
+ * @property string         $remember_token
+ * @property bool           $is_admin
+ * @property bool           $is_banned
+ * @property bool           $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereAvatar($value)
@@ -45,5 +45,6 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
+
     use Authenticatable, Authorizable;
 }
