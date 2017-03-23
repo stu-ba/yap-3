@@ -74,7 +74,7 @@ class GithubRegisterTest extends TestCase
 
 
     //Hopefully this will NEVER happen
-    public function testUserIsRegisteredAndNotLoggedInBecauseRegistrationTokenUsedByDifferentRegisteredUser()
+    public function testUserIsRegisteredAndNotLoggedInBecauseInvitationUsedByDifferentRegisteredUser()
     {
         $faker = Factory::create();
 
@@ -85,7 +85,6 @@ class GithubRegisterTest extends TestCase
         $this->mockSocialiteFacade([
             'id'       => $faker->randomNumber(9, true),
             'token'    => $githubToken,
-            //'email'    => $invitation->user->email,
             'email'    => $faker->safeEmail,
             'nickname' => $faker->userName,
             'name'     => $faker->firstName.' '.$faker->lastName,
@@ -100,7 +99,7 @@ class GithubRegisterTest extends TestCase
     }
 
 
-    public function testUserIsRegisteredAndLoggedInWhenInvitationIsNotDepletedAndEmailDoesNotMatchInvitedUser()
+    public function testUserIsLoggedInGivenInvitationIsNotDepletedAndEmailDoesNotMatchInvitedUser()
     {
         $faker = Factory::create();
 
@@ -113,7 +112,8 @@ class GithubRegisterTest extends TestCase
         $this->mockSocialiteFacade([
             'id'       => $invitation2->user->github_id,
             'token'    => $githubToken,
-            'email'    => $invitation2->user->email,
+            //'email'    => $invitation2->user->email,
+            'email'    => $faker->email,
             'nickname' => $faker->userName,
             'name'     => $faker->firstName.' '.$faker->lastName,
             'avatar'   => $faker->imageUrl(),
@@ -130,6 +130,7 @@ class GithubRegisterTest extends TestCase
 
     public function testUserIsRegisteredAndLoggedInGivenValidNonDepletedInvitationIsProvided()
     {
+        //swapping happens
         $faker = Factory::create();
         /** @var User $user */
         $user = factory(User::class)->create();
@@ -148,6 +149,7 @@ class GithubRegisterTest extends TestCase
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
+
         $this->seeIsAuthenticatedAs($invitation->user->fresh());
         $this->assertResponseStatus(302);
     }
