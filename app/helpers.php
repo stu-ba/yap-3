@@ -1,8 +1,9 @@
 <?php
 
-if (! function_exists('d')) {
+if ( ! function_exists('d')) {
     /**
      * @param  mixed
+     *
      * @return void
      */
     function d()
@@ -13,7 +14,7 @@ if (! function_exists('d')) {
     }
 }
 
-if (! function_exists('in_range')) {
+if ( ! function_exists('in_range')) {
     /**
      * Determines if $number is between $min and $max
      *
