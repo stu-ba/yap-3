@@ -44,9 +44,9 @@ class AuthenticableTest extends TestCase
     {
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
         /** @var User $user */
-        $user = factory(User::class)->states('confirmed')->create($userData);
+        $user = factory(User::class)->states(['confirmed'])->create($userData);
 
-        $this->authenticable->attempt($user, $githubUser);
+        $this->authenticable->attempt($user);
         $this->seeIsAuthenticatedAs($user);
     }
 
@@ -56,9 +56,9 @@ class AuthenticableTest extends TestCase
         $this->expectException(UserBannedException::class);
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
         /** @var User $user */
-        $user = factory(User::class)->states('banned')->create($userData);
+        $user = factory(User::class)->states(['banned'])->create($userData);
 
-        $this->authenticable->attempt($user, $githubUser);
+        $this->authenticable->attempt($user);
         $this->dontSeeIsAuthenticated();
     }
 
@@ -70,7 +70,7 @@ class AuthenticableTest extends TestCase
         /** @var User $user */
         $user = factory(User::class)->create($userData);
 
-        $this->authenticable->attempt($user, $githubUser);
+        $this->authenticable->attempt($user);
         $this->dontSeeIsAuthenticated();
     }
 

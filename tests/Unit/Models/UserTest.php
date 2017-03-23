@@ -15,7 +15,7 @@ class UserTest extends TestCase
 
     public function testUserIsLoginable()
     {
-        $user = factory(User::class)->states('confirmed')->create();
+        $user = factory(User::class)->states(['confirmed'])->create();
         $this->assertTrue($user->logginable());
     }
 
@@ -24,7 +24,7 @@ class UserTest extends TestCase
     {
         $this->expectException(UserBannedException::class);
         /** @var User $user */
-        $user = factory(User::class)->states('banned')->create();
+        $user = factory(User::class)->states(['banned'])->create();
         $user->logginable();
     }
 

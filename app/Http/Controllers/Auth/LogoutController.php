@@ -11,7 +11,7 @@ class LogoutController extends Controller
     {
         //redirect to taiga /
         // logout from taiga /
-        // redirect back here if referer is taiga logout and return to login page
+        // redirect back here if referrer is taiga logout and return to login page
         auth()->logout();
 
         return redirect()->route('login');

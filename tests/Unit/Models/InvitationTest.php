@@ -24,7 +24,7 @@ class InvitationTest extends TestCase
     public function testTokenIsNotValidBecauseCreatorIsBanned()
     {
         /** @var User $bannedUser */
-        $bannedUser = factory(User::class)->states('banned')->create();
+        $bannedUser = factory(User::class)->states(['banned'])->create();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
         $this->assertTrue($invitation->isDepleted());
@@ -34,7 +34,7 @@ class InvitationTest extends TestCase
     public function testTokenIsDepleted()
     {
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
         $this->assertTrue($invitation->isDepleted());
 
         $invitation = factory(Invitation::class)->create();

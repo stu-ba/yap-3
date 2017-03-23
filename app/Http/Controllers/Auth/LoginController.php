@@ -52,6 +52,7 @@ class LoginController extends Controller
      */
     public function handle(User $user, Socialite $socialite, UserRegistrar $registrar)
     {
+        /** @var \Laravel\Socialite\Two\User $githubUser */
         $githubUser = $socialite->driver('github')->user();
 
         try {
