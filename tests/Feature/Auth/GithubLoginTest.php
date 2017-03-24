@@ -10,6 +10,7 @@ use Yap\Models\Invitation;
 
 class GithubLogin extends TestCase
 {
+
     use DatabaseMigrations, GithubMock;
 
 
@@ -18,10 +19,12 @@ class GithubLogin extends TestCase
         $this->visitRoute('login')->seeText('Login to Yap 3.0');
     }
 
+
     public function testCallbackRedirectsAfterStateException()
     {
         $this->visitRoute('login.callback')->seeRouteIs('login');
     }
+
 
     public function testUserIsLoggedIn()
     {
@@ -47,6 +50,7 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(302);
     }
 
+
     public function testUserIsNotLoggedInIfNotConfirmed()
     {
         /** @var Invitation $invitation */
@@ -70,6 +74,7 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(403);
     }
 
+
     public function testUserIsNotLoggedInIfBanned()
     {
         /** @var Invitation $invitation */
@@ -92,6 +97,7 @@ class GithubLogin extends TestCase
         $this->dontSeeIsAuthenticated();
         $this->assertResponseStatus(403);
     }
+
 
     public function testNewGithubUserIsLoggedInIfInvitationIsNotDepletedAndEmailMatches()
     {
@@ -120,6 +126,7 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(302);
     }
 
+
     public function testNewGithubUserIsNotLoggedIfInvitationIsDepletedAndEmailMatches()
     {
         /** @var Invitation $invitation */
@@ -143,7 +150,9 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(403);
     }
 
-    public function testNewGithubUserIsNotLoggedInIfInvitationIsNotDepletedAndEmailDoesNotMatch() {
+
+    public function testNewGithubUserIsNotLoggedInIfInvitationIsNotDepletedAndEmailDoesNotMatch()
+    {
         factory(Invitation::class, 'empty')->create();
         $faker = Factory::create();
 
@@ -163,6 +172,7 @@ class GithubLogin extends TestCase
         $this->dontSeeIsAuthenticated();
         $this->assertResponseStatus(403);
     }
+
 
     public function testNewGithubUserIsNotLoggedInIfInvitationIsDepletedAndEmailDoesNotMatch()
     {
@@ -185,6 +195,7 @@ class GithubLogin extends TestCase
         $this->dontSeeIsAuthenticated();
         $this->assertResponseStatus(403);
     }
+
 
     public function testNewGithubUserIsNotLoggedIfNoInvitationIsFound()
     {

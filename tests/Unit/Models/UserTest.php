@@ -3,8 +3,10 @@
 namespace Tests\Unit\Models;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Event;
 use Tests\Feature\Auth\Mocks\GithubMock;
 use Tests\TestCase;
+use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Models\User;
@@ -20,16 +22,18 @@ class UserTest extends TestCase
         $this->assertTrue($user->logginable());
     }
 
-    public function testUserIsMadeAnAdmin()
+    public function testUserIsPromoted()
     {
+        Event::fake();
         /** @var User $user */
         $user = factory(User::class)->create();
-        $user->makeAdmin();
+        $user->promote();
+        $this->expectsEvents(UserPromoted::class);
         $this->assertTrue($user->is_admin);
 
         /** @var User $user */
         $user = factory(User::class, 'empty')->create();
-        $user->makeAdmin();
+        $user->promote();
         $this->assertTrue($user->is_admin);
     }
 
