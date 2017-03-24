@@ -105,11 +105,25 @@ class User extends Authenticatable
     ];
 
 
+    /**
+     * Boot function for using with User Events
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($model) {
+            $model->attributes['github_id'] = $model->getOriginal('github_id') ?? $model->attributes['github_id'] ?? null;
+        });
+    }
+
+
     public function invitation()
     {
         return $this->hasOne(Invitation::class);
     }
-
 
 
     /**

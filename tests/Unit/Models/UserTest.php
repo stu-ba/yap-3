@@ -50,4 +50,14 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $user->logginable();
     }
+
+    public function testUpdatingUserDoesNotChangeGithubId() {
+        $user = factory(User::class)->create();
+        $githubIdOriginal = $user->github_id;
+        $githubId = rand(10, 30);
+        $user->update(['name' => 'Joe', 'github_id' => $githubId]);
+
+        $this->assertNotEquals($githubId, $user->github_id);
+        $this->assertEquals($githubIdOriginal, $user->github_id);
+    }
 }
