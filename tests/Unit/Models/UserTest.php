@@ -15,8 +15,22 @@ class UserTest extends TestCase
 
     public function testUserIsLoginable()
     {
+        /** @var User $user */
         $user = factory(User::class)->states(['confirmed'])->create();
         $this->assertTrue($user->logginable());
+    }
+
+    public function testUserIsMadeAnAdmin()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        $user->makeAdmin();
+        $this->assertTrue($user->is_admin);
+
+        /** @var User $user */
+        $user = factory(User::class, 'empty')->create();
+        $user->makeAdmin();
+        $this->assertTrue($user->is_admin);
     }
 
 

@@ -89,4 +89,17 @@ class InvitationTest extends TestCase
 
         $this->assertTrue($invitation->is_depleted);
     }
+
+    public function testDetermineValidUntil()
+    {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $this->assertNotNull($invitation->valid_until);
+
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
+        $this->assertNull($invitation->valid_until);
+
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->addDay()]);
+        $this->assertNotNull($invitation->valid_until);
+    }
 }

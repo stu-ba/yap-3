@@ -1,14 +1,5 @@
 <?php
 
-if ( ! function_exists('systemAccount')) {
-    function systemAccount()
-    {
-        $user = resolve(Yap\Models\User::class);
-
-        return $user->system() ?? factory(Yap\Models\User::class, 'system')->create();
-    }
-}
-
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Yap\Models\User::class, function (Faker\Generator $faker) {
     return [

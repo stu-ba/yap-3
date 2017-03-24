@@ -111,6 +111,7 @@ class User extends Authenticatable
     }
 
 
+
     /**
      * Get system User instance.
      * @return array|\Illuminate\Database\Eloquent\Model|null|\stdClass|static
@@ -138,6 +139,15 @@ class User extends Authenticatable
     public function confirm(): self
     {
         $this->is_confirmed = true;
+        $this->save();
+
+        return $this;
+    }
+
+
+    public function makeAdmin(): self
+    {
+        $this->is_admin = true;
         $this->save();
 
         return $this;

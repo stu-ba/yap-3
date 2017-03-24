@@ -59,6 +59,24 @@ class Invitation extends Model
     ];
 
 
+    /**
+     * Boot function for using with User Events
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->attributes['valid_until'] = $model->determineValidUntil();
+            $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(64));
+            $model->attributes['created_by'] = $model->attributes['created_by'] ?? $model->determineCreator();
+        });
+
+    }
+
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -88,5 +106,32 @@ class Invitation extends Model
         $this->save();
 
         return $this;
+    }
+
+
+    public function prolong(Carbon $date = null): self
+    {
+        if (is_null($date)) {
+            $date = Carbon::now()->addDays(config('yap.invitations.valid_until'));
+        }
+        $this->valid_until = $date;
+        $this->save();
+
+        return $this;
+    }
+
+
+    private function determineCreator()
+    {
+        return auth()->id() ?? systemAccount()->id;
+    }
+
+
+    private function determineValidUntil()
+    {
+        if (isset($this->attributes['valid_until']) && $this->attributes['valid_until'] === 0) {
+            return null;
+        }
+        return $this->attributes['valid_until'] ?? Carbon::now()->addDays(config('yap.invitations.valid_until'));
     }
 }

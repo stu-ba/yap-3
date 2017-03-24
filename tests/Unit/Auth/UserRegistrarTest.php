@@ -232,7 +232,7 @@ class UserRegistrarTest extends TestCase
 
     public function testRegistrarArgumentOrderDoesNotMatter()
     {
-        $invitation = factory(Invitation::class, 'empty')->make();
+        $invitation = factory(Invitation::class, 'empty')->create();
         $githubUser = $this->mockSocialiteUser($this->dummyGithubUserData());
 
         $thrown = false;
@@ -246,7 +246,7 @@ class UserRegistrarTest extends TestCase
             $this->assertFalse($thrown);
         }
 
-        $invitation = factory(Invitation::class, 'empty')->make();
+        $invitation = factory(Invitation::class, 'empty')->create();
         $githubUser = $this->mockSocialiteUser($this->dummyGithubUserData());
         $thrown = false;
 
