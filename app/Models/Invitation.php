@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Yap\Models\Invitation
  *
- * @property int                   $id
- * @property int                   $user_id
- * @property int                   $created_by
- * @property string                $email
- * @property string                $token
- * @property bool                  $is_depleted
- * @property \Carbon\Carbon        $depleted_at
- * @property \Carbon\Carbon        $valid_until
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
+ * @property int $id
+ * @property int $user_id
+ * @property int $created_by
+ * @property string $email
+ * @property string $token
+ * @property bool $is_depleted
+ * @property \Carbon\Carbon $depleted_at
+ * @property \Carbon\Carbon $valid_until
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $creator
  * @property-read \Yap\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
@@ -73,7 +73,6 @@ class Invitation extends Model
             $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(64));
             $model->attributes['created_by'] = $model->attributes['created_by'] ?? $model->determineCreator();
         });
-
     }
 
 

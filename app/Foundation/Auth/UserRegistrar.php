@@ -34,7 +34,6 @@ class UserRegistrar
     {
         if (func_num_args() === 1 && is_a($args[0], GithubUser::class)) {
             $this->githubUser = $args[0];
-
             $this->userByGithub = null;
 
             return $this->registerByGithubUser();
@@ -61,7 +60,6 @@ class UserRegistrar
     private function registerByGithubUser(): User
     {
         $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
-
         if (is_null($this->invitation) && is_null($this->userByGithub)) {
             return $this->user->create($this->githubUserData());
         } elseif ( ! is_null($this->invitation)) {
