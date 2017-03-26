@@ -1,11 +1,6 @@
 <?php
 
 if ( ! function_exists('d')) {
-    /**
-     * @param  mixed
-     *
-     * @return void
-     */
     function d()
     {
         array_map(function ($x) {
@@ -14,9 +9,17 @@ if ( ! function_exists('d')) {
     }
 }
 
-if (! function_exists('emailHandle')) {
-    function emailHandle(string $e): string {
+if ( ! function_exists('emailHandle')) {
+    function emailHandle(string $e): string
+    {
         return substr($e, 0, strrpos($e, '@'));
+    }
+}
+
+if ( ! function_exists('is_email')) {
+    function is_email(string $e): bool
+    {
+        return !!filter_var($e, FILTER_VALIDATE_EMAIL);
     }
 }
 
@@ -43,7 +46,6 @@ if ( ! function_exists('systemAccount')) {
         return Cache::rememberForever('system_account', function () {
             return app(Yap\Models\User::class)->system() ?? factory(Yap\Models\User::class, 'system')->create();
         });
-
 
     }
 }
