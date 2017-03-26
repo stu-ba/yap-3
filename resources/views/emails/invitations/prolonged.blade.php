@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $emailHandle }},
 
-Your confirmation token got prolonged to {{ $validUntil }}
+your confirmation token got prolonged to {{ $validUntil }}.
 
 @component('mail::button', ['url' => $continueUrl])
 Continue to {{ config('yap.short_name') }}
