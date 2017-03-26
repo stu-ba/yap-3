@@ -67,31 +67,33 @@ class InvitationRegistrar
     }
 
 
-    public function invite(string $email, array $options = [])
+    public function invite(string $email, array $options = []): Invitation
     {
         /** @var User $user */
         /** @var Invitation $invitation */
         list($user, $invitation) = $this->setUp($email, $options);
 
         if (is_null($invitation) && is_null($user)) {
-            return $this->makeBare()->mail(new UserInvited($this->user->invitation));
-        } elseif ( ! is_null($invitation) && ! is_null($user)) {
-            $this->invitationAndUserFound($user);
+            $this->makeBare()->mail(new UserInvited($this->user->invitation));
 
-            return false;
+            return $this->user->invitation;
+        } elseif ( ! is_null($invitation) && ! is_null($user)) {
+            //This always throws exception catch it!
+            $this->invitationAndUserFound($user);
         } elseif ( ! is_null($invitation) && is_null($user)) {
             $invitation = $this->processOptions($invitation);
 
             if (is_null($invitation->valid_until)) {
-                return $this->mail(new InvitationUrged($invitation));
+                $this->mail(new InvitationUrged($invitation));
+
+                return $invitation;
             } elseif ($invitation->valid_until->lessThan(Carbon::now()) || $this->options['force_resend']) {
                 //send email if valid until is in past...
                 $this->mail(new InvitationProlonged($invitation));
             }
-
             $invitation->prolong();
 
-            return true;
+            return $invitation;
         } elseif (is_null($invitation) && ! is_null($user)) {
 
             $this->updateAdmin($user);
@@ -106,7 +108,7 @@ class InvitationRegistrar
             $user->confirm()->invitation()->save($invitation);
             $this->mail(new UserAccessGranted($user));
 
-            return true;
+            return $invitation;
         }
 
     }
@@ -121,8 +123,7 @@ class InvitationRegistrar
     private function setUp(string $email, array $options): array
     {
         $this->reset();
-        $this->setOptions($options)->setEmail($email);
-        $this->setInviter();
+        $this->setInviter()->setOptions($options)->setEmail($email);
         /** @var User $user */
         /** @var Invitation $invitation */
         $user = $this->user->whereEmail($email)->first();
@@ -136,7 +137,7 @@ class InvitationRegistrar
 
 
     /**
-     *Re-instantiate user and invitation. Reset options to defaults.
+     * Re-instantiate user and invitation. Reset options to defaults.
      */
     private function reset()
     {
@@ -146,6 +147,11 @@ class InvitationRegistrar
     }
 
 
+    /**
+     * @param array $options
+     *
+     * @return InvitationRegistrar
+     */
     private function setOptions(array $options): self
     {
         $this->options = array_merge($this->options, $options);
@@ -157,9 +163,13 @@ class InvitationRegistrar
     /**
      * Sets inviter to either currently signed in user or systemAccount();
      */
-    private function setInviter(): void
+    private function setInviter(): self
     {
-        $this->inviter = auth()->id() ?? systemAccount();
+        if (is_null($this->inviter)) {
+            $this->inviter = auth()->id() ?? systemAccount();
+        }
+
+        return $this;
     }
 
 
@@ -206,9 +216,11 @@ class InvitationRegistrar
 
         if ( ! $this->options['dont_send']) {
             $this->mailer->send($mailable);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 
@@ -248,7 +260,8 @@ class InvitationRegistrar
                 1);
         }
         //TODO: this should never happen
-        throw new InvitationRegistrarException('User is not confirmed but invitation is depleted.', 2);
+        throw new InvitationRegistrarException('User is not confirmed but invitation is depleted. Someone has fiddled with database.',
+            2);
     }
 
 
