@@ -3,6 +3,12 @@
 namespace Yap\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Yap\Events\UserDemoted;
+use Yap\Events\UserPromoted;
+use Yap\Listeners\Github\DemoteUser as GithubDemote;
+use Yap\Listeners\Github\PromoteUser as GithubPromote;
+use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
+use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
 use Yap\Listeners\SendDemotedNotification;
 use Yap\Listeners\SendPromotedNotification;
 
@@ -15,15 +21,15 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Yap\Events\UserPromoted' => [
+        UserPromoted::class => [
             SendPromotedNotification::class,
-            'Yap\Listeners\Github\PromoteUser',
-            'Yap\Listeners\Taiga\PromoteUser'
+            GithubPromote::class,
+            TaigaPromote::class
         ],
-        'Yap\Events\UserDemoted' => [
+        UserDemoted::class  => [
             SendDemotedNotification::class,
-            'Yap\Listeners\Github\DemoteUser',
-            'Yap\Listeners\Taiga\DemoteUser'
+            GithubDemote::class,
+            TaigaDemote::class
         ],
     ];
 
