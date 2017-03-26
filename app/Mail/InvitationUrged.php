@@ -2,13 +2,14 @@
 
 namespace Yap\Mail;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Yap\Models\Invitation;
 
 class InvitationUrged extends Mailable implements ShouldQueue
 {
+
     use SerializesModels;
 
     /**
@@ -30,9 +31,8 @@ class InvitationUrged extends Mailable implements ShouldQueue
     public function __construct(Invitation $invitation)
     {
         $this->invitation = $invitation;
-        $this->subject('Confirm your ' . config('yap.short_name') . ' account');
-        $this->to($invitation->email);
     }
+
 
     /**
      * Build the message.
@@ -41,6 +41,8 @@ class InvitationUrged extends Mailable implements ShouldQueue
      */
     public function build()
     {
+        $this->to($this->invitation->email)->subject('Confirm your '.config('yap.short_name').' account');
+
         return $this->markdown('emails.invitations.urge')->with([
             'emailHandle' => emailHandle($this->invitation->email),
             'continueUrl' => route('register', ['token' => $this->invitation->token])

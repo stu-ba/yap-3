@@ -2,9 +2,9 @@
 
 namespace Yap\Mail;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Yap\Models\User;
 
 class UserAccessGranted extends Mailable implements ShouldQueue
@@ -33,9 +33,8 @@ class UserAccessGranted extends Mailable implements ShouldQueue
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->subject('Access granted to ' . config('yap.short_name'));
-        $this->to($user->email);
     }
+
 
     /**
      * Build the message.
@@ -44,8 +43,10 @@ class UserAccessGranted extends Mailable implements ShouldQueue
      */
     public function build()
     {
+        $this->to($this->user->email)->subject('Access granted to '.config('yap.short_name'));
+
         return $this->markdown('emails.users.granted')->with([
-            'user' => $this->user,
+            'user'        => $this->user,
             'continueUrl' => route('login.github')
         ]);
     }

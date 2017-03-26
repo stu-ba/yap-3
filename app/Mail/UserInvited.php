@@ -23,7 +23,6 @@ class UserInvited extends Mailable implements ShouldQueue
     public $invitation;
 
 
-
     /**
      * Create a new message instance.
      *
@@ -34,8 +33,6 @@ class UserInvited extends Mailable implements ShouldQueue
     public function __construct(Invitation $invitation)
     {
         $this->invitation = $invitation;
-        $this->subject('Invitation to ' . config('yap.short_name'));
-        $this->to($invitation->email);
     }
 
 
@@ -46,11 +43,13 @@ class UserInvited extends Mailable implements ShouldQueue
      */
     public function build()
     {
+        return $this->to($this->invitation->email)->subject('Invitation to '.config('yap.short_name'));
+
         return $this->markdown('emails.users.invited')->with([
-                'emailHandle' => emailHandle($this->invitation->email),
-                'validUntil' => $this->validUntil(),
-                'continueUrl' => route('register', ['token' => $this->invitation->token])
-            ]);
+            'emailHandle' => emailHandle($this->invitation->email),
+            'validUntil'  => $this->validUntil(),
+            'continueUrl' => route('register', ['token' => $this->invitation->token])
+        ]);
     }
 
 
