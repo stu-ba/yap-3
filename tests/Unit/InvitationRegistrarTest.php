@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\Testing\Fakes\MailFake;
+use Tests\ForceSyncQueueDriver;
 use Tests\TestCase;
 use Yap\Exceptions\InvitationRegistrarException;
 use Yap\Foundation\InvitationRegistrar;
@@ -19,7 +20,7 @@ use Yap\Models\User;
 class InvitationRegistrarTest extends TestCase
 {
 
-    use DatabaseMigrations;
+    use DatabaseMigrations, ForceSyncQueueDriver;
 
     /** @var MailFakeInvitationRegistrar $registrar */
     private $registrar;
