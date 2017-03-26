@@ -63,7 +63,6 @@ class InvitationRegistrar
     {
         $this->user = $user;
         $this->invitation = $invitation;
-        $this->inviter = auth()->id() ?? systemAccount();
         $this->mailer = $mailer;
     }
 
@@ -123,6 +122,7 @@ class InvitationRegistrar
     {
         $this->reset();
         $this->setOptions($options)->setEmail($email);
+        $this->setInviter();
         /** @var User $user */
         /** @var Invitation $invitation */
         $user = $this->user->whereEmail($email)->first();
@@ -151,6 +151,15 @@ class InvitationRegistrar
         $this->options = array_merge($this->options, $options);
 
         return $this;
+    }
+
+
+    /**
+     * Sets inviter to either currently signed in user or systemAccount();
+     */
+    private function setInviter(): void
+    {
+        $this->inviter = auth()->id() ?? systemAccount();
     }
 
 
