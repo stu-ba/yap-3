@@ -92,6 +92,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals($email, $this->invitation->first()->email);
     }
 
+
     public function testInvitationUrgedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
@@ -101,6 +102,7 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
+
 
     public function testInvitationUrgedEmailQueued()
     {
@@ -114,6 +116,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
     }
 
+
     public function testInvitationProlongedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
@@ -123,6 +126,7 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
+
 
     public function testInvitationProlongedEmailQueued()
     {
@@ -136,6 +140,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
     }
 
+
     public function testInvitationUrgeIfProlongedToIndefiniteEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
@@ -146,6 +151,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testNoEmailIsSentIfProlongedDuringValidUntilPeriod()
     {
         $invitation = factory(Invitation::class, 'empty')->create();
@@ -153,6 +159,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
         $this->registrar->mailer->assertNilSent();
     }
+
 
     public function testEmailIsSentIfProlongedDuringValidUntilPeriodAndForceResendOptionIsPassed()
     {
@@ -163,6 +170,7 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
+
 
     public function testBannedExceptionIsThrown()
     {
@@ -223,8 +231,8 @@ class InvitationRegistrarTest extends TestCase
         $this->assertTrue($invitation->isDepleted(), 'Invitation is depleted.');
         $this->assertTrue($user->is_confirmed, 'User is confirmed');
 
-        $this->registrar->mailer->assertSent(UserAccessGranted::class, function($mail) use ($user) {
-           return  $mail->user->email === $user->email;
+        $this->registrar->mailer->assertSent(UserAccessGranted::class, function ($mail) use ($user) {
+            return $mail->user->email === $user->email;
         });
     }
 
@@ -243,8 +251,8 @@ class InvitationRegistrarTest extends TestCase
         $this->assertTrue($user->is_confirmed, 'User is confirmed.');
         $this->assertTrue($user->is_admin, 'User is admin.');
 
-        $this->registrar->mailer->assertSent(UserAccessGranted::class, function($mail) use ($user) {
-            return  $mail->user->email === $user->email;
+        $this->registrar->mailer->assertSent(UserAccessGranted::class, function ($mail) use ($user) {
+            return $mail->user->email === $user->email;
         });
     }
 }
