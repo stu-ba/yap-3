@@ -13,6 +13,18 @@ abstract class TestCase extends BaseTestCase
     public $baseUrl = 'http://test.dev';
 
 
+    protected function setUpTraits()
+    {
+        parent::setUpTraits();
+
+        $uses = array_flip(class_uses_recursive(static::class));
+
+        if (isset($uses[ForceSyncQueueDriver::class])) {
+            $this->forceSyncDriver();
+        }
+    }
+
+
     /**
      * Disable Laravel's exception handling.
      *
