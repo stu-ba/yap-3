@@ -4,6 +4,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/a', function () {
+    return abort(500);
+});
+
+
+
 Route::get('home', function () {
     d('logged-in:', Auth::user(), Cookie::get('github_token'));
 })->name('home')->middleware('auth');
