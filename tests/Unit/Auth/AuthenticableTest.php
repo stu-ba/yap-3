@@ -17,7 +17,6 @@ class AuthenticableTest extends TestCase
     /** @var ControllerStub $authenticable */
     private $authenticable;
 
-
     /**
      * Sets up the fixture.
      *
@@ -25,7 +24,7 @@ class AuthenticableTest extends TestCase
      */
     public function setUp()
     {
-        $this->authenticable = new ControllerStub;
+        $this->authenticable = new ControllerStub();
         parent::setUp();
     }
 
@@ -39,7 +38,6 @@ class AuthenticableTest extends TestCase
         $this->seeIsAuthenticatedAs($user);
     }
 
-
     public function testBannedUserIsCanNotLogIn()
     {
         $this->expectException(UserBannedException::class);
@@ -51,7 +49,6 @@ class AuthenticableTest extends TestCase
         $this->dontSeeIsAuthenticated();
     }
 
-
     public function testNotConfirmedUserIsCanNotLogIn()
     {
         $this->expectException(UserNotConfirmedException::class);
@@ -62,7 +59,6 @@ class AuthenticableTest extends TestCase
         $this->authenticable->attempt($user);
         $this->dontSeeIsAuthenticated();
     }
-
 
     public function testResponseHasCookie()
     {

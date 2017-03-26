@@ -9,7 +9,8 @@ class DemotedNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -20,14 +21,15 @@ class DemotedNotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
             'message' => 'You have been demoted to basic user.',
-            'help_uri' => 'help_uri'
+            'help_uri' => 'help_uri',
         ];
     }
 }

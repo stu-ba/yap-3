@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 trait GithubMock
 {
-
     /**
      * Mock the Socialite Factory, so we can hijack the OAuth Request.
      *
@@ -31,7 +30,6 @@ trait GithubMock
         $this->app->instance(SocialiteOriginal::class, $stub);
     }
 
-
     public function mockGithubRedirect($token)
     {
         $redirectResponse = RedirectResponse::create($this->buildGithubLoginUrl($token), 302);
@@ -39,7 +37,7 @@ trait GithubMock
         $provider = $this->getMockBuilder(GithubProvider::class)->disableOriginalConstructor()->setMethods([
             'with',
             'scopes',
-            'redirect'
+            'redirect',
         ])->getMock();
         $provider->expects($this->once())->method('with')->will($this->returnSelf());
         $provider->expects($this->once())->method('scopes')->will($this->returnSelf());
@@ -51,27 +49,25 @@ trait GithubMock
         $this->app->instance(SocialiteOriginal::class, $stub);
     }
 
-
     /**
      * @param string $encryptedToken
      *
      * @return string
-     * @internal param $token
      *
+     * @internal param $token
      */
     protected function buildGithubLoginUrl(string $encryptedToken): string
     {
         $query = http_build_query([
-            'client_id'     => env('GITHUB_CLIENT_ID'),
-            'redirect_uri'  => config('services.github.redirect').'/'.$encryptedToken,
-            'scope'         => 'user:email',
+            'client_id' => env('GITHUB_CLIENT_ID'),
+            'redirect_uri' => config('services.github.redirect').'/'.$encryptedToken,
+            'scope' => 'user:email',
             'response_type' => 'code',
-            'state'         => 'abc123'
+            'state' => 'abc123',
         ]);
 
         return 'https://github.com/login/oauth/authorize?'.$query;
     }
-
 
     /**
      * @param array $attributes
@@ -91,9 +87,7 @@ trait GithubMock
         return $socialiteUser;
     }
 
-
     /**
-     *
      * @param array $attributes
      *
      * @return array
@@ -102,13 +96,13 @@ trait GithubMock
     {
         $faker = Factory::create();
         $data = [
-            'token'    => str_random(32),
-            'id'       => rand(4, 32),
-            'email'    => $faker->safeEmail,
+            'token' => str_random(32),
+            'id' => rand(4, 32),
+            'email' => $faker->safeEmail,
             'nickname' => $faker->userName,
-            'name'     => $faker->firstName.' '.$faker->lastName,
-            'avatar'   => $faker->imageUrl(),
-            'user'     => ['bio' => 'abc']
+            'name' => $faker->firstName.' '.$faker->lastName,
+            'avatar' => $faker->imageUrl(),
+            'user' => ['bio' => 'abc'],
         ];
 
         return array_merge($data, $attributes);
@@ -128,7 +122,6 @@ trait GithubMock
 
         return $data;
     }
-
 
     /**
      * @param array $attributes

@@ -7,14 +7,13 @@ use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Listeners\Github\DemoteUser as GithubDemote;
 use Yap\Listeners\Github\PromoteUser as GithubPromote;
-use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
-use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
 use Yap\Listeners\SendDemotedNotification;
 use Yap\Listeners\SendPromotedNotification;
+use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
+use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
 
 class EventServiceProvider extends ServiceProvider
 {
-
     /**
      * The event listener mappings for the application.
      *
@@ -24,15 +23,14 @@ class EventServiceProvider extends ServiceProvider
         UserPromoted::class => [
             SendPromotedNotification::class,
             GithubPromote::class,
-            TaigaPromote::class
+            TaigaPromote::class,
         ],
-        UserDemoted::class  => [
+        UserDemoted::class => [
             SendDemotedNotification::class,
             GithubDemote::class,
-            TaigaDemote::class
+            TaigaDemote::class,
         ],
     ];
-
 
     /**
      * Register any events for your application.

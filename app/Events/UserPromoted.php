@@ -7,14 +7,12 @@ use Yap\Models\User;
 
 class UserPromoted
 {
-
     use SerializesModels;
 
     /**
      * @var User
      */
     public $user;
-
 
     /**
      * Create a new event instance.
@@ -25,5 +23,4 @@ class UserPromoted
     {
         $this->user = $user;
     }
-
 }

@@ -14,9 +14,7 @@ use Yap\Models\User;
 
 class UserTest extends TestCase
 {
-
     use DatabaseMigrations, GithubMock;
-
 
     public function testUserIsLoginable()
     {
@@ -24,7 +22,6 @@ class UserTest extends TestCase
         $user = factory(User::class)->states(['confirmed'])->create();
         $this->assertTrue($user->logginable());
     }
-
 
     public function testUserIsPromoted()
     {
@@ -38,7 +35,6 @@ class UserTest extends TestCase
         $this->assertTrue($user->is_admin, 'Test that user is an administrator.');
     }
 
-
     public function testUserIsPromotedWithoutEvent()
     {
         $user = factory(User::class, 'empty')->create();
@@ -48,7 +44,6 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->is_admin, 'Test that user is basic user.');
     }
-
 
     public function testUserIsDemoted()
     {
@@ -63,7 +58,6 @@ class UserTest extends TestCase
         $this->assertFalse($user->is_admin, 'Test that user is basic user.');
     }
 
-
     public function testUserIsDemotedWithoutEvent()
     {
         $user = factory(User::class, 'empty')->states(['admin'])->create();
@@ -74,7 +68,6 @@ class UserTest extends TestCase
         $this->assertFalse($user->is_admin, 'Test that user is basic user.');
     }
 
-
     public function testBannedExceptionIsThrownUponLoginable()
     {
         $this->expectException(UserBannedException::class);
@@ -83,7 +76,6 @@ class UserTest extends TestCase
         $user->logginable();
     }
 
-
     public function testNotConfirmedExceptionIsThrownUponLoginable()
     {
         $this->expectException(UserNotConfirmedException::class);
@@ -91,7 +83,6 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
         $user->logginable();
     }
-
 
     public function testUpdatingUserDoesNotChangeGithubId()
     {

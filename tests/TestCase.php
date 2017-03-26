@@ -12,7 +12,6 @@ abstract class TestCase extends BaseTestCase
 
     public $baseUrl = 'http://test.dev';
 
-
     protected function setUpTraits()
     {
         parent::setUpTraits();
@@ -24,7 +23,6 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-
     /**
      * Disable Laravel's exception handling.
      *
@@ -32,16 +30,14 @@ abstract class TestCase extends BaseTestCase
      */
     protected function disableExceptionHandling()
     {
-        app()->instance(Handler::class, new class extends Handler {
+        app()->instance(Handler::class, new class() extends Handler {
             public function __construct()
             {
             }
 
-
             public function report(Exception $e)
             {
             }
-
 
             public function render($request, Exception $e)
             {

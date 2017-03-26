@@ -11,7 +11,6 @@ use Spatie\Tail\TailServiceProvider;
 
 class EnvironmentServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application services.
      *
@@ -21,7 +20,6 @@ class EnvironmentServiceProvider extends ServiceProvider
     {
         //
     }
-
 
     /**
      * Register the application services.

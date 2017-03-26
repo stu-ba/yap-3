@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.4.x-dev",
         "kyslik/django-signer": "0.0.*",
         "kyslik/django-bcrypt": "0.0.*",
         "laravel/socialite": "3.0.*"

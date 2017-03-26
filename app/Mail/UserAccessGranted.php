@@ -9,7 +9,6 @@ use Yap\Models\User;
 
 class UserAccessGranted extends Mailable implements ShouldQueue
 {
-
     use SerializesModels;
 
     /**
@@ -21,7 +20,6 @@ class UserAccessGranted extends Mailable implements ShouldQueue
      * @var User
      */
     public $user;
-
 
     /**
      * Create a new message instance.
@@ -35,7 +33,6 @@ class UserAccessGranted extends Mailable implements ShouldQueue
         $this->user = $user;
     }
 
-
     /**
      * Build the message.
      *
@@ -46,8 +43,8 @@ class UserAccessGranted extends Mailable implements ShouldQueue
         $this->to($this->user->email)->subject('Access granted to '.config('yap.short_name'));
 
         return $this->markdown('emails.users.granted')->with([
-            'user'        => $this->user,
-            'continueUrl' => route('login.github')
+            'user' => $this->user,
+            'continueUrl' => route('login.github'),
         ]);
     }
 }

@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
-
     protected $table = 'users';
-
 
     /**
      * Run the migrations.
@@ -34,7 +32,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

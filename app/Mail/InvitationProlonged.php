@@ -9,7 +9,6 @@ use Yap\Models\Invitation;
 
 class InvitationProlonged extends Mailable implements ShouldQueue
 {
-
     use SerializesModels;
 
     /**
@@ -22,7 +21,6 @@ class InvitationProlonged extends Mailable implements ShouldQueue
      */
     public $invitation;
 
-
     /**
      * Create a new message instance.
      *
@@ -32,7 +30,6 @@ class InvitationProlonged extends Mailable implements ShouldQueue
     {
         $this->invitation = $invitation;
     }
-
 
     /**
      * Build the message.
@@ -45,8 +42,8 @@ class InvitationProlonged extends Mailable implements ShouldQueue
 
         return $this->markdown('emails.invitations.prolonged')->with([
             'emailHandle' => emailHandle($this->invitation->email),
-            'validUntil'  => $this->invitation->valid_until->toDateString(),
-            'continueUrl' => route('register', ['token' => $this->invitation->token])
+            'validUntil' => $this->invitation->valid_until->toDateString(),
+            'continueUrl' => route('register', ['token' => $this->invitation->token]),
         ]);
     }
 }

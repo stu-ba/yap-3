@@ -7,16 +7,15 @@ use Yap\Notifications\PromotedNotification;
 
 class SendPromotedNotification
 {
-
     /**
      * Handle the event.
      *
-     * @param  UserPromoted $event
+     * @param UserPromoted $event
      *
      * @return void
      */
     public function handle(UserPromoted $event)
     {
-        $event->user->notify(new PromotedNotification);
+        $event->user->notify(new PromotedNotification());
     }
 }

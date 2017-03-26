@@ -20,7 +20,6 @@ class InvitationTest extends TestCase
         $invitation->whereToken('abc')->firstOrFail();
     }
 
-
     public function testTokenIsNotValidBecauseCreatorIsBanned()
     {
         /** @var User $bannedUser */
@@ -29,7 +28,6 @@ class InvitationTest extends TestCase
         $invitation = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
         $this->assertTrue($invitation->isDepleted());
     }
-
 
     public function testTokenIsDepleted()
     {
@@ -41,14 +39,12 @@ class InvitationTest extends TestCase
         $this->assertTrue($invitation->isDepleted());
     }
 
-
     public function testTokenIsNotValidBecauseItExpired()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
         $this->assertTrue($invitation->isDepleted());
     }
-
 
     public function testTokenIsValid()
     {
@@ -64,7 +60,6 @@ class InvitationTest extends TestCase
         $this->assertFalse($invitation->isDepleted());
     }
 
-
     public function testInvitationHasCreator()
     {
         /** @var Invitation $invitation */
@@ -72,14 +67,12 @@ class InvitationTest extends TestCase
         $this->assertInstanceOf(User::class, $invitation->creator);
     }
 
-
     public function testInvitationHasUser()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $this->assertInstanceOf(User::class, $invitation->user);
     }
-
 
     public function testInvitationDepletion()
     {

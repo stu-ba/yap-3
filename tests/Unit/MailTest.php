@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class MailTest extends TestCase
 {
-
     public function testMailsAreQueued()
     {
         $files = \File::allFiles(app_path('Mail'));

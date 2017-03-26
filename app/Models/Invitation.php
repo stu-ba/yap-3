@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Yap\Models\Invitation
+ * Yap\Models\Invitation.
  *
  * @property int $id
  * @property int $user_id
@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $creator
  * @property-read \Yap\Models\User $user
+ *
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereDepletedAt($value)
@@ -34,7 +35,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
-
     protected $fillable = [
         'user_id',
         'created_by',
@@ -42,25 +42,24 @@ class Invitation extends Model
         'token',
         'is_depleted',
         'depleted_at',
-        'valid_until'
+        'valid_until',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
         'depleted_at',
-        'valid_until'
+        'valid_until',
     ];
 
     protected $casts = [
-        'user_id'     => 'int',
-        'created_by'  => 'int',
+        'user_id' => 'int',
+        'created_by' => 'int',
         'is_depleted' => 'boolean',
     ];
 
-
     /**
-     * Boot function for using with User Events
+     * Boot function for using with User Events.
      *
      * @return void
      */
@@ -75,18 +74,15 @@ class Invitation extends Model
         });
     }
 
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
 
     public function isDepleted(): bool
     {
@@ -97,7 +93,6 @@ class Invitation extends Model
         return false;
     }
 
-
     public function deplete(): self
     {
         $this->is_depleted = true;
@@ -106,7 +101,6 @@ class Invitation extends Model
 
         return $this;
     }
-
 
     public function prolong(Carbon $date = null): self
     {
@@ -120,12 +114,10 @@ class Invitation extends Model
         return $this;
     }
 
-
     private function determineCreator()
     {
         return auth()->id() ?? systemAccount()->id;
     }
-
 
     private function determineValidUntil()
     {

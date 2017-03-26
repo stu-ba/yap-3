@@ -19,7 +19,6 @@ use Yap\Models\User;
 
 class InvitationRegistrarTest extends TestCase
 {
-
     use DatabaseMigrations, ForceSyncQueueDriver;
 
     /** @var MailFakeInvitationRegistrar $registrar */
@@ -28,14 +27,12 @@ class InvitationRegistrarTest extends TestCase
     /** @var Invitation $invitation */
     private $invitation;
 
-
     public function setUp()
     {
         parent::setUp();
         $this->registrar = resolve(MailFakeInvitationRegistrar::class);
         $this->invitation = resolve(Invitation::class);
     }
-
 
     public function testBareInvitationIsMade()
     {
@@ -67,7 +64,6 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals(3, $this->invitation->all()->count());
     }
 
-
     public function testBareInvitationEmailIsSent()
     {
         $email = str_random(32).'@email.com';
@@ -77,7 +73,6 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $email;
         });
     }
-
 
     public function testInvitationUrgedEmailIsSent()
     {
@@ -89,7 +84,6 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
-
     public function testInvitationProlongedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
@@ -99,7 +93,6 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
-
 
     public function testInvitationUrgeIfProlongedToIndefiniteEmailIsSent()
     {
@@ -111,15 +104,13 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
-
     public function testNoEmailIsSentIfProlongedDuringValidUntilPeriod()
     {
         $invitation = factory(Invitation::class, 'empty')->create();
         $this->registrar->invite($invitation->email);
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
-        $this->registrar->mailer->assertNilSent();
+        $this->registrar->mailer->assertNothingSent();
     }
-
 
     public function testEmailIsSentIfProlongedDuringValidUntilPeriodAndForceResendOptionIsPassed()
     {
@@ -131,7 +122,6 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
-
     public function testBannedExceptionIsThrown()
     {
         $user = factory(User::class)->states(['banned'])->create();
@@ -139,7 +129,6 @@ class InvitationRegistrarTest extends TestCase
         $this->expectExceptionCode(0);
         $this->registrar->invite($user->email);
     }
-
 
     public function testConfirmedExceptionIsThrown()
     {
@@ -149,7 +138,6 @@ class InvitationRegistrarTest extends TestCase
         $this->expectExceptionCode(2);
         $this->registrar->invite($invitation->email);
     }
-
 
     public function testExceptionIsThrownWhenUserIsNotConfirmedAndInvitationDepleted()
     {
@@ -161,9 +149,7 @@ class InvitationRegistrarTest extends TestCase
         $this->expectExceptionCode(2);
 
         $this->registrar->invite($invitation->user->email);
-
     }
-
 
     public function testCaseThatNeverHappensBecauseUserRegistrarTakesCareOfIt()
     {
@@ -176,7 +162,6 @@ class InvitationRegistrarTest extends TestCase
 
         $this->registrar->invite($invitation->email);
     }
-
 
     public function testUserIsConfirmedAndEmailIsSent()
     {
@@ -195,7 +180,6 @@ class InvitationRegistrarTest extends TestCase
             return $mail->user->email === $user->email;
         });
     }
-
 
     public function testUserIsConfirmedAndIsAdmin()
     {
@@ -219,13 +203,11 @@ class InvitationRegistrarTest extends TestCase
 
 class MailFakeInvitationRegistrar extends InvitationRegistrar
 {
-
     public $mailer;
-
 
     public function __construct(User $user, Invitation $invitation, Mailer $mailer)
     {
         parent::__construct($user, $invitation, $mailer);
-        $this->mailer = new MailFake;
+        $this->mailer = new MailFake();
     }
 }

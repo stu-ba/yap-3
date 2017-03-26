@@ -11,9 +11,7 @@ use Yap\Models\User;
 
 class GithubRegisterTest extends TestCase
 {
-
     use DatabaseMigrations, GithubMock;
-
 
     public function testUserIsShown404IfTokenDoesNotExists()
     {
@@ -21,15 +19,13 @@ class GithubRegisterTest extends TestCase
         $this->get($register)->assertResponseStatus(404);
     }
 
-
     public function testUserCanNotUseDepletedTokenToRegister()
     {
-        $invitation = factory(Invitation::class, 'empty')->states('depleted')->create();
+        $invitation = factory(Invitation::class, 'empty')->states(['depleted'])->create();
         $register = route('register', ['token' => $invitation->token]);
 
         $this->get($register)->assertRedirectedToRoute('login');
     }
-
 
     public function testUserIsRedirectedToGithubWithEncryptedToken()
     {
@@ -43,7 +39,6 @@ class GithubRegisterTest extends TestCase
         $this->assertEquals($this->buildGithubLoginUrl($encryptedToken), $response->getTargetUrl());
     }
 
-
     public function testUserIsRegisteredAndLoggedIn()
     {
         /** @var Invitation $invitation */
@@ -52,13 +47,13 @@ class GithubRegisterTest extends TestCase
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
-            'id'       => $faker->randomNumber(9, true),
-            'token'    => $githubToken,
-            'email'    => $faker->safeEmail,
+            'id' => $faker->randomNumber(9, true),
+            'token' => $githubToken,
+            'email' => $faker->safeEmail,
             'nickname' => $faker->userName,
-            'name'     => $faker->firstName.' '.$faker->lastName,
-            'avatar'   => $faker->imageUrl(),
-            'user'     => ['bio' => 'abc']
+            'name' => $faker->firstName.' '.$faker->lastName,
+            'avatar' => $faker->imageUrl(),
+            'user' => ['bio' => 'abc'],
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
@@ -72,24 +67,23 @@ class GithubRegisterTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
-
     //Hopefully this will NEVER happen
     public function testUserIsRegisteredAndNotLoggedInBecauseInvitationUsedByDifferentRegisteredUser()
     {
         $faker = Factory::create();
 
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class)->states('!depleted')->create();
+        $invitation = factory(Invitation::class)->states(['!depleted'])->create();
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
-            'id'       => $faker->randomNumber(9, true),
-            'token'    => $githubToken,
-            'email'    => $faker->safeEmail,
+            'id' => $faker->randomNumber(9, true),
+            'token' => $githubToken,
+            'email' => $faker->safeEmail,
             'nickname' => $faker->userName,
-            'name'     => $faker->firstName.' '.$faker->lastName,
-            'avatar'   => $faker->imageUrl(),
-            'user'     => ['bio' => 'abc']
+            'name' => $faker->firstName.' '.$faker->lastName,
+            'avatar' => $faker->imageUrl(),
+            'user' => ['bio' => 'abc'],
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
@@ -98,7 +92,6 @@ class GithubRegisterTest extends TestCase
         $this->assertResponseStatus(403);
     }
 
-
     public function testUserIsLoggedInGivenInvitationIsNotDepletedAndEmailDoesNotMatchInvitedUser()
     {
         $faker = Factory::create();
@@ -106,18 +99,18 @@ class GithubRegisterTest extends TestCase
         /** @var Invitation $invitation2 */
         $invitation2 = factory(Invitation::class)->create();
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class)->states('!depleted')->create();
+        $invitation = factory(Invitation::class)->states(['!depleted'])->create();
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
-            'id'       => $invitation2->user->github_id,
-            'token'    => $githubToken,
+            'id' => $invitation2->user->github_id,
+            'token' => $githubToken,
             //'email'    => $invitation2->user->email,
-            'email'    => $faker->email,
+            'email' => $faker->email,
             'nickname' => $faker->userName,
-            'name'     => $faker->firstName.' '.$faker->lastName,
-            'avatar'   => $faker->imageUrl(),
-            'user'     => ['bio' => 'abc']
+            'name' => $faker->firstName.' '.$faker->lastName,
+            'avatar' => $faker->imageUrl(),
+            'user' => ['bio' => 'abc'],
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
@@ -126,7 +119,6 @@ class GithubRegisterTest extends TestCase
         $this->seeCookie('github_token', $githubToken);
         $this->assertResponseStatus(302);
     }
-
 
     public function testUserIsRegisteredAndLoggedInGivenValidNonDepletedInvitationIsProvided()
     {
@@ -139,13 +131,13 @@ class GithubRegisterTest extends TestCase
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
-            'id'       => $user->github_id,
-            'token'    => $githubToken,
-            'email'    => $user->email,
+            'id' => $user->github_id,
+            'token' => $githubToken,
+            'email' => $user->email,
             'nickname' => $faker->userName,
-            'name'     => $faker->firstName.' '.$faker->lastName,
-            'avatar'   => $faker->imageUrl(),
-            'user'     => ['bio' => 'abc']
+            'name' => $faker->firstName.' '.$faker->lastName,
+            'avatar' => $faker->imageUrl(),
+            'user' => ['bio' => 'abc'],
         ]);
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
@@ -153,7 +145,6 @@ class GithubRegisterTest extends TestCase
         $this->seeIsAuthenticatedAs($invitation->user->fresh());
         $this->assertResponseStatus(302);
     }
-
 
     public function testRegisterCallbackFailsIfTokenIsUndecryptable()
     {

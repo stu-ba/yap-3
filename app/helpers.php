@@ -1,6 +1,6 @@
 <?php
 
-if ( ! function_exists('d')) {
+if (! function_exists('d')) {
     function d()
     {
         array_map(function ($x) {
@@ -9,17 +9,17 @@ if ( ! function_exists('d')) {
     }
 }
 
-if ( ! function_exists('emailHandle')) {
+if (! function_exists('emailHandle')) {
     function emailHandle(string $e): string
     {
         return substr($e, 0, strrpos($e, '@'));
     }
 }
 
-if ( ! function_exists('is_email')) {
+if (! function_exists('is_email')) {
     function is_email(string $e): bool
     {
-        return !!filter_var($e, FILTER_VALIDATE_EMAIL);
+        return (bool) filter_var($e, FILTER_VALIDATE_EMAIL);
     }
 }
 
@@ -32,7 +32,7 @@ if ( ! function_exists('is_email')) {
 //    }
 //}
 
-if ( ! function_exists('systemAccount')) {
+if (! function_exists('systemAccount')) {
     function systemAccount()
     {
         //if ( ! app()->bound('system_account')) {
@@ -46,20 +46,19 @@ if ( ! function_exists('systemAccount')) {
         return Cache::rememberForever('system_account', function () {
             return app(Yap\Models\User::class)->system() ?? factory(Yap\Models\User::class, 'system')->create();
         });
-
     }
 }
 
-if ( ! function_exists('in_range')) {
+if (! function_exists('in_range')) {
     /**
-     * Determines if $number is between $min and $max
+     * Determines if $number is between $min and $max.
      *
-     * @param  integer $number    The number to test
-     * @param  integer $min       The minimum value in the range
-     * @param  integer $max       The maximum value in the range
-     * @param  boolean $inclusive Whether the range should be inclusive or not
+     * @param int  $number    The number to test
+     * @param int  $min       The minimum value in the range
+     * @param int  $max       The maximum value in the range
+     * @param bool $inclusive Whether the range should be inclusive or not
      *
-     * @return boolean              Whether the number was in the range
+     * @return bool Whether the number was in the range
      */
     function in_range($number, $min, $max, $inclusive = false)
     {

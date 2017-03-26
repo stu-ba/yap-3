@@ -3,11 +3,9 @@
 namespace Yap\Http\Controllers\Auth;
 
 use Yap\Http\Controllers\Controller;
-use Yap\User;
 
 class LogoutController extends Controller
 {
-
     public function logout()
     {
         //redirect to taiga /

@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 class SystemUserSeeder extends Seeder
 {
     public $attributes = [];
+
     /**
      * Run the database seeds.
      *

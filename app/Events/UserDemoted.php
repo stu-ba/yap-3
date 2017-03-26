@@ -7,14 +7,12 @@ use Yap\Models\User;
 
 class UserDemoted
 {
-
     use SerializesModels;
 
     /**
      * @var User
      */
     public $user;
-
 
     /**
      * Create a new event instance.

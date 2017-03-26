@@ -10,7 +10,6 @@ use Yap\Models\User;
 
 class LoginController extends Controller
 {
-
     use Authenticable;
 
     protected $redirectTo = 'home';
@@ -19,13 +18,11 @@ class LoginController extends Controller
 
     protected $registrar;
 
-
     public function __construct(User $user, UserRegistrar $registrar)
     {
         $this->user = $user;
         $this->registrar = $registrar;
     }
-
 
     /**
      * Show login page.
@@ -36,7 +33,6 @@ class LoginController extends Controller
     {
         return view('auth.login');
     }
-
 
     /**
      * Redirect to GitHub authorization server.
@@ -50,13 +46,13 @@ class LoginController extends Controller
         return $socialite->driver('github')->redirect();
     }
 
-
     /**
      * Handle GitHub callback redirect.
      *
      * @param Socialite $socialite
      *
      * @return $this
+     *
      * @internal param User $user
      * @internal param UserRegistrar $registrar
      */

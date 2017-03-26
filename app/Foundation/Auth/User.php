@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
 /**
- * Yap\Foundation\Auth\User
+ * Yap\Foundation\Auth\User.
  *
  * @property int $id
  * @property int $taiga_id
@@ -26,6 +26,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
  * @property bool $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ *
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereBanReason($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Foundation\Auth\User whereBio($value)
@@ -45,6 +46,5 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-
     use Authenticatable, Authorizable;
 }

@@ -8,7 +8,6 @@ use Yap\Console\Commands\Invitation;
 
 class Kernel extends ConsoleKernel
 {
-
     /**
      * The Artisan commands provided by your application.
      *
@@ -18,11 +17,10 @@ class Kernel extends ConsoleKernel
         Invitation::class,
     ];
 
-
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      *
      * @return void
      */
@@ -32,8 +30,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
     }
 
-
-    /**
+    /*
      * Register the Closure based commands for the application.
      *
      * @return void

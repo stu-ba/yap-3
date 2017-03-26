@@ -10,7 +10,7 @@ use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
 
 /**
- * Yap\Models\User
+ * Yap\Models\User.
  *
  * @property int $id
  * @property int $taiga_id
@@ -29,6 +29,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\Invitation $invitation
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ *
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBio($value)
@@ -48,7 +49,6 @@ use Yap\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
-
     use Notifiable;
 
     /**
@@ -67,7 +67,7 @@ class User extends Authenticatable
         'avatar',
         'is_admin',
         'is_banned',
-        'is_confirmed'
+        'is_confirmed',
     ];
 
     /**
@@ -82,16 +82,15 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'taiga_id'     => 'int',
-        'github_id'    => 'int',
-        'is_admin'     => 'boolean',
-        'is_banned'    => 'boolean',
+        'taiga_id' => 'int',
+        'github_id' => 'int',
+        'is_admin' => 'boolean',
+        'is_banned' => 'boolean',
         'is_confirmed' => 'boolean',
     ];
 
-
     /**
-     * Boot function for using with User Events
+     * Boot function for using with User Events.
      *
      * @return void
      */
@@ -104,15 +103,14 @@ class User extends Authenticatable
         });
     }
 
-
     public function invitation()
     {
         return $this->hasOne(Invitation::class);
     }
 
-
     /**
      * Get system User instance.
+     *
      * @return array|\Illuminate\Database\Eloquent\Model|null|\stdClass|static
      */
     public function system()
@@ -120,24 +118,22 @@ class User extends Authenticatable
         return $this->whereGithubId(0)->whereTaigaId(0)->whereIsAdmin(true)->first();
     }
 
-
     public function logginable(): bool
     {
         if ($this->is_banned) {
             throw new UserBannedException();
         }
 
-        if ( ! $this->is_confirmed) {
+        if (! $this->is_confirmed) {
             throw new UserNotConfirmedException();
         }
 
         return true;
     }
 
-
     public function confirm(): self
     {
-        if ( ! $this->is_confirmed) {
+        if (! $this->is_confirmed) {
             $this->is_confirmed = true;
             $this->save();
             //TODO: add event that is fired when confirmed, set up taiga / set up github etc
@@ -146,14 +142,13 @@ class User extends Authenticatable
         return $this;
     }
 
-
     public function promote(): self
     {
-        if ( ! $this->is_admin) {
+        if (! $this->is_admin) {
             $this->is_admin = true;
             $this->save();
 
-            if ( ! is_null($this->github_id)) {
+            if (! is_null($this->github_id)) {
                 event(new UserPromoted($this));
             }
         }
@@ -161,22 +156,19 @@ class User extends Authenticatable
         return $this;
     }
 
-
     public function demote(): self
     {
         if ($this->is_admin) {
             $this->is_admin = false;
             $this->save();
 
-            if ( ! is_null($this->github_id)) {
+            if (! is_null($this->github_id)) {
                 event(new UserDemoted($this));
             }
-
         }
 
         return $this;
     }
-
 
     public function unconfirm(): self
     {
@@ -185,7 +177,6 @@ class User extends Authenticatable
 
         return $this;
     }
-
 
     public function unban(): self
     {
@@ -196,7 +187,6 @@ class User extends Authenticatable
         return $this;
     }
 
-
     public function ban(string $reason): self
     {
         $this->is_banned = true;
@@ -206,15 +196,14 @@ class User extends Authenticatable
         return $this;
     }
 
-
     /**
      * Synchronize User with GitHub data.
      *
      * @param array $githubUserData
      *
      * @return User
-     * @internal param GithubUser $user
      *
+     * @internal param GithubUser $user
      */
     public function syncWith(array $githubUserData): self
     {
@@ -222,7 +211,6 @@ class User extends Authenticatable
 
         return $this;
     }
-
 
     public function swapWith(self $user): self
     {

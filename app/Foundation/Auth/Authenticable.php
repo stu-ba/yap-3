@@ -7,18 +7,15 @@ use Yap\Models\User;
 
 trait Authenticable
 {
-
     protected $githubTokenCookie;
-
 
     public function response()
     {
         return redirect()->route($this->redirectTo ?? 'home')->cookie($this->githubTokenCookie);
     }
 
-
     /**
-     * @param      $githubUser
+     * @param   $githubUser
      *
      * @internal param User $user
      */
@@ -34,9 +31,8 @@ trait Authenticable
         $this->setGithubTokenCookie($githubUser->token);
     }
 
-
     /**
-     * Attempt to log in user
+     * Attempt to log in user.
      *
      * @param User $user
      */
@@ -47,13 +43,11 @@ trait Authenticable
         }
     }
 
-
     public function setGithubTokenCookie(string $token): void
     {
         $cookie = resolve('cookie');
         $this->githubTokenCookie = $cookie->forever('github_token', $token);
     }
-
 
     /**
      * @param $invitation

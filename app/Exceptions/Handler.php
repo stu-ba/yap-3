@@ -10,7 +10,6 @@ use Laravel\Socialite\Two\InvalidStateException;
 
 class Handler extends ExceptionHandler
 {
-
     /**
      * A list of the exception types that should not be reported.
      *
@@ -23,15 +22,17 @@ class Handler extends ExceptionHandler
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
+        \Yap\Exceptions\InvitationRegistrarException::class,
+        \Yap\Exceptions\UserBannedException::class,
+        \Yap\Exceptions\UserNotConfirmedException::class,
     ];
-
 
     /**
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception $exception
+     * @param \Exception $exception
      *
      * @return void
      */
@@ -40,15 +41,15 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception               $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $exception
+     *
+     * @throws Exception
      *
      * @return \Illuminate\Http\Response
-     * @throws Exception
      */
     public function render($request, Exception $exception)
     {
@@ -65,18 +66,16 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
-
     protected function banned($request, UserBannedException $exception)
     {
         return abort(403);
     }
 
-
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request                 $request
-     * @param  \Illuminate\Auth\AuthenticationException $exception
+     * @param \Illuminate\Http\Request                 $request
+     * @param \Illuminate\Auth\AuthenticationException $exception
      *
      * @return \Illuminate\Http\Response
      */
@@ -89,12 +88,12 @@ class Handler extends ExceptionHandler
         return redirect()->guest(route('login'));
     }
 
-
     /**
      * Prepare response containing exception render.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception $e
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $e
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function prepareResponse($request, Exception $e)
@@ -105,6 +104,7 @@ class Handler extends ExceptionHandler
         if (! $this->isHttpException($e)) {
             $e = new HttpException(500, $e->getMessage());
         }
+
         return $this->toIlluminateResponse($this->renderHttpException($e), $e);
     }
 }

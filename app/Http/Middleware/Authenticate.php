@@ -8,17 +8,16 @@ use Yap\Exceptions\UserBannedException;
 
 class Authenticate extends StockAuthenticate
 {
-
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string[]                 ...$guards
-     *
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string[]                 ...$guards
      *
      * @throws \Illuminate\Auth\AuthenticationException
+     *
+     * @return mixed
      */
     public function handle($request, Closure $next, ...$guards)
     {
@@ -28,11 +27,12 @@ class Authenticate extends StockAuthenticate
         return $next($request);
     }
 
-
     /**
      * Determine if the user is banned.
-     * @return void
+     *
      * @throws UserBannedException
+     *
+     * @return void
      */
     protected function banned()
     {

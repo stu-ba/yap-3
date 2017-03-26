@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateInvitationsTable extends Migration
 {
-
     protected $table = 'invitations';
-
 
     /**
      * Run the migrations.
@@ -35,7 +33,6 @@ class CreateInvitationsTable extends Migration
             $table->foreign('created_by')->references('id')->on('users');
         });
     }
-
 
     /**
      * Reverse the migrations.

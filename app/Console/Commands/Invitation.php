@@ -8,7 +8,6 @@ use Yap\Foundation\InvitationRegistrar;
 
 class Invitation extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -33,7 +32,6 @@ class Invitation extends Command
      */
     protected $registrar;
 
-
     /**
      * Create a new command instance.
      *
@@ -45,11 +43,12 @@ class Invitation extends Command
         $this->registrar = $registrar;
     }
 
-
     /**
      * Execute the console command.
-     * @return mixed
+     *
      * @throws InvitationRegistrarException
+     *
+     * @return mixed
      */
     public function handle()
     {
@@ -70,12 +69,11 @@ class Invitation extends Command
         }
     }
 
-
     private function validateEmail(): string
     {
         $email = $this->argument('email');
         $this->info('Checking validity of email.', 'vv');
-        if ( ! is_email($email)) {
+        if (! is_email($email)) {
             $this->error('Provided email is not a valid email.');
             die();
         }
@@ -83,17 +81,15 @@ class Invitation extends Command
         return $email;
     }
 
-
     private function makeOptions(): array
     {
         return [
-            'admin'        => (bool)$this->option('admin'),
-            'force_resend' => (bool)$this->option('force-resend'),
-            'indefinite'   => (bool)$this->option('indefinite'),
-            'dont_send'    => (bool)$this->option('dont-send')
+            'admin' => (bool) $this->option('admin'),
+            'force_resend' => (bool) $this->option('force-resend'),
+            'indefinite' => (bool) $this->option('indefinite'),
+            'dont_send' => (bool) $this->option('dont-send'),
         ];
     }
-
 
     /**
      * @param $exception

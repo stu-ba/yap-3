@@ -1,0 +1,24 @@
+language: php
+git:
+  depth: 2
+sudo: false
+
+php:
+  - 7.1
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - phpenv config-rm xdebug.ini
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer install --no-interaction --prefer-dist --no-suggest;
+
+script: vendor/bin/phpunit
+
+branches:
+  only:
+    - master
