@@ -5,8 +5,6 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Mail\Mailer;
-use Illuminate\Mail\SendQueuedMailable;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Testing\Fakes\MailFake;
 use Tests\TestCase;
 use Yap\Exceptions\InvitationRegistrarException;
@@ -80,19 +78,6 @@ class InvitationRegistrarTest extends TestCase
     }
 
 
-    public function testBareInvitationEmailIsQueued()
-    {
-        $registrar = resolve(InvitationRegistrar::class);
-        $email = str_random(32).'@email.com';
-
-        Queue::fake();
-        $this->expectsJobs(SendQueuedMailable::class);
-
-        $registrar->invite($email);
-        $this->assertEquals($email, $this->invitation->first()->email);
-    }
-
-
     public function testInvitationUrgedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
@@ -104,19 +89,6 @@ class InvitationRegistrarTest extends TestCase
     }
 
 
-    public function testInvitationUrgedEmailQueued()
-    {
-        $registrar = resolve(InvitationRegistrar::class);
-        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
-
-        Queue::fake();
-        $this->expectsJobs(SendQueuedMailable::class);
-
-        $registrar->invite($invitation->email);
-        $this->assertEquals($invitation->email, $this->invitation->first()->email);
-    }
-
-
     public function testInvitationProlongedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
@@ -125,19 +97,6 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->mailer->assertSent(InvitationProlonged::class, function ($mail) use ($invitation) {
             return $mail->invitation->email === $invitation->email;
         });
-    }
-
-
-    public function testInvitationProlongedEmailQueued()
-    {
-        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
-        $registrar = resolve(InvitationRegistrar::class);
-
-        Queue::fake();
-        $this->expectsJobs(SendQueuedMailable::class);
-
-        $registrar->invite($invitation->email);
-        $this->assertEquals($invitation->email, $this->invitation->first()->email);
     }
 
 
