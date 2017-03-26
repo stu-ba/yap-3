@@ -113,6 +113,7 @@ class Invitation extends Model
         if (is_null($date)) {
             $date = Carbon::now()->addDays(config('yap.invitations.valid_until'));
         }
+
         $this->valid_until = $date;
         $this->save();
 
@@ -131,6 +132,7 @@ class Invitation extends Model
         if (isset($this->attributes['valid_until']) && $this->attributes['valid_until'] === 0) {
             return null;
         }
+
         return $this->attributes['valid_until'] ?? Carbon::now()->addDays(config('yap.invitations.valid_until'));
     }
 }

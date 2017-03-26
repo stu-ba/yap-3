@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Event;
 use Tests\Feature\Auth\Mocks\GithubMock;
 use Tests\TestCase;
+use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
@@ -13,7 +14,9 @@ use Yap\Models\User;
 
 class UserTest extends TestCase
 {
+
     use DatabaseMigrations, GithubMock;
+
 
     public function testUserIsLoginable()
     {
@@ -22,19 +25,53 @@ class UserTest extends TestCase
         $this->assertTrue($user->logginable());
     }
 
+
     public function testUserIsPromoted()
     {
         Event::fake();
-        /** @var User $user */
-        $user = factory(User::class)->create();
-        $user->promote();
-        $this->expectsEvents(UserPromoted::class);
-        $this->assertTrue($user->is_admin);
 
         /** @var User $user */
-        $user = factory(User::class, 'empty')->create();
+        $user = factory(User::class)->create();
+        $this->expectsEvents(UserPromoted::class);
         $user->promote();
-        $this->assertTrue($user->is_admin);
+
+        $this->assertTrue($user->is_admin, 'Test that user is an administrator.');
+    }
+
+
+    public function testUserIsPromotedWithoutEvent()
+    {
+        $user = factory(User::class, 'empty')->create();
+        $this->doesntExpectEvents(UserPromoted::class);
+
+        $user->promote();
+
+        $this->assertTrue($user->is_admin, 'Test that user is basic user.');
+    }
+
+
+    public function testUserIsDemoted()
+    {
+        Event::fake();
+
+        /** @var User $user */
+        $user = factory(User::class)->states(['admin'])->create();
+        $this->expectsEvents(UserDemoted::class);
+
+        $user->demote();
+
+        $this->assertFalse($user->is_admin, 'Test that user is basic user.');
+    }
+
+
+    public function testUserIsDemotedWithoutEvent()
+    {
+        $user = factory(User::class, 'empty')->states(['admin'])->create();
+        $this->doesntExpectEvents(UserDemoted::class);
+
+        $user->demote();
+
+        $this->assertFalse($user->is_admin, 'Test that user is basic user.');
     }
 
 
@@ -55,12 +92,15 @@ class UserTest extends TestCase
         $user->logginable();
     }
 
-    public function testUpdatingUserDoesNotChangeGithubId() {
+
+    public function testUpdatingUserDoesNotChangeGithubId()
+    {
         $user = factory(User::class)->create();
         $githubIdOriginal = $user->github_id;
         $githubId = rand(10, 30);
         $user->update(['name' => 'Joe', 'github_id' => $githubId]);
 
+        $this->assertEquals('Joe', $user->name);
         $this->assertNotEquals($githubId, $user->github_id);
         $this->assertEquals($githubIdOriginal, $user->github_id);
     }

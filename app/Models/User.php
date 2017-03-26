@@ -8,7 +8,6 @@ use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
-use Yap\Notifications\DemotedNotification;
 
 /**
  * Yap\Models\User
@@ -141,6 +140,7 @@ class User extends Authenticatable
         if ( ! $this->is_confirmed) {
             $this->is_confirmed = true;
             $this->save();
+            //TODO: add event that is fired when confirmed, set up taiga / set up github etc
         }
 
         return $this;
@@ -152,17 +152,26 @@ class User extends Authenticatable
         if ( ! $this->is_admin) {
             $this->is_admin = true;
             $this->save();
-            event(new UserPromoted($this));
+
+            if ( ! is_null($this->github_id)) {
+                event(new UserPromoted($this));
+            }
         }
 
         return $this;
     }
 
-    public function demote():self {
+
+    public function demote(): self
+    {
         if ($this->is_admin) {
             $this->is_admin = false;
             $this->save();
-            event(new UserDemoted($this));
+
+            if ( ! is_null($this->github_id)) {
+                event(new UserDemoted($this));
+            }
+
         }
 
         return $this;
