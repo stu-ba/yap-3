@@ -3,8 +3,8 @@
 namespace Yap\Foundation;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailer;
 use Yap\Exceptions\InvitationRegistrarException;
 use Yap\Mail\InvitationProlonged;
 use Yap\Mail\InvitationUrged;
