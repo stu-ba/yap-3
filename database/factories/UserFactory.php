@@ -46,7 +46,7 @@ $factory->defineAs(Yap\Models\User::class, 'empty', function () {
 
 $factory->state(Yap\Models\User::class, 'admin', function () {
     return [
-        'admin' => true,
+        'is_admin' => true,
     ];
 });
 

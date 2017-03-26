@@ -14,6 +14,12 @@ if ( ! function_exists('d')) {
     }
 }
 
+if (! function_exists('emailHandle')) {
+    function emailHandle(string $e): string {
+        return substr($e, 0, strrpos($e, '@'));
+    }
+}
+
 //if ( ! function_exists('systemAccount')) {
 //    function systemAccount()
 //    {
