@@ -17,7 +17,11 @@ before_install:
 install:
   - travis_retry composer install --no-interaction --prefer-dist --no-suggest;
   - travis_retry composer dump-autoload
+
+before_script:
+  - cp .env.travis .env
   - travis_retry php artisan key:generate
+  - travis_retry php artisan optimize
 
 script: vendor/bin/phpunit
 
