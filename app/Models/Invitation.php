@@ -114,6 +114,32 @@ class Invitation extends Model
         return $this;
     }
 
+    public function updateInviter(User $inviter): self
+    {
+        if ($this->creator->id !== $inviter->id) {
+            $this->created_by = $inviter->id;
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Updates valid until to indefinite if not previously set as such.
+     *
+     * @param bool $indefinite
+     *
+     * @return Invitation
+     */
+    public function updateValidUntil(bool $indefinite): self
+    {
+        if ($indefinite && ! is_null($this->valid_until)) {
+            $this->valid_until = null;
+        }
+
+        return $this;
+    }
+
     private function determineCreator()
     {
         return auth()->id() ?? systemAccount()->id;

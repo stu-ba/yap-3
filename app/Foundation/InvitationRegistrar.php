@@ -15,6 +15,7 @@ use Yap\Models\User;
 
 class InvitationRegistrar
 {
+
     /**
      * @var User
      */
@@ -44,11 +45,12 @@ class InvitationRegistrar
      * @var array
      */
     private $options = [
-        'admin' => false,
+        'admin'        => false,
         'force_resend' => false,
-        'indefinite' => false,
-        'dont_send' => false,
+        'indefinite'   => false,
+        'dont_send'    => false,
     ];
+
 
     /**
      * InvitationRegistrar constructor.
@@ -64,6 +66,7 @@ class InvitationRegistrar
         $this->mailer = $mailer;
     }
 
+
     public function invite(string $email, array $options = []): Invitation
     {
         /** @var User $user */
@@ -74,10 +77,10 @@ class InvitationRegistrar
             $this->makeBare()->mail(new UserInvited($this->user->invitation));
 
             return $this->user->invitation;
-        } elseif (! is_null($invitation) && ! is_null($user)) {
+        } elseif ( ! is_null($invitation) && ! is_null($user)) {
             //This always throws exception catch it!
             $this->invitationAndUserFound($user);
-        } elseif (! is_null($invitation) && is_null($user)) {
+        } elseif ( ! is_null($invitation) && is_null($user)) {
             $invitation = $this->processOptions($invitation);
 
             if (is_null($invitation->valid_until)) {
@@ -95,7 +98,7 @@ class InvitationRegistrar
             $this->updateAdmin($user);
 
             $invitation = $this->invitation->fill([
-                'email' => $this->email,
+                'email'       => $this->email,
                 'is_depleted' => true,
                 'depleted_at' => Carbon::now(),
                 'valid_until' => Carbon::now(),
@@ -107,6 +110,7 @@ class InvitationRegistrar
             return $invitation;
         }
     }
+
 
     /**
      * @param string $email
@@ -129,6 +133,7 @@ class InvitationRegistrar
         return [$user, $invitation];
     }
 
+
     /**
      * Re-instantiate user and invitation. Reset options to defaults.
      */
@@ -138,6 +143,7 @@ class InvitationRegistrar
         $this->invitation = $this->invitation->newInstance();
         $this->user = $this->user->newInstance();
     }
+
 
     /**
      * @param array $options
@@ -151,6 +157,7 @@ class InvitationRegistrar
         return $this;
     }
 
+
     /**
      * Sets inviter to either currently signed in user or systemAccount();.
      */
@@ -163,6 +170,7 @@ class InvitationRegistrar
         return $this;
     }
 
+
     /**
      * @param $user
      * @param $invitation
@@ -171,14 +179,15 @@ class InvitationRegistrar
      */
     private function checkRelations($user, $invitation): array
     {
-        if (! is_null($user) && ! is_null($user->invitation)) {
+        if ( ! is_null($user) && ! is_null($user->invitation)) {
             $invitation = $user->invitation;
-        } elseif (! is_null($invitation) && is_null($invitation->user)) {
+        } elseif ( ! is_null($invitation) && is_null($invitation->user)) {
             $user = $invitation->user;
         }
 
         return [$invitation, $user];
     }
+
 
     /**
      * Throw exceptions if provided user is banned.
@@ -189,11 +198,19 @@ class InvitationRegistrar
      */
     private function handleBannedUser($user)
     {
-        if (! is_null($user) && $user->is_banned) {
+        if ( ! is_null($user) && $user->is_banned) {
             throw new InvitationRegistrarException('User specified by email \''.$this->email.'\' is banned.', 0);
         }
     }
 
+
+    /**
+     * Send mail if dont_send option is not set to true.
+     *
+     * @param Mailable $mailable
+     *
+     * @return bool
+     */
     private function mail(Mailable $mailable): bool
     {
         if (property_exists($mailable, 'invitation') && is_null($mailable->invitation->email)) {
@@ -202,7 +219,7 @@ class InvitationRegistrar
             throw new \LogicException('User\'s email can not be null.');
         }
 
-        if (! $this->options['dont_send']) {
+        if ( ! $this->options['dont_send']) {
             $this->mailer->send($mailable);
 
             return true;
@@ -210,6 +227,7 @@ class InvitationRegistrar
 
         return false;
     }
+
 
     /**
      * Make bare invitation.
@@ -222,7 +240,7 @@ class InvitationRegistrar
     private function makeBare(): self
     {
         $this->invitation->fill([
-            'email' => $this->email,
+            'email'       => $this->email,
             'valid_until' => $this->options['indefinite'] ? 0 : null,
         ]);
 
@@ -231,6 +249,7 @@ class InvitationRegistrar
 
         return $this;
     }
+
 
     /**
      * Logic when invitation and user have same email.
@@ -250,12 +269,15 @@ class InvitationRegistrar
             2);
     }
 
+
     private function processOptions(Invitation $invitation): Invitation
     {
         $this->updateAdmin($invitation->user);
+        $invitation->updateValidUntil($this->options['indefinite'])->updateInviter($this->inviter)->save();
 
-        return $this->updateValidUntil($invitation);
+        return $invitation;
     }
+
 
     /**
      * @param User $user
@@ -267,22 +289,6 @@ class InvitationRegistrar
         }
     }
 
-    /**
-     * Updates valid until to indefinite if not previously set as such.
-     *
-     * @param Invitation $invitation
-     *
-     * @return Invitation
-     */
-    private function updateValidUntil(Invitation $invitation): Invitation
-    {
-        if ($this->options['indefinite'] && ! is_null($invitation->valid_until)) {
-            $invitation->valid_until = null;
-            $invitation->save();
-        }
-
-        return $invitation;
-    }
 
     /**
      * @return string
@@ -291,6 +297,7 @@ class InvitationRegistrar
     {
         return $this->email;
     }
+
 
     /**
      * @param string $email
