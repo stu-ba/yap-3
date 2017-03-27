@@ -25,7 +25,7 @@ class InvitationTest extends TestCase
         /** @var User $bannedUser */
         $bannedUser = factory(User::class)->states(['banned'])->create();
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->create(['created_by' => $bannedUser->id]);
+        $invitation = factory(Invitation::class, 'empty')->create(['invited_by' => $bannedUser->id]);
         $this->assertTrue($invitation->isDepleted());
     }
 
@@ -64,7 +64,7 @@ class InvitationTest extends TestCase
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
-        $this->assertInstanceOf(User::class, $invitation->creator);
+        $this->assertInstanceOf(User::class, $invitation->inviter);
     }
 
     public function testInvitationHasUser()

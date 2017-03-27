@@ -10,7 +10,7 @@ use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
 
 /**
- * Yap\Models\User.
+ * Yap\Models\User
  *
  * @property int $id
  * @property int $taiga_id
@@ -29,7 +29,6 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\Invitation $invitation
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- *
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBio($value)

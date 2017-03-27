@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Yap\Models\Invitation.
+ * Yap\Models\Invitation
  *
  * @property int $id
  * @property int $user_id
- * @property int $created_by
+ * @property int $invited_by
  * @property string $email
  * @property string $token
  * @property bool $is_depleted
@@ -18,14 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $valid_until
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Yap\Models\User $creator
+ * @property-read \Yap\Models\User $inviter
  * @property-read \Yap\Models\User $user
- *
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereDepletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereEmail($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereInvitedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereIsDepleted($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereToken($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereUpdatedAt($value)
@@ -37,7 +36,7 @@ class Invitation extends Model
 {
     protected $fillable = [
         'user_id',
-        'created_by',
+        'invited_by',
         'email',
         'token',
         'is_depleted',
@@ -54,7 +53,7 @@ class Invitation extends Model
 
     protected $casts = [
         'user_id' => 'int',
-        'created_by' => 'int',
+        'invited_by' => 'int',
         'is_depleted' => 'boolean',
     ];
 
@@ -70,7 +69,7 @@ class Invitation extends Model
         static::creating(function ($model) {
             $model->attributes['valid_until'] = $model->determineValidUntil();
             $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(64));
-            $model->attributes['created_by'] = $model->attributes['created_by'] ?? $model->determineCreator();
+            $model->attributes['invited_by'] = $model->attributes['invited_by'] ?? $model->determineCreator();
         });
     }
 
@@ -79,14 +78,14 @@ class Invitation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function creator()
+    public function inviter()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'invited_by');
     }
 
     public function isDepleted(): bool
     {
-        if ($this->creator->is_banned || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
+        if ($this->inviter->is_banned || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
             return true;
         }
 
@@ -116,8 +115,8 @@ class Invitation extends Model
 
     public function updateInviter(User $inviter): self
     {
-        if ($this->creator->id !== $inviter->id) {
-            $this->created_by = $inviter->id;
+        if ($this->inviter->id !== $inviter->id) {
+            $this->invited_by = $inviter->id;
         }
 
         return $this;

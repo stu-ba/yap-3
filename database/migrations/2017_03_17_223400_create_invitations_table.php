@@ -18,7 +18,7 @@ class CreateInvitationsTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('invited_by');
             $table->string('email')->unique();
             $table->string('token', 128)->unique();
             $table->boolean('is_depleted')->default(false);
@@ -30,7 +30,7 @@ class CreateInvitationsTable extends Migration
         //Foreign Keys
         Schema::table($this->table, function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('invited_by')->references('id')->on('users');
         });
     }
 
