@@ -20,7 +20,7 @@ class InvitationTest extends TestCase
         $invitation->whereToken('abc')->firstOrFail();
     }
 
-    public function testTokenIsNotValidBecauseCreatorIsBanned()
+    public function testTokenIsNotValidBecauseInviterIsBanned()
     {
         /** @var User $bannedUser */
         $bannedUser = factory(User::class)->states(['banned'])->create();
@@ -37,6 +37,42 @@ class InvitationTest extends TestCase
 
         $invitation = factory(Invitation::class)->create();
         $this->assertTrue($invitation->isDepleted());
+    }
+
+    public function testIsProlonged() {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
+        $invitation->prolong();
+        $this->assertTrue(Carbon::now()->lt($invitation->valid_until));
+        $invitation->prolong(Carbon::now()->subDays(20));
+        $this->assertTrue(Carbon::now()->lt($invitation->valid_until));
+    }
+
+    public function testInviterIsUpdated() {
+        /** @var User $user */
+        $user = factory(User::class)->states(['admin'])->create();
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()]);
+        $this->actingAs($user);
+        $invitation->updateInviter($user);
+        $this->assertEquals($user->id, $invitation->inviter->id);
+    }
+
+    public function testInviterIsNotUpdated() {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()]);
+        $this->actingAs($user);
+        $invitation->updateInviter($user);
+        $this->assertNotEquals($user->id, $invitation->inviter->id);
+    }
+
+    public function testMakeIndefinite() {
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
+        $invitation->makeIndefinite();
+        $this->assertNull($invitation->valid_until);
     }
 
     public function testTokenIsNotValidBecauseItExpired()
@@ -60,7 +96,7 @@ class InvitationTest extends TestCase
         $this->assertFalse($invitation->isDepleted());
     }
 
-    public function testInvitationHasCreator()
+    public function testInvitationHasInviter()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();

@@ -273,9 +273,12 @@ class InvitationRegistrar
     private function processOptions(Invitation $invitation): Invitation
     {
         $this->updateAdmin($invitation->user);
-        $invitation->updateValidUntil($this->options['indefinite'])->updateInviter($this->inviter)->save();
 
-        return $invitation;
+        if ($this->options['indefinite']) {
+            $invitation->makeIndefinite();
+        }
+
+        return $invitation->updateInviter($this->inviter);
     }
 
 

@@ -103,7 +103,7 @@ class Invitation extends Model
 
     public function prolong(Carbon $date = null): self
     {
-        if (is_null($date)) {
+        if (is_null($date) || $date->lt(Carbon::now())) {
             $date = Carbon::now()->addDays(config('yap.invitations.valid_until'));
         }
 
@@ -113,10 +113,18 @@ class Invitation extends Model
         return $this;
     }
 
+
+    /**
+     * Update inviter iff inviter is administrator.
+     *
+     * @param User $inviter
+     *
+     * @return Invitation
+     */
     public function updateInviter(User $inviter): self
     {
-        if ($this->inviter->id !== $inviter->id) {
-            $this->invited_by = $inviter->id;
+        if ($inviter->is_admin && $this->inviter->id !== $inviter->id) {
+            $this->inviter()->associate($inviter)->save();
         }
 
         return $this;
@@ -126,14 +134,13 @@ class Invitation extends Model
     /**
      * Updates valid until to indefinite if not previously set as such.
      *
-     * @param bool $indefinite
-     *
      * @return Invitation
      */
-    public function updateValidUntil(bool $indefinite): self
+    public function makeIndefinite(): self
     {
-        if ($indefinite && ! is_null($this->valid_until)) {
+        if (!$this->is_depleted && ! is_null($this->valid_until)) {
             $this->valid_until = null;
+            $this->save();
         }
 
         return $this;
