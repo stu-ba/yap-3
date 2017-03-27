@@ -15,10 +15,10 @@ class Invitation extends Command
      */
     protected $signature = 'yap:invitation
                             {email : The email of the user being invited}
-                            {--a|admin : Make the user also an administrator}
+                            {--a|admin : Make user also an administrator}
                             {--f|force-resend : Force resending an email}
-                            {--i|indefinite : Make an invitation valid indefinitely}
-                            {--d|dont-send : Do not send an email}';
+                            {--i|indefinite : Make an invitation valid indefinitely (until signed in)}
+                            {--d|dont-send : Suppress all emails}';
 
     /**
      * The console command description.
