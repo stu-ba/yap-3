@@ -170,6 +170,7 @@ return [
          */
         Kyslik\Django\Signing\SignerServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        GrahamCampbell\GitHub\GitHubServiceProvider::class,
 
         /*
          * Application Service Providers...
