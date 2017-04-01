@@ -118,10 +118,6 @@
 .docs blockquote.has-icon {
   position: relative;
 
-  //:not(pre) > code[class*="language-"] {
-  //  color: black;
-  //}
-
   &.warning {
     @include quotes(red);
   }

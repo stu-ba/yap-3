@@ -61,7 +61,6 @@ if (! function_exists('systemAccount')) {
 
 if (! function_exists('markdown')) {
     function markdown(string $text) {
-        //return (new ParsedownExtra)->text($text);
         return (new \Yap\Auxiliary\BlockQuoteParser)->text($text);
     }
 }
@@ -86,4 +85,3 @@ if (! function_exists('in_range')) {
         return false;
     }
 }
-

@@ -976,12 +976,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7f1d851e0bd29795b1b5aa7db5490126f5ebe18c"
+                "reference": "d5a71bad602e45e54aef2c15e1cb1b8c20c46535"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7f1d851e0bd29795b1b5aa7db5490126f5ebe18c",
-                "reference": "7f1d851e0bd29795b1b5aa7db5490126f5ebe18c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d5a71bad602e45e54aef2c15e1cb1b8c20c46535",
+                "reference": "d5a71bad602e45e54aef2c15e1cb1b8c20c46535",
                 "shasum": ""
             },
             "require": {
@@ -1097,7 +1097,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-03-31T18:36:19+00:00"
+            "time": "2017-04-01T02:39:51+00:00"
         },
         {
             "name": "laravel/socialite",
