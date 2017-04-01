@@ -6,8 +6,6 @@ use ParsedownExtra;
 
 class BlockQuoteParser extends ParsedownExtra
 {
-
-
     public function __construct()
     {
         parent::__construct();
@@ -37,12 +35,12 @@ class BlockQuoteParser extends ParsedownExtra
     }
 
 
-    private function insertSvg($string)
+    private function insertSvg($string): array
     {
         if (preg_match('/\{([^}]+)\}/', $string, $iconMatch)) {
             $string = substr($string, strlen($iconMatch[0]));
             if (array_key_exists($iconMatch[1], $this->icons)) {
-                $string = $this->wrapInFlag($iconMatch[1], $string);
+                $string = $this->wrap($iconMatch[1], $string);
                 $attributes = ['class' => 'has-icon '.$iconMatch[1]];
             }
         }
@@ -51,9 +49,9 @@ class BlockQuoteParser extends ParsedownExtra
     }
 
 
-    private function wrapInFlag($svg, $text)
+    private function wrap(string $svg, string $text): string
     {
-        return '<div class="paragraph"><div class="flag"><span class="svg">'.svg($this->icons[$svg]).'</span></div>'.trim($text).'</div>';
+        return '<div class="paragraph"><div class="icon"><span class="svg">'.svg($this->icons[$svg]).'</span></div>'.trim($text).'</div>';
     }
 
     //protected function getQuoteElement($svg, $text)

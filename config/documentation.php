@@ -3,9 +3,9 @@
 return [
     'repository' => 'https://github.com/stu-ba/yap-3-user-guide.git',
 
-    'home_doc'   => 'releases',
+    'home_doc' => 'releases',
 
-    'icons'      => [
+    'icons' => [
         'note'     => 'exclamation-circle',
         'tip'      => 'lightbulb-o',
         'warning'  => 'exclamation',
@@ -13,6 +13,7 @@ return [
         'youtube'  => 'youtube-play',
         'github'   => 'github',
         'fork'     => 'code-fork',
-        'overflow' => 'stack-overflow'
+        'overflow' => 'stack-overflow',
+        'link'     => 'chain',
     ],
 ];

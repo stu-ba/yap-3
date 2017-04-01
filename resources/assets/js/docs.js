@@ -26,7 +26,7 @@ $(function() {
         scotchPanel.close();
     });
 
-    // gheading links
+    // Add links to h2 headings
     $('.docs-wrapper').find('a[name]').each(function () {
         var anchor = $('<a href="#' + this.name + '"/>');
         $(this).parent().next('h2').wrapInner(anchor);
