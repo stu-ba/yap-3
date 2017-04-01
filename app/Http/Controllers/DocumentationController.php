@@ -48,7 +48,7 @@ class DocumentationController extends Controller
      */
     public function show($page = null)
     {
-        $sectionPage = $page ?: config('documentation.home_doc');
+        $sectionPage = $page ?: config('documentation.main');
         $content = $this->docs->get($sectionPage);
 
         if (is_null($content)) {

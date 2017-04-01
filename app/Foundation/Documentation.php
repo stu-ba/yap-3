@@ -22,6 +22,20 @@ class Documentation
      */
     protected $cache;
 
+    /**
+     * The cache length in minutes.
+     *
+     * @var integer
+     */
+    protected $cacheFor;
+
+    /**
+     * Path to documentation files.
+     *
+     * @var string
+     */
+    protected $path;
+
 
     /**
      * Create a new documentation instance.
@@ -33,6 +47,8 @@ class Documentation
     {
         $this->files = $files;
         $this->cache = $cache;
+        $this->cache_for = config('documentation.cache_length', 10);
+        $this->path = config('documentation.path');
     }
 
 
@@ -43,8 +59,8 @@ class Documentation
      */
     public function getIndex()
     {
-        return $this->cache->remember('docs.index', 10, function () {
-            $path = base_path('resources/docs/index.md');
+        return $this->cache->remember('docs.index', $this->cache_for, function () {
+            $path = base_path($this->path.'index.md');
 
             if ($this->files->exists($path)) {
                 return markdown($this->files->get($path));
@@ -64,8 +80,8 @@ class Documentation
      */
     public function get($page)
     {
-        return $this->cache->remember('docs.'.$page, 10, function () use ($page) {
-            $path = base_path('resources/docs/'.$page.'.md');
+        return $this->cache->remember('docs.'.$page, $this->cache_for, function () use ($page) {
+            $path = base_path($this->path.$page.'.md');
 
             if ($this->files->exists($path)) {
                 return markdown($this->files->get($path));
@@ -85,13 +101,6 @@ class Documentation
      */
     public function sectionExists($page)
     {
-        return $this->files->exists(base_path('resources/docs/'.$page.'.md'));
+        return $this->files->exists(base_path($this->path.$page.'.md'));
     }
-
-
-    public function processFile(string $path): ?string
-    {
-
-    }
-
 }
