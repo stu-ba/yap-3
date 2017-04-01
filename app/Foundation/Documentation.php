@@ -2,12 +2,12 @@
 
 namespace Yap\Foundation;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Cache\Repository as Cache;
-use Symfony\Component\DomCrawler\Crawler;
+use Illuminate\Filesystem\Filesystem;
 
 class Documentation
 {
+
     /**
      * The filesystem implementation.
      *
@@ -22,33 +22,19 @@ class Documentation
      */
     protected $cache;
 
-    /**
-     * The symphony crawler instance.
-     *
-     * @var Crawler
-     */
-    protected $crawler;
-
-    protected $icons = [
-        'note' => 'lightbulb-o',
-        'warning' => 'exclamation',
-        'video' => 'film'
-    ];
-
 
     /**
      * Create a new documentation instance.
      *
      * @param  Filesystem $files
      * @param  Cache      $cache
-     * @param Crawler     $crawler
      */
-    public function __construct(Filesystem $files, Cache $cache, Crawler $crawler)
+    public function __construct(Filesystem $files, Cache $cache)
     {
         $this->files = $files;
         $this->cache = $cache;
-        $this->crawler = $crawler;
     }
+
 
     /**
      * Get the documentation index page.
@@ -68,10 +54,12 @@ class Documentation
         });
     }
 
+
     /**
      * Get the given documentation page.
      *
-     * @param  string  $page
+     * @param  string $page
+     *
      * @return string
      */
     public function get($page)
@@ -87,20 +75,22 @@ class Documentation
         });
     }
 
+
     /**
      * Check if the given section exists.
      *
-     * @param  string  $page
+     * @param  string $page
+     *
      * @return boolean
      */
     public function sectionExists($page)
     {
-        return $this->files->exists(
-            base_path('resources/docs/'.$page.'.md')
-        );
+        return $this->files->exists(base_path('resources/docs/'.$page.'.md'));
     }
 
-    public function processFile(string $path): ?string {
+
+    public function processFile(string $path): ?string
+    {
 
     }
 
