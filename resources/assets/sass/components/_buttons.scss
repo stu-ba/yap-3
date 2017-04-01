@@ -1,0 +1,16 @@
+.btn {
+	border: none;
+	border-radius: 3px;
+	background: $curious_blue;
+	color: #fff;
+	padding: 10px 15px;
+	font-size: 16px;
+	.faint {
+		color: rgba(255,255,255,.5);
+	}
+	&:hover,
+	&:active {
+		background: $eastern_blue;
+		color: #fff;
+	}
+}

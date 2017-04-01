@@ -23,6 +23,16 @@ if (! function_exists('is_email')) {
     }
 }
 
+if (! function_exists('svg')) {
+    function svg(string $src)
+    {
+        try {
+            return trim(preg_replace('/\s+/', ' ', file_get_contents(public_path('svg/'.$src.'.svg'))));
+        } catch (ErrorException $e) {
+            return '';
+        }
+    }
+}
 //if ( ! function_exists('systemAccount')) {
 //    function systemAccount()
 //    {
@@ -49,6 +59,13 @@ if (! function_exists('systemAccount')) {
     }
 }
 
+if (! function_exists('markdown')) {
+    function markdown(string $text) {
+        //return (new ParsedownExtra)->text($text);
+        return (new \Yap\Auxiliary\BlockQuoteParser)->text($text);
+    }
+}
+
 if (! function_exists('in_range')) {
     /**
      * Determines if $number is between $min and $max.
@@ -69,3 +86,4 @@ if (! function_exists('in_range')) {
         return false;
     }
 }
+

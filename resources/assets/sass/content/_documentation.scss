@@ -1,0 +1,203 @@
+.docs article {
+  padding: 15px 125px 50px 45px;
+  margin-left: 300px;
+
+  ul {
+    font-size: 14px;
+  }
+
+  .content-list ul li {
+    margin: 8px;
+    line-height: 1.65;
+  }
+
+  p {
+    font-size: 14.5px;
+    line-height: 1.70;
+  }
+
+  h1 + ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.5;
+    padding-bottom: 40px;
+    border-bottom: 1px solid $black_haze;
+    -webkit-font-smoothing: antialiased;
+    li {
+      &:before {
+        font-family: "documentation-font";
+        content: "\f0c1";
+        margin-right: 0.25em;
+        color: $curious_blue;
+        font-size: smaller;
+        opacity: 0.4;
+      }
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  li > ul {
+    font-size: 15px;
+    font-weight: 400;
+    list-style: none;
+  }
+
+  h2:first-of-type {
+    margin-top: 15px;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 400;
+    margin-top: 55px;
+    position: relative;
+
+    a,
+    a:hover {
+      color: $emperor;
+      text-decoration: none;
+    }
+    a:before {
+      font-family: "documentation-font";
+      content: "\f0c1";
+      margin-left: -30px;
+      position: absolute;
+      font-size: 28px;
+      top: 10px;
+      color: $curious_blue;
+      opacity: .7;
+    }
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 400;
+    margin-top: 45px;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 35px;
+  }
+
+  a {
+    text-decoration: underline;
+    &:hover {
+      color: darken($curious_blue, 10%);
+    }
+  }
+
+  blockquote a:hover {
+    color: lighten($curious_blue, 25%);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+    th,
+    td {
+      border: 1px solid $black_haze_lighter;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      font-size: 16px;
+    }
+  }
+
+  blockquote {}
+}
+
+.docs blockquote.has-icon {
+  position: relative;
+
+  //:not(pre) > code[class*="language-"] {
+  //  color: black;
+  //}
+
+  &.warning {
+    @include quotes(red);
+  }
+
+  &.tip {
+    @include quotes(#64B5F6);
+  }
+
+  &.video {
+    @include quotes(rgba(#673AB7, 0.70));
+  }
+
+  &.youtube {
+    @include quotes(#e52d27);
+  }
+
+  &.github, &.fork {
+    @include quotes(black);
+  }
+
+  &.overflow {
+    //background: #ef8236;
+    @include quotes(#ef8236);
+
+  }
+
+  //emulate p tag since Parsedown has issues with it :(
+  div.paragraph {
+    padding-left: 40px;
+    font-size: 14.5px;
+    line-height: 1.70;
+  }
+
+  .flag {
+    position: absolute;
+    width: 30px;
+    left: 15px;
+    top: 5px;
+    svg {
+      width: 24px;
+      height: 32px;
+      path {
+        fill:white;
+      }
+    }
+  }
+}
+
+.docs .svg svg {
+  width: 24px;
+}
+
+.docs-wrapper {
+  overflow: hidden;
+}
+
+@media (max-width:1080px) {
+  .docs article {
+    margin-left: 200px;
+    padding: 15px 30px 30px;
+    h2 a:before {
+      margin-left: -24px;
+      font-size: 25px;
+      top: 10px;
+    }
+  }
+}
+
+@media (max-width:780px) {
+  .docs article {
+    margin-left: 0px;
+    h1 {
+      margin-top: 0;
+    }
+    h2 a:before {
+      font-size: 22px;
+    }
+  }
+}

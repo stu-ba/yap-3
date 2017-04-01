@@ -31,3 +31,5 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
         return redirect()->route('home');
     })->middleware('auth');
 });
+
+Route::get('docs/{page?}', 'DocumentationController@show')->name('docs');
