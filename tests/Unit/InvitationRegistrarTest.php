@@ -150,7 +150,6 @@ class InvitationRegistrarTest extends TestCase
 
     public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentUserEmailUsed() {
         $invitation = factory(Invitation::class)->create();
-        //dd($invitation->user->toArray());
         $this->expectException(InvitationRegistrarException::class);
         $this->expectExceptionCode(1);
         $this->registrar->invite($invitation->user->email);
