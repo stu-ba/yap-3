@@ -122,9 +122,10 @@ class InvitationRegistrar
     {
         $this->reset();
         $this->setInviter()->setOptions($options)->setEmail($email);
+
         /** @var User $user */
-        /** @var Invitation $invitation */
         $user = $this->user->whereEmail($email)->first();
+        /** @var Invitation $invitation */
         $invitation = $this->invitation->whereEmail($email)->first();
 
         list($invitation, $user) = $this->checkRelations($user, $invitation);
@@ -181,7 +182,7 @@ class InvitationRegistrar
     {
         if ( ! is_null($user) && ! is_null($user->invitation)) {
             $invitation = $user->invitation;
-        } elseif ( ! is_null($invitation) && is_null($invitation->user)) {
+        } elseif ( ! is_null($invitation) && is_null($user) && ! is_null($invitation->user->email)) { //big error here
             $user = $invitation->user;
         }
 
@@ -260,6 +261,7 @@ class InvitationRegistrar
      */
     private function invitationAndUserFound($user): void
     {
+        //dd($user);
         if ($user->is_confirmed) {
             throw new InvitationRegistrarException('User specified by email \''.$this->email.'\' is already confirmed.',
                 1);

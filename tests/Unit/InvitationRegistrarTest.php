@@ -130,14 +130,39 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->invite($user->email);
     }
 
-    public function testConfirmedExceptionIsThrown()
+    public function testBannedExceptionIsThrownThroughInvitationEmail()
     {
-        $user = factory(User::class)->create();
-        $invitation = factory(Invitation::class, 'unconfirmed')->create(['email' => $user->email]);
+        $user = factory(User::class)->states(['banned'])->create();
+        $invitation = factory(Invitation::class)->create(['user_id' => $user->id]);
         $this->expectException(InvitationRegistrarException::class);
-        $this->expectExceptionCode(2);
+        $this->expectExceptionCode(0);
         $this->registrar->invite($invitation->email);
     }
+
+    public function testConfirmedExceptionIsThrownWhenEmailsAreSame()
+    {
+        $user = factory(User::class)->states(['confirmed'])->create();
+        $invitation = factory(Invitation::class)->create(['email' => $user->email]);
+        $this->expectException(InvitationRegistrarException::class);
+        $this->expectExceptionCode(1);
+        $this->registrar->invite($invitation->email);
+    }
+
+    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentUserEmailUsed() {
+        $invitation = factory(Invitation::class)->create();
+        //dd($invitation->user->toArray());
+        $this->expectException(InvitationRegistrarException::class);
+        $this->expectExceptionCode(1);
+        $this->registrar->invite($invitation->user->email);
+    }
+
+    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentInvitationEmailUsed() {
+        $invitation = factory(Invitation::class)->create();
+        $this->expectException(InvitationRegistrarException::class);
+        $this->expectExceptionCode(1);
+        $this->registrar->invite($invitation->email);
+    }
+
 
     public function testExceptionIsThrownWhenUserIsNotConfirmedAndInvitationDepleted()
     {

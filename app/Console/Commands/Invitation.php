@@ -3,6 +3,7 @@
 namespace Yap\Console\Commands;
 
 use Illuminate\Console\Command;
+use InvalidArgumentException;
 use Yap\Exceptions\InvitationRegistrarException;
 use Yap\Foundation\InvitationRegistrar;
 
@@ -54,12 +55,8 @@ class Invitation extends Command
     {
         $email = $this->validateEmail();
 
-        try {
-            $this->info('Running invitation registrar...', 'vvv');
-            $invitation = $this->registrar->invite($email, $this->makeOptions());
-        } catch (InvitationRegistrarException $exception) {
-            $this->handleException($exception);
-        }
+        $this->info('Running invitation registrar...', 'vvv');
+        $invitation = $this->registrar->invite($email, $this->makeOptions());
 
         if ($invitation->is_depleted) {
             $this->info('User '.($invitation->user->name ?? $invitation->user->username).' was granted access and can freely login to '.config('yap.short_name').'.');
@@ -69,13 +66,16 @@ class Invitation extends Command
         }
     }
 
+
+    /**
+     * @return string
+     */
     private function validateEmail(): string
     {
         $email = $this->argument('email');
         $this->info('Checking validity of email.', 'vv');
         if (! is_email($email)) {
-            $this->error('Provided email is not a valid email.');
-            die();
+            throw new InvalidArgumentException('Provided email is not a valid email.');
         }
 
         return $email;
@@ -89,29 +89,5 @@ class Invitation extends Command
             'indefinite' => (bool) $this->option('indefinite'),
             'dont_send' => (bool) $this->option('dont-send'),
         ];
-    }
-
-    /**
-     * @param $exception
-     */
-    private function handleException($exception): void
-    {
-        switch ($exception->getCode()) {
-            case 0:
-                $this->error($exception->getMessage());
-                $this->info('Use Yap dashboard to remove ban.');
-                break;
-            case 1:
-                $this->warn($exception->getMessage());
-                break;
-            case 2:
-                $this->error($exception->getMessage());
-                break;
-            default:
-                //rethrow in case there is Exception I can't handle
-                throw $exception;
-        }
-        $this->info('Aborting invitation registrar...', 'vvv');
-        die();
     }
 }

@@ -12,7 +12,7 @@ $factory->define(Yap\Models\Invitation::class, function (Faker\Generator $faker)
 
 $factory->defineAs(Yap\Models\Invitation::class, 'unconfirmed', function (Faker\Generator $faker) {
     return [
-        'user_id' => factory(Yap\Models\User::class)->create(['is_confirmed' => false])->id,
+        'user_id' => factory(Yap\Models\User::class)->create()->id,
         'email' => $faker->unique()->safeEmail,
         'is_depleted' => true,
         'depleted_at' => \Carbon\Carbon::now()->addDay(rand(1, 5)),
