@@ -1,16 +1,9 @@
-/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+apacheconf+batch+c+bison+cpp+git+go+haskell+http+latex+markdown+matlab+nginx+php+php-extras+python+sql+vim+yaml */
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+apacheconf+bash+c+brainfuck+cpp+fortran+git+go+haskell+http+java+json+latex+makefile+markdown+matlab+nginx+objectivec+perl+php+python+r+sql+swift+vim+yaml */
 /**
  * prism.js default theme for JavaScript, CSS and HTML
  * Based on dabblet (http://dabblet.com)
  * @author Lea Verou
  */
-
-.docs article code[class*="language-"],
-.docs article pre[class*="language-"] {
-	font-size: 11px;
-	line-height: 2.0;
-	vertical-align: middle;
-}
 
 code[class*="language-"],
 pre[class*="language-"] {
@@ -68,10 +61,9 @@ pre[class*="language-"] {
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-	background: $black_haze;
-	color: $curious_blue;
-	padding: 1px 5px;
-	border-radius: 3px;
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
 }
 
 .token.comment,
