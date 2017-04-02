@@ -19,7 +19,11 @@ abstract class TestCase extends BaseTestCase
         $uses = array_flip(class_uses_recursive(static::class));
 
         if (isset($uses[ForceSyncQueueDriver::class])) {
-            $this->forceSyncDriver();
+            $this->forceSyncQueueDriver();
+        }
+
+        if (isset($uses[ForceArrayMailerDriver::class])) {
+            $this->forceArrayMailerDriver();
         }
     }
 

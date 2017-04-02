@@ -4,7 +4,7 @@ namespace Tests;
 
 trait ForceSyncQueueDriver
 {
-    public function forceSyncDriver()
+    public function forceSyncQueueDriver()
     {
         $this->app['queue']->setDefaultDriver('sync');
     }
