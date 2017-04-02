@@ -3,10 +3,17 @@
 return [
 
     //Cache for ... minutes
-    'cache_length' => 10,
+    'cache_for' => 10,
 
-    //Repository to grab documentation from
-    'repository'   => 'https://github.com/stu-ba/yap-3-user-guide.git',
+    //Git settings
+    'git' => [
+        //Repository to grab documentation from
+        'repository'   => 'https://github.com/stu-ba/yap-3-user-guide.git',
+        //Branch to grab
+        'branch' => 'master',
+        //Depth
+        'depth' => 1,
+    ],
 
     //Main documentation file
     'main'         => 'releases',
