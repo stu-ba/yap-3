@@ -9,6 +9,7 @@ use Yap\Foundation\InvitationRegistrar;
 
 class Invitation extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
@@ -33,6 +34,7 @@ class Invitation extends Command
      */
     protected $registrar;
 
+
     /**
      * Create a new command instance.
      *
@@ -43,6 +45,7 @@ class Invitation extends Command
         parent::__construct();
         $this->registrar = $registrar;
     }
+
 
     /**
      * Execute the console command.
@@ -57,13 +60,7 @@ class Invitation extends Command
 
         $this->info('Running invitation registrar...', 'vvv');
         $invitation = $this->registrar->invite($email, $this->makeOptions());
-
-        if ($invitation->is_depleted) {
-            $this->info('User '.($invitation->user->name ?? $invitation->user->username).' was granted access and can freely login to '.config('yap.short_name').'.');
-        } else {
-            $this->info('Generated invitation link:');
-            $this->info(route('register', ['token' => $invitation->token]));
-        }
+        $this->invite($invitation);
     }
 
 
@@ -74,20 +71,35 @@ class Invitation extends Command
     {
         $email = $this->argument('email');
         $this->info('Checking validity of email.', 'vv');
-        if (! is_email($email)) {
+        if ( ! is_email($email)) {
             throw new InvalidArgumentException('Provided email is not a valid email.');
         }
 
         return $email;
     }
 
+
     private function makeOptions(): array
     {
         return [
-            'admin' => (bool) $this->option('admin'),
-            'force_resend' => (bool) $this->option('force-resend'),
-            'indefinite' => (bool) $this->option('indefinite'),
-            'dont_send' => (bool) $this->option('dont-send'),
+            'admin'        => (bool)$this->option('admin'),
+            'force_resend' => (bool)$this->option('force-resend'),
+            'indefinite'   => (bool)$this->option('indefinite'),
+            'dont_send'    => (bool)$this->option('dont-send'),
         ];
+    }
+
+
+    /**
+     * @param $invitation
+     */
+    private function invite($invitation): void
+    {
+        if ($invitation->is_depleted) {
+            $this->info('User '.($invitation->user->name ?? $invitation->user->username).' was granted access and can freely login to '.config('yap.short_name').'.');
+        } else {
+            $this->info('Invitation link:');
+            $this->info(route('register', ['token' => $invitation->token]));
+        }
     }
 }
