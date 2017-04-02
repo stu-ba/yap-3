@@ -71,7 +71,7 @@ class MaintainerTest extends TestCase
 
     public function testPull()
     {
-        $this->markTestSkipped('Test uses \'git pull\', run only if needed.');
+        $this->markTestIncomplete('Test uses \'git pull\', run only if needed. INCOMPLETE');
         $this->maintainer->setPath('tests/Unit/Documentation/Stubs/downloads/');
         $this->maintainer->install();
         $this->maintainer->update();
@@ -125,7 +125,7 @@ class Maintainer extends MaintainerOriginal
         $this->path = base_path($path);
     }
 
-
+    //Testing protected method
     public function gitignore(): void
     {
         parent::gitignore();
