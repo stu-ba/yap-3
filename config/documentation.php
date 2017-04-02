@@ -15,13 +15,15 @@ return [
         'depth'      => 1,
     ],
 
-    //Main documentation file
+    //Main (fallback) documentation file.
     'main'      => 'releases',
 
-    //Path to documentation files
+    //Path to documentation files.
+    //If you change this setting all links inside repository must be changed as well.
     'path'      => 'resources/docs/',
 
     //Supported blockquote icons "name" => "svg file"
+    //Ex. > {note} Some notable text here.
     'icons'     => [
         'note'     => 'exclamation-circle',
         'tip'      => 'lightbulb-o',

@@ -4,6 +4,7 @@ namespace Yap\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Yap\Console\Commands\Documentation;
 use Yap\Console\Commands\Invitation;
 
 class Kernel extends ConsoleKernel
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Invitation::class,
+        Documentation::class,
     ];
 
     /**

@@ -20,6 +20,13 @@ class Maintainer
      */
     protected $files;
 
+    /**
+     * Mute git output.
+     *
+     * @var bool
+     */
+    protected $quiet = false;
+
 
     /**
      * Create a new documentation instance.
@@ -54,6 +61,7 @@ class Maintainer
      */
     public function install(bool $force = false): bool
     {
+
         if ( ! $force && $this->check()) {
             throw new DocumentationException('Repository already exists.', 1);
         }
@@ -122,7 +130,7 @@ class Maintainer
 
     protected function clone(): void
     {
-        @exec('cd '.$this->path.' && '.$this->cloneCommand());
+        @exec('cd '.$this->path.' && '.$this->cloneCommand().($this->quiet ?' 2>&1':''));
     }
 
 
@@ -143,13 +151,36 @@ class Maintainer
 
     protected function pull(): void
     {
-        @exec('cd '.$this->path.' && '.$this->pullCommand());
+        @exec('cd '.$this->path.' && '.$this->pullCommand().($this->quiet ?' 2>&1':''));
     }
 
 
     private function pullCommand(): string
     {
         return 'git pull origin '.config('documentation.git.branch');
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isQuiet(): bool
+    {
+        return $this->quiet;
+    }
+
+
+    /**
+     * @param bool $quiet
+     *
+     * @return Maintainer
+     *
+     */
+    public function setQuiet(bool $quiet): Maintainer
+    {
+        $this->quiet = $quiet;
+
+        return $this;
     }
 
 }
