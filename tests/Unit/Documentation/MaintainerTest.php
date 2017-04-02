@@ -37,7 +37,9 @@ class MaintainerTest extends TestCase
         $files->deleteDirectory(base_path('tests/Unit/Documentation/Stubs/.gitignore'));
     }
 
-    public function testGitignoreIsUpdated() {
+
+    public function testGitignoreIsUpdated()
+    {
         /** @var Filesystem $files */
         $files = resolve(\Illuminate\Filesystem\Filesystem::class);
         $gitignore = base_path('tests/Unit/Documentation/Stubs/.gitignore');
