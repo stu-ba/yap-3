@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'short_name' => 'Yap',
+    'short_name'  => 'Yap',
     'invitations' => [
         //in days
         'valid_until' => 7,
     ],
-    'github' => [
+    'github'      => [
         'organisation' => 'stu-ba',
     ]
 ];
