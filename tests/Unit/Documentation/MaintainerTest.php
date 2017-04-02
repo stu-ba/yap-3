@@ -84,6 +84,7 @@ class MaintainerTest extends TestCase
         $this->maintainer->setPath(str_random(32));
         $this->expectException(DocumentationException::class);
         $this->expectExceptionCode(2);
+
         $this->maintainer->check(Maintainer::THROW);
     }
 
@@ -93,6 +94,7 @@ class MaintainerTest extends TestCase
         $this->maintainer->setPath(str_random(32));
         $this->expectException(DocumentationException::class);
         $this->expectExceptionCode(3);
+
         $this->maintainer->check(Maintainer::THROW | Maintainer::SKIP_EXISTS);
     }
 
@@ -102,6 +104,7 @@ class MaintainerTest extends TestCase
         $this->maintainer->setPath(str_random(32));
         $this->expectException(DocumentationException::class);
         $this->expectExceptionCode(4);
+
         $this->maintainer->check(Maintainer::THROW | Maintainer::SKIP_EXISTS | Maintainer::SKIP_DIRECTORY);
     }
 
