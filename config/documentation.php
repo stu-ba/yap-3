@@ -16,10 +16,9 @@ return [
     ],
 
     //Main (fallback) documentation file.
-    'main'      => 'releases',
+    'main'      => 'markdown',
 
     //Path to documentation files.
-    //If you change this setting all links inside repository must be changed as well.
     'path'      => 'resources/docs/',
 
     //Supported blockquote icons "name" => "svg file"

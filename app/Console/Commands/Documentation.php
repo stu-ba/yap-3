@@ -8,7 +8,6 @@ use Yap\Foundation\Documentation\Maintainer;
 
 class Documentation extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -56,11 +55,9 @@ class Documentation extends Command
 
         if ($action === 'install') {
             $this->info('change directory to \''.config('documentation.path').'\'');
-            $this->install();
-            $this->info('Documentation installed.');
+            $this->maintainer->install();
         } elseif ($action === 'update') {
-            $this->update();
-            $this->info('Update went great.');
+            $this->maintainer->update();
         }
     }
 
@@ -86,29 +83,5 @@ class Documentation extends Command
         }
 
         return $action;
-    }
-
-
-    private function install(): void
-    {
-        try {
-            $this->maintainer->install();
-        } catch (DocumentationException $exception) {
-            $this->error($exception->getMessage());
-            $this->info('Try updating instead.');
-            die();
-        }
-    }
-
-
-    private function update(): void
-    {
-        try {
-            $this->maintainer->update();
-        } catch (DocumentationException $exception) {
-            $this->error($exception->getMessage());
-            $this->info('Try installing first.');
-            die();
-        }
     }
 }
