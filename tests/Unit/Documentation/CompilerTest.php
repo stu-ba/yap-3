@@ -1,24 +1,18 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Documentation;
 
-use Illuminate\Config\Repository as Config;
 use Illuminate\Filesystem\Filesystem;
 use Tests\TestCase;
-use Yap\Foundation\Documentation;
+use Yap\Foundation\Documentation\Compiler as CompilerOriginal;
 
-class DocumentationTest extends TestCase
+class CompilerTest extends TestCase
 {
 
     /**
-     * @var Documentation $documentation
+     * @var Documentation $compiler
      */
-    protected $documentation;
-
-    /**
-     * @var Config $config
-     */
-    protected $config;
+    protected $compiler;
 
 
     /**
@@ -27,9 +21,8 @@ class DocumentationTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->config = resolve(Config::class);
-        $this->config->set('documentation.path', 'tests/Unit/Stubs/docs/');
-        $this->documentation = resolve(Documentation::class);
+        $this->compiler = resolve(Compiler::class);
+        $this->compiler->setPath('tests/Unit/Documentation/Stubs/docs/');
     }
 
 
@@ -45,11 +38,11 @@ class DocumentationTest extends TestCase
 
         $files = new Filesystem();
 
-        $stub = $files->get(base_path('tests/Unit/Stubs/docs/compiled-stub.html'));
+        $stub = $files->get(base_path('tests/Unit/Documentation/Stubs/docs/compiled-stub.html'));
 
         foreach ($pages as $page => $title) {
             $compiled = str_replace('{{name}}', $title, $stub);
-            $html = $this->documentation->get($page);
+            $html = $this->compiler->get($page);
             $this->assertEquals($compiled, $html);
         }
     }
@@ -67,10 +60,19 @@ class DocumentationTest extends TestCase
             '<li><a href="/docs/administrator">Administrator</a></li>',
         ];
 
-        $index = $this->documentation->getIndex();
+        $index = $this->compiler->getIndex();
 
         foreach ($prospects as $prospect) {
             $this->assertContains($prospect, $index);
         }
+    }
+}
+
+class Compiler extends CompilerOriginal
+{
+
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }

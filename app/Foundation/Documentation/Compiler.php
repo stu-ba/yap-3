@@ -1,11 +1,11 @@
 <?php
 
-namespace Yap\Foundation;
+namespace Yap\Foundation\Documentation;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Filesystem\Filesystem;
 
-class Documentation
+class Compiler
 {
 
     /**
@@ -47,7 +47,7 @@ class Documentation
     {
         $this->files = $files;
         $this->cache = $cache;
-        $this->cache_for = config('documentation.cache_length', 10);
+        $this->cache_for = config('documentation.cache_for', 10);
         $this->path = config('documentation.path');
     }
 

@@ -3,16 +3,16 @@
 namespace Yap\Http\Controllers;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Yap\Foundation\Documentation;
+use Yap\Foundation\Documentation\Compiler;
 
 class DocumentationController extends Controller
 {
     /**
      * The documentation repository.
      *
-     * @var Documentation
+     * @var Compiler
      */
-    protected $docs;
+    protected $compiler;
 
     /**
      * @var Crawler
@@ -23,12 +23,13 @@ class DocumentationController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  Documentation $docs
-     * @param Crawler        $crawler
+     * @param Compiler $compiler
+     * @param Crawler  $crawler
+     *
      */
-    public function __construct(Documentation $docs, Crawler $crawler)
+    public function __construct(Compiler $compiler, Crawler $crawler)
     {
-        $this->docs = $docs;
+        $this->compiler = $compiler;
         $this->crawler = $crawler;
     }
     /**
@@ -49,7 +50,7 @@ class DocumentationController extends Controller
     public function show($page = null)
     {
         $sectionPage = $page ?: config('documentation.main');
-        $content = $this->docs->get($sectionPage);
+        $content = $this->compiler->get($sectionPage);
 
         if (is_null($content)) {
             abort(404);
@@ -59,7 +60,7 @@ class DocumentationController extends Controller
         $title = $this->crawler->filterXPath('//h1');
 
         $section = '';
-        if ($this->docs->sectionExists($page)) {
+        if ($this->compiler->sectionExists($page)) {
             $section .= '/'.$page;
         } elseif (! is_null($page)) {
             return redirect()->route('docs');
@@ -67,7 +68,7 @@ class DocumentationController extends Controller
 
         return view('docs', [
             'title' => count($title) ? $title->text() : null,
-            'index' => $this->docs->getIndex(),
+            'index' => $this->compiler->getIndex(),
             'content' => $content,
             'currentSection' => $section,
         ]);
