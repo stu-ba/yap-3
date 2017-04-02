@@ -13,6 +13,8 @@ return [
         'branch'     => 'master',
         //Depth
         'depth'      => 1,
+        //Webhook secret
+        'secret' => env('GITHUB_DOCUMENTATION_SECRET', null),
     ],
 
     //Main (fallback) documentation file.
