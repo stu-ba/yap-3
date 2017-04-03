@@ -1,9 +1,7 @@
 <?php
 
 namespace Yap\Console\Commands;
-
 use Illuminate\Console\Command;
-use Yap\Exceptions\DocumentationException;
 use Yap\Foundation\Documentation\Maintainer;
 
 class Documentation extends Command
