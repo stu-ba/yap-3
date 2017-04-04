@@ -92,6 +92,7 @@ class GithubLogin extends TestCase
         $this->assertResponseStatus(403);
     }
 
+
     public function testNewGithubUserIsLoggedInIfInvitationIsNotDepletedAndEmailMatches()
     {
         /** @var Invitation $invitation */

@@ -77,6 +77,7 @@ class UserRegistrarTest extends TestCase
         $user = $this->registrar->register($invitation, $githubUser)->fresh();
 
         $this->assertFalse($user->is_confirmed);
+
         foreach ($userData as $key => $value) {
             $this->assertEquals($value, $user->{$key});
         }
