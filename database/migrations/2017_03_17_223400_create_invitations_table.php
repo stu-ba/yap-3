@@ -43,7 +43,7 @@ class CreateInvitationsTable extends Migration
     {
         Schema::table($this->table, function (Blueprint $table) {
             $table->dropForeign($this->table.'_user_id_foreign');
-            $table->dropForeign($this->table.'_created_by_foreign');
+            $table->dropForeign($this->table.'_invited_by_foreign');
         });
 
         Schema::dropIfExists($this->table);
