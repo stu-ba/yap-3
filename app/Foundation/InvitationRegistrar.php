@@ -72,7 +72,7 @@ class InvitationRegistrar
         /** @var User $user */
         /** @var Invitation $invitation */
         list($user, $invitation) = $this->setUp($email, $options);
-
+        //d($user->toArray(), $invitation->toArray());
         if (is_null($invitation) && is_null($user)) {
             $this->makeBare()->mail(new UserInvited($this->user->invitation));
 

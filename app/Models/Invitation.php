@@ -68,7 +68,7 @@ class Invitation extends Model
 
         static::creating(function ($model) {
             $model->attributes['valid_until'] = $model->determineValidUntil();
-            $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(64));
+            $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(63));
             $model->attributes['invited_by'] = $model->attributes['invited_by'] ?? $model->determineCreator();
         });
     }
