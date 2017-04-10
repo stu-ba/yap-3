@@ -38,7 +38,7 @@ class AuthenticableTest extends TestCase
         $this->seeIsAuthenticatedAs($user);
     }
 
-    public function testBannedUserIsCanNotLogIn()
+    public function testBannedUserCanNotLogIn()
     {
         $this->expectException(UserBannedException::class);
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
@@ -49,7 +49,7 @@ class AuthenticableTest extends TestCase
         $this->dontSeeIsAuthenticated();
     }
 
-    public function testNotConfirmedUserIsCanNotLogIn()
+    public function testNotConfirmedUserCanNotLogIn()
     {
         $this->expectException(UserNotConfirmedException::class);
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();

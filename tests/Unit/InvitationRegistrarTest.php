@@ -64,6 +64,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals(3, $this->invitation->all()->count());
     }
 
+
     public function testBareInvitationEmailIsSent()
     {
         $email = str_random(32).'@email.com';

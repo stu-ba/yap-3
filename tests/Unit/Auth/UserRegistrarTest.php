@@ -38,6 +38,19 @@ class UserRegistrarTest extends TestCase
         }
     }
 
+    public function testA() {
+        $this->markTestSkipped('Not finished.');
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class)->create();
+        /** @var Invitation $invitation2 */
+        $invitation2 = factory(Invitation::class, 'empty')->create();
+        d($invitation2->toArray());
+        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['id' => $invitation->user->github_id, 'email' => $invitation2->email]);
+
+        $this->registrar->register($invitation2, $githubUser);
+        dd($invitation2->fresh()->toArray());
+    }
+
     public function testRegisterByInvitationWithSameEmails()
     {
         /** @var Invitation $invitation */

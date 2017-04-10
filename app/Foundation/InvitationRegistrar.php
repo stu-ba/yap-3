@@ -182,7 +182,7 @@ class InvitationRegistrar
     {
         if ( ! is_null($user) && ! is_null($user->invitation)) {
             $invitation = $user->invitation;
-        } elseif ( ! is_null($invitation) && is_null($user) && ! is_null($invitation->user->email)) { //big error here
+        } elseif ( ! is_null($invitation) && ! is_null($invitation->user->email)) {
             $user = $invitation->user;
         }
 
@@ -191,7 +191,7 @@ class InvitationRegistrar
 
 
     /**
-     * Throw exceptions if provided user is banned.
+     * Throw exception if provided user is banned.
      *
      * @param $user
      *
@@ -261,7 +261,6 @@ class InvitationRegistrar
      */
     private function invitationAndUserFound($user): void
     {
-        //dd($user);
         if ($user->is_confirmed) {
             throw new InvitationRegistrarException('User specified by email \''.$this->email.'\' is already confirmed.',
                 1);
