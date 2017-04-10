@@ -27,6 +27,12 @@ class CreateInvitationsTable extends Migration
             $table->timestamps();
         });
 
+        //Indexes
+        Schema::table($this->table, function (Blueprint $table) {
+            $table->index('user_id');
+            $table->index('invited_by');
+        });
+
         //Foreign Keys
         Schema::table($this->table, function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
@@ -42,6 +48,8 @@ class CreateInvitationsTable extends Migration
     public function down()
     {
         Schema::table($this->table, function (Blueprint $table) {
+            $table->dropIndex(['user_id']);
+            $table->dropIndex(['invited_by']);
             $table->dropForeign($this->table.'_user_id_foreign');
             $table->dropForeign($this->table.'_invited_by_foreign');
         });
