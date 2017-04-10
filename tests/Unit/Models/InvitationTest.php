@@ -131,4 +131,21 @@ class InvitationTest extends TestCase
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->addDay()]);
         $this->assertNotNull($invitation->valid_until);
     }
+
+    public function testInvitationUserIsSwapped() {
+        // swap filled user with empty user
+        $invitation = factory(Invitation::class, 'empty')->create();
+        $user = factory(User::class)->create();
+
+        $invitation->swapUser($user);
+        $this->assertEquals($invitation->user_id, $user->id);
+
+        // swap empty user with already confirmed user (swap only relations)
+        $invitation = factory(Invitation::class)->create();
+        $invitation2 = factory(Invitation::class, 'empty')->create();
+
+        $invitation2->swapUser($invitation->user);
+        $this->assertEquals($invitation->user_id, $invitation2->user_id);
+
+    }
 }

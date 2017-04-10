@@ -95,4 +95,32 @@ class UserTest extends TestCase
         $this->assertNotEquals($githubId, $user->github_id);
         $this->assertEquals($githubIdOriginal, $user->github_id);
     }
+
+    public function testSwappingConfirmedUser() {
+        $userConfirmed = factory(User::class)->states(['confirmed'])->create();
+        $userEmpty = factory(User::class, 'empty')->create();
+
+        $userEmpty->notify(new \Yap\Notifications\PromotedNotification);
+        $userEmpty->notify(new \Yap\Notifications\DemotedNotification);
+
+        $userConfirmed->swapWith($userEmpty);
+
+        $this->assertEquals(2 , $userConfirmed->notifications()->count());
+        $this->assertNull($userEmpty->fresh());
+
+        $this->markTestIncomplete('Test for swapping every relation!');
+    }
+
+    public function testSwappingEmptyUser() {
+        $userEmpty = factory(User::class, 'empty')->create();
+        $user = factory(User::class)->create();
+
+        $userEmpty->swapWith($user);
+
+        $this->assertEquals($userEmpty->email, $user->email);
+        $this->assertEquals($userEmpty->github_id, $user->github_id);
+        $this->assertNotEquals($userEmpty->id, $user->id);
+
+        $this->assertNull($user->fresh());
+    }
 }

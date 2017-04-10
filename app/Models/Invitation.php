@@ -83,6 +83,15 @@ class Invitation extends Model
         return $this->belongsTo(User::class, 'invited_by');
     }
 
+    public function swapUser(User $user): self
+    {
+        $user->swapWith($this->user);
+        $this->user_id = $user->id;
+        $this->save();
+
+        return $this;
+    }
+
     public function isDepleted(): bool
     {
         if ($this->inviter->is_banned || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {

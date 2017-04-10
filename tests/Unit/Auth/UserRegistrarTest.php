@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Auth;
 
+use DB;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use InvalidArgumentException;
 use Tests\Feature\Auth\Mocks\GithubMock;
@@ -38,17 +39,37 @@ class UserRegistrarTest extends TestCase
         }
     }
 
+    public function testInvitationIsDepletedIfEmailIsDifferentAndUserAlreadyConfirmed() {
+        //testing multiple invitations for one github account
+
+        //$this->markTestSkipped('Not finished.');
+        /** @var Invitation $invitation */
+        $invitation = factory(Invitation::class)->create();
+        /** @var Invitation $invitationEmpty */
+        $invitationEmpty = factory(Invitation::class, 'empty')->create();
+
+        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['id' => $invitation->user->github_id, 'email' => $invitationEmpty->email]);
+        $this->registrar->register($invitationEmpty, $githubUser);
+
+        $invitationEmpty = $invitationEmpty->fresh();
+
+        $this->assertTrue($invitationEmpty->is_depleted);
+        $this->assertEquals($invitation->user_id, $invitationEmpty->user_id);
+    }
+
     public function testA() {
         $this->markTestSkipped('Not finished.');
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class)->create();
         /** @var Invitation $invitation2 */
         $invitation2 = factory(Invitation::class, 'empty')->create();
-        d($invitation2->toArray());
+
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['id' => $invitation->user->github_id, 'email' => $invitation2->email]);
 
         $this->registrar->register($invitation2, $githubUser);
-        dd($invitation2->fresh()->toArray());
+
+        $this->assertTrue($invitation2->is_depleted);
+        $this->assertEquals($invitation->user_id, $invitation2->user_id);
     }
 
     public function testRegisterByInvitationWithSameEmails()
@@ -187,25 +208,27 @@ class UserRegistrarTest extends TestCase
 
     public function testRegisterByInvitationDifferentThanMine()
     {
-        /** @var Invitation $invitation2 */
-        $invitation2 = factory(Invitation::class)->create();
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class, 'empty')->create();
+        $invitation = factory(Invitation::class)->create();
+        /** @var Invitation $invitationEmpty */
+        $invitationEmpty = factory(Invitation::class, 'empty')->create();
 
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser([
-            'id' => $invitation2->user->github_id,
-            'email' => $invitation2->user->email,
+            'id' => $invitation->user->github_id,
+            'email' => $invitation->user->email,
         ]);
 
-        $this->registrar->register($invitation, $githubUser);
+        $this->registrar->register($invitationEmpty, $githubUser);
 
+        $this->assertNull($invitationEmpty->user->fresh());
+
+        $invitationEmpty = $invitationEmpty->fresh();
         $invitation = $invitation->fresh();
-        $invitation2 = $invitation2->fresh();
 
-        $this->assertTrue($invitation2->isDepleted(), 'Invitation 2 is not depleted.');
-        $this->assertFalse($invitation->isDepleted(), 'Invitation is depleted.');
+        $this->assertTrue($invitation->isDepleted(), 'Invitation is not depleted.');
+        $this->assertTrue($invitationEmpty->isDepleted(), 'InvitationEmpty is not depleted.');
 
-        $this->assertTrue($invitation2->user->is_confirmed);
+        $this->assertTrue($invitation->user->is_confirmed);
     }
 
     public function testRegisterNotIfAlreadyRegistered()
@@ -220,12 +243,9 @@ class UserRegistrarTest extends TestCase
             'id' => $invitation->user->github_id,
         ]);
 
-        $expected = $invitation->user_id;
-        $expectedEmpty = $invitationEmpty->user_id;
-
         $this->registrar->register($invitationEmpty, $githubUser);
-        $this->assertEquals($expected, $invitation->fresh()->user_id);
-        $this->assertEquals($expectedEmpty, $invitationEmpty->fresh()->user_id);
+        $this->assertNull($invitationEmpty->user->fresh());
+        $this->assertEquals($invitationEmpty->fresh()->user_id, $invitation->fresh()->user_id);
     }
 
     public function testRegistrarArgumentOrderDoesNotMatter()

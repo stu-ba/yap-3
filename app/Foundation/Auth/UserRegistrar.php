@@ -49,7 +49,7 @@ class UserRegistrar
             }
 
             $this->userByGithub = $this->user->whereGithubId($this->githubUser->getId())->first();
-
+            $this->invitation->load(['user' => function($q) {$q->select(['id', 'email']);}]);
             return $this->registerByInvitation();
         }
 
@@ -59,8 +59,9 @@ class UserRegistrar
 
     private function registerByGithubUser(): User
     {
-        $this->invitation = $this->invitation->whereEmail($this->githubUser->getEmail())->first();
-        if (is_null($this->invitation) && is_null($this->userByGithub)) { //possible refactor removing second check
+        $this->invitation = $this->invitation->with(['user' => function($q) {$q->select(['id', 'email']);}])->whereEmail($this->githubUser->getEmail())->first();
+
+        if (is_null($this->invitation) && is_null($this->userByGithub)) {
             return $this->user->create($this->githubUserData());
         } elseif ( ! is_null($this->invitation)) {
             return $this->createByInvitation();
@@ -107,9 +108,13 @@ class UserRegistrar
     {
         if ( ! is_null($this->userByGithub)) {
             if ($this->userByGithub->is_confirmed) {
+                if (!$this->invitation->is_depleted) {
+                    $this->invitation->swapUser($this->userByGithub)->deplete();
+                }
+
                 return $this->userByGithub;
             } elseif (is_null($this->invitation->user->email) && ! $this->invitation->isDepleted()) {
-                $this->swapUsers($this->userByGithub);
+                $this->invitation = $this->invitation->swapUser($this->userByGithub)->fresh('user');
 
                 return $this->createByInvitation();
             } elseif ($this->invitation->user->email !== $this->githubUser->email) {
@@ -120,17 +125,5 @@ class UserRegistrar
         }
 
         return $this->createByInvitation();
-    }
-
-
-    /**
-     * @param $user
-     *
-     * @return mixed
-     */
-    private function swapUsers(User $user): void
-    {
-        $this->invitation->user->swapWith($user);
-        $this->invitation = $this->invitation->fresh();
     }
 }

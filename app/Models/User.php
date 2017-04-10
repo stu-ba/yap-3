@@ -9,6 +9,7 @@ use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
 
+
 /**
  * Yap\Models\User
  *
@@ -27,7 +28,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property bool $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Yap\Models\Invitation $invitation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[] $invitations
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
@@ -46,6 +47,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereUsername($value)
  * @mixin \Eloquent
  */
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -102,9 +104,14 @@ class User extends Authenticatable
         });
     }
 
-    public function invitation()
+    //public function invitation()
+    //{
+    //    return $this->hasOne(Invitation::class);
+    //}
+
+    public function invitations()
     {
-        return $this->hasOne(Invitation::class);
+        return $this->hasMany(Invitation::class);
     }
 
     /**
@@ -114,7 +121,7 @@ class User extends Authenticatable
      */
     public function system()
     {
-        return $this->whereGithubId(0)->whereTaigaId(0)->whereIsAdmin(true)->first();
+        return $this->whereGithubId(0)->whereIsAdmin(true)->first();
     }
 
     public function logginable(): bool
@@ -211,11 +218,24 @@ class User extends Authenticatable
         return $this;
     }
 
+    protected function swapNotifications(self $user): void
+    {
+        $this->notifications()->update(['notifiable_id' => $user->id]);
+    }
+
     public function swapWith(self $user): self
     {
-        $this->setRawAttributes(array_except($user->attributes, 'id'));
-        $user->delete();
-        $this->save();
+        if (is_null($user->email) && is_null($user->taiga_id) && ! $user->is_confirmed) {
+            //swapping every associated model except invitation
+            $user->swapNotifications($this);
+            //swap project
+            //swap ...
+            $user->delete();
+        } else {
+            $this->setRawAttributes(array_except($user->attributes, 'id'));
+            $user->delete();
+            $this->save();
+        }
 
         return $this;
     }

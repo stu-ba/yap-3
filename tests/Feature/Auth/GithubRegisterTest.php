@@ -99,13 +99,12 @@ class GithubRegisterTest extends TestCase
         /** @var Invitation $invitation2 */
         $invitation2 = factory(Invitation::class)->create();
         /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class)->states(['!depleted'])->create();
+        $invitation = factory(Invitation::class, 'empty')->create();
 
         $githubToken = str_random(24);
         $this->mockSocialiteFacade([
             'id' => $invitation2->user->github_id,
             'token' => $githubToken,
-            //'email'    => $invitation2->user->email,
             'email' => $faker->email,
             'nickname' => $faker->userName,
             'name' => $faker->firstName.' '.$faker->lastName,
@@ -142,7 +141,7 @@ class GithubRegisterTest extends TestCase
 
         $this->get(route('register.callback', ['token' => encrypt($invitation->token)]));
 
-        $this->seeIsAuthenticatedAs($invitation->user->fresh());
+        $this->seeIsAuthenticatedAs($invitation->fresh('user')->user);
         $this->assertResponseStatus(302);
     }
 

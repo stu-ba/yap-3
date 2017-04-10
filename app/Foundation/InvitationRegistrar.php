@@ -74,9 +74,9 @@ class InvitationRegistrar
         list($user, $invitation) = $this->setUp($email, $options);
 
         if (is_null($invitation) && is_null($user)) {
-            $this->makeBare()->mail(new UserInvited($this->user->invitation));
+            $this->makeBare()->mail(new UserInvited($this->user->invitations->first()));
 
-            return $this->user->invitation;
+            return $this->user->invitations->first();
         } elseif ( ! is_null($invitation) && ! is_null($user)) {
             //This always throws exception catch it!
             $this->invitationAndUserFound($user);
@@ -104,7 +104,7 @@ class InvitationRegistrar
                 'valid_until' => Carbon::now(),
             ]);
 
-            $user->confirm()->invitation()->save($invitation);
+            $user->confirm()->invitations()->save($invitation);
             $this->mail(new UserAccessGranted($user));
 
             return $invitation;
@@ -124,7 +124,7 @@ class InvitationRegistrar
         $this->setInviter()->setOptions($options)->setEmail($email);
 
         /** @var User $user */
-        $user = $this->user->whereEmail($email)->first();
+        $user = $this->user->with('invitations')->whereEmail($email)->first();
         /** @var Invitation $invitation */
         $invitation = $this->invitation->whereEmail($email)->first();
 
@@ -173,15 +173,16 @@ class InvitationRegistrar
 
 
     /**
-     * @param $user
-     * @param $invitation
+     * @param User $user
+     * @param Invitation $invitation
      *
      * @return array
      */
     private function checkRelations($user, $invitation): array
     {
-        if ( ! is_null($user) && ! is_null($user->invitation)) {
-            $invitation = $user->invitation;
+        if ( ! is_null($user) && $user->invitations->isNotEmpty()) {
+            // This can be any invitation from collection so lets grab first
+            $invitation = $user->invitations->first();
         } elseif ( ! is_null($invitation) && ! is_null($invitation->user->email)) {
             $user = $invitation->user;
         }
@@ -221,6 +222,7 @@ class InvitationRegistrar
         }
 
         if ( ! $this->options['dont_send']) {
+
             $this->mailer->send($mailable);
 
             return true;
@@ -246,7 +248,7 @@ class InvitationRegistrar
         ]);
 
         $this->user->fill(['is_admin' => $this->options['admin']])->save();
-        $this->user->invitation()->save($this->invitation);
+        $this->user->invitations()->save($this->invitation);
 
         return $this;
     }
