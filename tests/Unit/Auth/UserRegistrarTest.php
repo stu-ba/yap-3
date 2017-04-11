@@ -42,34 +42,24 @@ class UserRegistrarTest extends TestCase
     public function testInvitationIsDepletedIfEmailIsDifferentAndUserAlreadyConfirmed() {
         //testing multiple invitations for one github account
 
-        //$this->markTestSkipped('Not finished.');
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class)->create();
         /** @var Invitation $invitationEmpty */
         $invitationEmpty = factory(Invitation::class, 'empty')->create();
+        /** @var Invitation $invitationEmpty2 */
+        $invitationEmpty2 = factory(Invitation::class, 'empty')->states(['expired'])->create();
 
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['id' => $invitation->user->github_id, 'email' => $invitationEmpty->email]);
         $this->registrar->register($invitationEmpty, $githubUser);
+        $this->registrar->register($invitationEmpty2, $githubUser);
 
         $invitationEmpty = $invitationEmpty->fresh();
+        $invitationEmpty2 = $invitationEmpty2->fresh();
 
         $this->assertTrue($invitationEmpty->is_depleted);
+        $this->assertTrue($invitationEmpty2->is_depleted);
         $this->assertEquals($invitation->user_id, $invitationEmpty->user_id);
-    }
-
-    public function testA() {
-        $this->markTestSkipped('Not finished.');
-        /** @var Invitation $invitation */
-        $invitation = factory(Invitation::class)->create();
-        /** @var Invitation $invitation2 */
-        $invitation2 = factory(Invitation::class, 'empty')->create();
-
-        list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['id' => $invitation->user->github_id, 'email' => $invitation2->email]);
-
-        $this->registrar->register($invitation2, $githubUser);
-
-        $this->assertTrue($invitation2->is_depleted);
-        $this->assertEquals($invitation->user_id, $invitation2->user_id);
+        $this->assertEquals($invitation->user_id, $invitationEmpty2->user_id);
     }
 
     public function testRegisterByInvitationWithSameEmails()
