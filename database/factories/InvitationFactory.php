@@ -50,3 +50,9 @@ $factory->state(Yap\Models\Invitation::class, '!depleted', function () {
         'depleted_at' => null,
     ];
 });
+
+$factory->state(Yap\Models\Invitation::class, 'expired', function () {
+    return [
+        'valid_until' => \Carbon\Carbon::now()->subDay(),
+    ];
+});
