@@ -78,7 +78,7 @@ class InvitationRegistrar
 
             return $this->user->invitations->first();
         } elseif ( ! is_null($invitation) && ! is_null($user)) {
-            //This always throws exception catch it!
+            // This always throws exception catch it!
             $this->invitationAndUserFound($user);
         } elseif ( ! is_null($invitation) && is_null($user)) {
             $invitation = $this->processOptions($invitation);

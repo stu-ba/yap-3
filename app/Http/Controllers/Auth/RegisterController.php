@@ -42,7 +42,7 @@ class RegisterController extends Controller
             return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email', 'admin:org'])->redirect();
         }
 
-        //todo: maybe inform user that token has expired or been used
+        //TODO: maybe inform user that token has expired or been used
         return redirect()->route('login');
     }
 
