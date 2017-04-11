@@ -85,9 +85,12 @@ class Invitation extends Model
 
     public function swapUser(User $user): self
     {
-        $user->swapWith($this->user);
+        $originalUser = $this->user;
+
         $this->user_id = $user->id;
         $this->save();
+
+        $user->swapWith($originalUser);
 
         return $this;
     }

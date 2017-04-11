@@ -225,7 +225,7 @@ class User extends Authenticatable
 
     public function swapWith(self $user): self
     {
-        if (is_null($user->email) && is_null($user->taiga_id) && ! $user->is_confirmed) {
+        if (is_null($user->email) && ! $user->is_confirmed) {
             //swapping every associated model except invitation
             $user->swapNotifications($this);
             //swap project
