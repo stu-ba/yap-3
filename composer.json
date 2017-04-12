@@ -1,9 +1,10 @@
 {
     "name": "stu-ba/yap",
-    "description": "Ytrium Admin Panel",
+    "description": "Ytrium Admin Panel is integration for Taiga and GitHub.",
     "keywords": [
         "ytrium",
-        "project-management"
+        "project-management",
+	"stu-ba"
     ],
     "license": "MIT",
     "type": "project",
@@ -16,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel/framework": "5.4.x-dev",
+        "laravel/framework": "5.4.*",
         "kyslik/django-signer": "0.0.*",
         "laravel/socialite": "3.0.*",
         "graham-campbell/github": "5.1.*",
