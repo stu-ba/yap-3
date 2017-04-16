@@ -30,3 +30,12 @@ $fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
     font-size: 4em !important;
   }
 }
+
+.bg-black {
+  background-color: black !important;
+}
+
+span.hover-tip {
+  cursor: default !important;
+  //border-bottom: 1px solid #f5f5f5;
+}

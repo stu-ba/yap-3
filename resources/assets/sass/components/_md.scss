@@ -34,6 +34,7 @@
 @import "../components/md/checkboxes";
 @import "../components/md/radios";
 @import "../components/md/togglebutton";
+@import "../components/md/pagination";
 @import "../components/md/ripples";
 @import "../components/md/pills";
 @import "../components/md/dialogs";
@@ -56,4 +57,8 @@
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;
+}
+
+i.fa + span {
+  margin-left: 12px;
 }

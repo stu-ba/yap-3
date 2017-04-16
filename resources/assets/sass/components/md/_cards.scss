@@ -26,7 +26,6 @@
     margin-right: 15px;
     margin-top: -30px;
     border-radius: $border-radius-large;
-
     img {
       width: 100%;
       height: 100%;
@@ -206,22 +205,22 @@
   }
 
   [data-background-color="blue"] {
-    background: linear-gradient(60deg, $cyan-400, $cyan-600);
-    @include shadow-big-color($brand-info);
+    background: linear-gradient(60deg, lighten($brand-primary, 5%), $brand-primary);
+    @include shadow-big-color($brand-primary);
   }
 
   [data-background-color="green"] {
-    background: linear-gradient(60deg, $green-400, $green-600);
+    background: linear-gradient(60deg, lighten($brand-success, 5%), $brand-success);
     @include shadow-big-color($brand-success);
   }
 
   [data-background-color="orange"] {
-    background: linear-gradient(60deg, $orange-400, $orange-600);
+    background: linear-gradient(60deg, lighten($brand-warning, 5%), $brand-warning);
     @include shadow-big-color($brand-warning);
   }
 
   [data-background-color="red"] {
-    background: linear-gradient(60deg, $red-400, $red-600);
+    background: linear-gradient(60deg, lighten($brand-danger, 5%), $brand-danger);
     @include shadow-big-color($brand-danger);
   }
 
@@ -241,7 +240,6 @@
   .card-header {
     float: left;
     text-align: center;
-
     i {
       font-size: 36px;
       line-height: 56px;
@@ -271,6 +269,21 @@
   }
 }
 
+.card-filter {
+  .filter-title {
+    float: left;
+    padding: 10px;
+    color: $white;
+  }
+
+  .nav-tabs {
+    background: $grey;
+  }
+
+  padding: 20px;
+  margin: 0px $margin-base 0;
+}
+
 .card-plain {
   background: transparent;
   box-shadow: none;
@@ -283,7 +296,6 @@
     padding-left: 5px;
     padding-right: 5px;
   }
-
   .card-image {
     margin: 0;
     border-radius: $border-radius-base;
