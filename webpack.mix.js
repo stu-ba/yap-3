@@ -22,5 +22,5 @@ mix.js('resources/assets/js/docs.js', 'public/js')
     .copy('resources/assets/svg', 'public/svg')
     .copy('resources/assets/fonts', 'public/fonts')
     .browserSync({
-        proxy: 'yap.dev/docs'
+        proxy: 'yap.dev'
     });
