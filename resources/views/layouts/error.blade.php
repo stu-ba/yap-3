@@ -7,9 +7,9 @@
     <meta name="author" content="">
 
     <!-- Title -->
-    <title>Errrrr</title>
+    <title>{{ $title ?? 'Error' }}</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300|700" rel="stylesheet" type="text/css">
     <style>
         html, body {
             height: 100%;
@@ -19,11 +19,10 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            /*color: #B0BEC5;*/
-            background-color: #22A7F0;
+            background-color: #309cd4;
             display: table;
-            /*font-weight: 100;*/
             font-family: 'Source Sans Pro', sans-serif;
+            color: white;
         }
 
         .container {
@@ -35,6 +34,7 @@
         .content_err {
             text-align: center;
             display: inline-block;
+            font-size: 32px;
         }
 
         .title_err {
@@ -42,14 +42,14 @@
             margin-bottom: 40px;
         }
 
-        a.link_err {
+        a.link_err, a:visited {
             font-size: 32px;
-            text-decoration: none;
+            text-decoration: underline;
+            color: white;
         }
     </style>
 </head>
 <body class="flat-blue login-page register-page">
-
 @yield('content')
 </body>
 </html>
