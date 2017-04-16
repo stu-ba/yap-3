@@ -167,6 +167,7 @@ return [
          * Package Service Providers...
          */
         Kyslik\Django\Signing\SignerServiceProvider::class,
+        Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
 
