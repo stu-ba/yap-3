@@ -19,6 +19,7 @@
         "php": ">=7.1.0",
         "laravel/framework": "5.4.*",
         "kyslik/django-signer": "0.0.*",
+        "kyslik/column-sortable": "5.4.*",
         "laravel/socialite": "3.0.*",
         "graham-campbell/github": "5.1.*",
         "php-http/guzzle6-adapter": "^1.1",
