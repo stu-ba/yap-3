@@ -14,37 +14,46 @@
  */
 
 //variables and mixins
-@import "components/md/variables";
-@import "components/md/mixins";
-@import "components/md/shadows";
+@import "../components/md/variables";
+@import "../components/md/mixins";
+@import "../components/md/shadows";
 
 //plugin css
-@import "components/md/plugins/_plugin-nouislider";
-@import "components/md/plugins/_animate";
+@import "../components/md/plugins/_plugin-nouislider";
+@import "../components/md/plugins/_animate";
 
 // Core CSS
-@import "components/md/typography";
-@import "components/md/sidebar-and-main-panel";
-@import "components/md/buttons";
-@import "components/md/misc";
-@import "components/md/inputs";
-@import "components/md/forms";
-@import "components/md/alerts";
-@import "components/md/tables";
-@import "components/md/checkboxes";
-@import "components/md/radios";
-@import "components/md/togglebutton";
-@import "components/md/ripples";
-@import "components/md/pills";
-@import "components/md/dialogs";
-@import "components/md/navbars";
-@import "components/md/popups";
-@import "components/md/footers";
+@import "../components/md/typography";
+@import "../components/md/sidebar-and-main-panel";
+@import "../components/md/buttons";
+@import "../components/md/misc";
+@import "../components/md/inputs";
+@import "../components/md/forms";
+@import "../components/md/alerts";
+@import "../components/md/tables";
+@import "../components/md/checkboxes";
+@import "../components/md/radios";
+@import "../components/md/togglebutton";
+@import "../components/md/ripples";
+@import "../components/md/pills";
+@import "../components/md/dialogs";
+@import "../components/md/navbars";
+@import "../components/md/popups";
+@import "../components/md/footers";
 
 // Fancy Stuff
-@import "components/md/dropdown";
-@import "components/md/cards";
-@import "components/md/tabs";
-@import "components/md/chartist";
-@import "components/md/responsive";
-@import "components/md/sections";
+@import "../components/md/dropdown";
+@import "../components/md/cards";
+@import "../components/md/tabs";
+@import "../components/md/chartist";
+@import "../components/md/responsive";
+@import "../components/md/sections";
+
+.taiga-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
