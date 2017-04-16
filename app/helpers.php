@@ -24,15 +24,23 @@ if (! function_exists('is_email')) {
 }
 
 if (! function_exists('svg')) {
-    function svg(string $src)
+    function svg(string $src, string $class = null)
     {
         try {
-            return trim(preg_replace('/\s+/', ' ', file_get_contents(public_path('svg/'.$src.'.svg'))));
+            $contents = trim(preg_replace('/\s+/', ' ', file_get_contents(public_path('svg/'.$src.'.svg'))));
+            if (!is_null($class)) {
+                $class = 'class="'.$class.'">';
+                $contents = str_replace_first('>', $class, $contents);
+            }
+
+            return $contents;
         } catch (ErrorException $e) {
             return '';
         }
     }
 }
+
+
 //if ( ! function_exists('systemAccount')) {
 //    function systemAccount()
 //    {
