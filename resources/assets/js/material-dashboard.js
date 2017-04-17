@@ -41,7 +41,9 @@ $(document).ready(function () {
     window_width = $(window).width();
 
     //  Activate the tooltips
-    $('[rel="tooltip"]').tooltip();
+    $('[rel="tooltip"]').tooltip({
+        trigger : 'hover'
+    });
 
     $('.form-control').on("focus", function () {
         $(this).parent('.input-group').addClass("input-group-focus");
@@ -204,10 +206,8 @@ md = {
 
                         }, 400);
                     });
-
                     $('html').addClass('nav-open');
                     mobile_menu_visible = 1;
-
                 }
 
             });
