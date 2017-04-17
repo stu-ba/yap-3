@@ -14,6 +14,7 @@ require('bootstrap-material-design');
 require('bootstrap-notify');
 require('./material-dashboard');
 
+swal = require('sweetalert2');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -29,13 +30,13 @@ require('./material-dashboard');
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-// window.axios = require('axios');
-//
+window.axios = require('axios');
 // // see https://laracasts.com/discuss/channels/vue/vuejs-error-cannot-read-property-csrftoken-of-undefined
-// window.axios.defaults.headers.common = {
-//     //'X-CSRF-TOKEN': window.Laravel.csrfToken,
-//     'X-Requested-With': 'XMLHttpRequest'
-// };
+window.axios.defaults.headers.common = {
+    'Authorization': 'Bearer ' + document.querySelector('meta[name="yap-token"]').getAttribute('content'),
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    'X-Requested-With': 'XMLHttpRequest'
+};
 
 
 
