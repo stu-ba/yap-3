@@ -136,7 +136,7 @@ if ( ! function_exists('yap_token')) {
             return $signer->setMaxAge(5)->dumps(array_only($user->toArray(), ['id', 'username']));
         }
 
-        return [];
+        return '';
     }
 }
 

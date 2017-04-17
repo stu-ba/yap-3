@@ -101,6 +101,7 @@ class Handler extends ExceptionHandler
         if (! $this->isHttpException($e) && config('app.debug')) {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
+
         if (! $this->isHttpException($e)) {
             $e = new HttpException(500, $e->getMessage());
         }

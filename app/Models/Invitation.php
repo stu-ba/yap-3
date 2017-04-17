@@ -160,7 +160,7 @@ class Invitation extends Model
 
     private function determineCreator()
     {
-        return auth()->id() ?? systemAccount()->id;
+        return auth()->id() ?? auth('api')->id() ?? systemAccount()->id;
     }
 
     private function determineValidUntil()

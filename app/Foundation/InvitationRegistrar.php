@@ -153,7 +153,7 @@ class InvitationRegistrar
      */
     private function setOptions(array $options): self
     {
-        $this->options = array_merge($this->options, $options);
+        $this->options = array_merge($this->options, array_filter($options));
 
         return $this;
     }
@@ -165,7 +165,7 @@ class InvitationRegistrar
     private function setInviter(): self
     {
         if (is_null($this->inviter)) {
-            $this->inviter = auth()->id() ?? systemAccount();
+            $this->inviter = auth()->user() ?? auth('api')->user() ?? systemAccount();
         }
 
         return $this;
