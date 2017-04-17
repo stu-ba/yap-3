@@ -7,10 +7,16 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <meta name="viewport" content="width=device-width"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="yap-token" content="{{ yap_token() }}">
 
     <title>{{ $title ?? 'Yap 3.0' }}</title>
 
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
+    <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
 </head>
 <body>
 <div class="wrapper">
