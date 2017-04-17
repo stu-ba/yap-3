@@ -118,6 +118,47 @@ if ( ! function_exists('set_active_filter')) {
         return null;
     }
 }
+
+if ( ! function_exists('yap_token')) {
+    /**
+     * Get the CSRF token value.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    function yap_token()
+    {
+        $signer = app(\Kyslik\Django\Signing\Signer::class);
+        $user = auth()->user();
+
+        if ( ! is_null($user)) {
+            return $signer->setMaxAge(5)->dumps(array_only($user->toArray(), ['id', 'username']));
+        }
+
+        return [];
+    }
+}
+
+if ( ! function_exists('route_exists')) {
+    /**
+     * @param $route
+     *
+     * @return bool
+     */
+    function route_exists(string $route = null): bool
+    {
+        $routes = \Route::getRoutes()->getRoutes();
+        foreach ($routes as $r) {
+            if ($r->getName() === $route) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 if ( ! function_exists('date_with_hovertip')) {
     function date_with_hovertip(\Carbon\Carbon $date, $position = 'top'): string
     {
