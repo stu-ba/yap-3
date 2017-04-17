@@ -1,7 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +10,17 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+Route::post('/users/invite', 'InvitationController@store')->middleware('auth:api');
+Route::get('/router/{route}/{parameters?}', function ($route, $parameters = null) {
+
+    if ( ! is_null($parameters)) {
+        $parameters = json_decode($parameters, true, 2);
+    }
+
+    if (route_exists($route)) {
+        return route($route, $parameters, true);
+    }
+
+    return abort(404);
+
+})->middleware('auth:api');
