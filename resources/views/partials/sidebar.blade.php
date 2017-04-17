@@ -13,7 +13,7 @@
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li class="{{ set_active_paths(['users*', 'profile']) }}">
+            <li class="{{ set_active_paths(['users*', 'profile*', 'invitations*']) }}">
                 <a href="{{ route('users.index') }}">
                     <i class="fa fa-lg fa-users"></i>
                     <p>Users</p>

@@ -10,7 +10,7 @@
 |
 */
 
-Route::post('/users/invite', 'InvitationController@store')->middleware('auth:api');
+Route::post('/invitations', 'InvitationController@store')->middleware('auth:api')->name('api.invitations.store');
 Route::get('/router/{route}/{parameters?}', function ($route, $parameters = null) {
 
     if ( ! is_null($parameters)) {
@@ -18,9 +18,11 @@ Route::get('/router/{route}/{parameters?}', function ($route, $parameters = null
     }
 
     if (route_exists($route)) {
-        return route($route, $parameters, true);
+        return response()->json(['url' => route($route, $parameters, true)]);
     }
 
-    return abort(404);
+    return response()->json([
+        'message' => 'Route ['.$route.'] not found.',
+    ], 404);
 
 })->middleware('auth:api');
