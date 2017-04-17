@@ -42,7 +42,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'yap',
             'provider' => 'users',
         ],
     ],
@@ -69,11 +69,6 @@ return [
             'driver' => 'eloquent',
             'model' => Yap\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
