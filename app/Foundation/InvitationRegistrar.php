@@ -91,7 +91,6 @@ class InvitationRegistrar
                 //send email if valid until is in past...
                 $this->mail(new InvitationProlonged($invitation));
             }
-            $invitation->prolong();
 
             return $invitation;
         } elseif (is_null($invitation) && ! is_null($user)) {
@@ -177,7 +176,7 @@ class InvitationRegistrar
 
 
     /**
-     * @param User $user
+     * @param User       $user
      * @param Invitation $invitation
      *
      * @return array
@@ -283,6 +282,8 @@ class InvitationRegistrar
 
         if ($this->options['indefinite']) {
             $invitation->makeIndefinite();
+        } elseif (is_null($invitation->valid_until) && ! $this->options['indefinite']) {
+            $invitation->prolong();
         }
 
         return $invitation->updateInviter($this->inviter);

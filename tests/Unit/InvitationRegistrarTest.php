@@ -78,7 +78,7 @@ class InvitationRegistrarTest extends TestCase
     public function testInvitationUrgedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
-        $this->registrar->invite($invitation->email);
+        $this->registrar->invite($invitation->email, ['indefinite' => true]);
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
         $this->registrar->mailer->assertSent(InvitationUrged::class, function ($mail) use ($invitation) {
             return $mail->invitation->email === $invitation->email;
@@ -103,6 +103,24 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->mailer->assertSent(InvitationUrged::class, function ($mail) use ($invitation) {
             return $mail->invitation->email === $invitation->email;
         });
+    }
+
+    public function testInvitationUrgeEmailIsSent()
+    {
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
+        $this->registrar->invite($invitation->email, ['indefinite' => true]);
+        $this->assertEquals($invitation->email, $this->invitation->first()->email);
+        $this->registrar->mailer->assertSent(InvitationUrged::class, function ($mail) use ($invitation) {
+            return $mail->invitation->email === $invitation->email;
+        });
+    }
+
+    public function testInvitationProlongedEmailIsNotSentAfterDemotedToDefinite()
+    {
+        $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
+        $this->registrar->invite($invitation->email, ['indefinite' => false]);
+        $this->assertEquals($invitation->email, $this->invitation->first()->email);
+        $this->registrar->mailer->assertNothingSent();
     }
 
     public function testNoEmailIsSentIfProlongedDuringValidUntilPeriod()
