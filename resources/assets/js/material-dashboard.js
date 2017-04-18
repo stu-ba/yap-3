@@ -14,15 +14,8 @@
 
  */
 
-
-var searchVisible = 0;
 var transparent = true;
-
-var transparentDemo = true;
-var fixedTop = false;
-
 var mobile_menu_visible = 0,
-    mobile_menu_initialized = false,
     toggle_initialized = false,
     bootstrap_nav_initialized = false;
 
@@ -266,7 +259,6 @@ md = {
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
-
 function debounce(func, wait, immediate) {
     var timeout;
     return function () {

@@ -170,6 +170,7 @@ return [
         Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
+        Prologue\Alerts\AlertsServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -231,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Alert' => Prologue\Alerts\Facades\Alert::class,
     ],
 
 ];

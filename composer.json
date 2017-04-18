@@ -17,15 +17,16 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "laravel/framework": "5.4.*",
-        "kyslik/django-signer": "0.0.*",
-        "kyslik/column-sortable": "5.4.*",
-        "laravel/socialite": "3.0.*",
-        "graham-campbell/github": "5.1.*",
-        "php-http/guzzle6-adapter": "^1.1",
-        "madewithlove/illuminate-psr-cache-bridge": "1.0.*",
         "erusev/parsedown-extra": "0.7.*",
+        "graham-campbell/github": "5.1.*",
+        "kyslik/column-sortable": "5.4.*",
+        "kyslik/django-signer": "0.0.*",
+        "laravel/framework": "5.4.*",
+        "laravel/socialite": "3.0.*",
         "league/commonmark": "0.15.*",
+        "madewithlove/illuminate-psr-cache-bridge": "1.0.*",
+        "php-http/guzzle6-adapter": "^1.1",
+        "prologue/alerts": "^0.4.1",
         "symfony/dom-crawler": "3.2.*"
     },
     "require-dev": {

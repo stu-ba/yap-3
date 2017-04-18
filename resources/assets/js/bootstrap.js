@@ -13,16 +13,8 @@ require('bootstrap-sass');
 require('bootstrap-material-design');
 require('bootstrap-notify');
 require('./material-dashboard');
-
 swal = require('sweetalert2');
 
-/**
- * Vue is a modern JavaScript library for building interactive web interfaces
- * using reactive data binding and reusable components. Vue's API is clean
- * and simple, leaving you to focus on building your next great project.
- */
-
-//window.Vue = require('vue');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -38,5 +30,22 @@ window.axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest'
 };
 
-
-
+window.$.notifyDefaults({
+    delay: 4000,
+    timer: 1000,
+    showProgressbar: true,
+    mouse_over: 'pause',
+    icon_type: 'class',
+    placement: {
+        from: 'top',
+        align: 'center'
+    },
+    template: '<div class="col-xs-10 col-sm-4 alert alert-{0} alert-with-icon" data-notify="container">' +
+    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"><i class="fa fa-close"></i></button>' +
+    '<i data-notify="icon" class="fa fa-lg fa-{0}"></i>' +
+    '<span data-notify="message">{2}</span>' +
+    '<div class="progress" data-notify="progressbar">' +
+    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+    '</div>' +
+    '<a href="{3}" target="{4}" data-notify="url"></a></div>'
+})

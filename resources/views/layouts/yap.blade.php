@@ -25,6 +25,7 @@
         @include('partials.navbar')
         <div class="content">
             <div class="container-fluid">
+                @include('partials.alerts')
                 @yield('content')
             </div>
         </div>
@@ -33,4 +34,5 @@
 </div>
 </body>
 <script src="{{ mix('/js/app.js') }}"></script>
+@stack('alerts')
 </html>
