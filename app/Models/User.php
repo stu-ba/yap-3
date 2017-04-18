@@ -2,13 +2,14 @@
 
 namespace Yap\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
+use Kyslik\ColumnSortable\Sortable;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
-
 
 /**
  * Yap\Models\User
@@ -30,6 +31,12 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[] $invitations
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues(\Yap\Models\User $user = null)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filter($filterName = 'all')
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User isAdmin($value = true)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBio($value)
@@ -50,7 +57,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -90,6 +97,15 @@ class User extends Authenticatable
         'is_confirmed' => 'boolean',
     ];
 
+    public $sortable = [
+        'id',
+        'name',
+        'email',
+        'username',
+        'created_at',
+        'updated_at'
+    ];
+
     /**
      * Boot function for using with User Events.
      *
@@ -104,14 +120,57 @@ class User extends Authenticatable
         });
     }
 
-    //public function invitation()
-    //{
-    //    return $this->hasOne(Invitation::class);
-    //}
+    public function getRouteKeyName()
+    {
+        return 'username';
+    }
 
     public function invitations()
     {
         return $this->hasMany(Invitation::class);
+    }
+
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeFilled(Builder $query): Builder
+    {
+        return $query->whereNotNull('email')->where('github_id', '<>', 0);
+    }
+
+
+    public function scopeFilter(Builder $query, string $filterName = 'all'): Builder
+    {
+        switch ($filterName) {
+            case 'banned':
+                return $query->banned();
+            case 'colleagues':
+                return $query->colleagues(auth()->user());
+            case 'admins':
+                return $query->isAdmin();
+            default:
+                return $query;
+        }
+    }
+
+
+    public function scopeBanned(Builder $query, bool $value = true): Builder
+    {
+        return $query->whereIsBanned($value);
+    }
+
+    public function scopeIsAdmin(Builder $query, bool $value = true): Builder
+    {
+        return $query->whereIsAdmin($value);
+    }
+
+    public function scopeColleagues(Builder $query, User $user = null): Builder
+    {
+        d($user ?? 'unset');
+        return $query;
     }
 
     /**
