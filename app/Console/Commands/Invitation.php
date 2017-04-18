@@ -96,10 +96,18 @@ class Invitation extends Command
     private function invite($invitation): void
     {
         if ($invitation->is_depleted) {
-            $this->info('User '.($invitation->user->name ?? $invitation->user->username).' was granted access and can freely login to '.config('yap.short_name').'.');
+            $this->info('User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.');
+
+            return;
+        } elseif ($invitation->created_at->diffInSeconds() <= 4) {
+            $this->info('Invitation for potential user with email \''.$invitation->email.'\' was created.');
+        } elseif (is_null($invitation->valid_until)) {
+            $this->info('Invitation for potential user with email \''.$invitation->email.'\' is now valid forever.');
         } else {
-            $this->info('Invitation link:');
-            $this->info(route('register', ['token' => $invitation->token]));
+            $this->info('Invitation for potential user with email \''.$invitation->email.'\' was prolonged.');
         }
+
+        $this->info('Invitation link:');
+        $this->info(route('register', ['token' => $invitation->token]));
     }
 }
