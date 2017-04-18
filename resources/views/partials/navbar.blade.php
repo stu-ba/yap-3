@@ -33,13 +33,13 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">{!! svg('taiga-icon', 'taiga-icon taiga-icon fa-lg') !!} Switch to Taiga</a></li>
-                        <li><a href="#"><i class="fa fa-lg fa-sign-out"></i> Logout</a></li>
+                        <li><a href="#"><i class="fa fa-lg fa-user-o"></i> <span>Profile</span></a></li>
+                        <li><a href="#">{!! svg('taiga-icon', 'taiga-icon fa-lg') !!} <span>Switch to Taiga</span></a></li>
+                        <li><a href="#"><i class="fa fa-lg fa-sign-out"></i> <span>Logout</span></a></li>
                     </ul>
                 </li>
             </ul>
