@@ -64,7 +64,7 @@ span.hover-tip {
   cursor: default !important;
 }
 
-.taiga-icon {
+.infinity-icon, .taiga-icon {
   display: inline-block;
   width: 1em;
   height: 1em;
@@ -73,6 +73,12 @@ span.hover-tip {
   fill: currentColor;
 }
 
-i.fa + span {
+i.fa + span, svg.taiga-icon + span {
   margin-left: 12px;
+}
+
+.fa-infinity:before {
+  font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial !important;
+  content: '\221E';
+  speak: none;
 }
