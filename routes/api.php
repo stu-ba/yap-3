@@ -12,7 +12,6 @@
 
 Route::post('/invitations', 'InvitationController@store')->middleware('auth:api')->name('api.invitations.store');
 Route::get('/router/{route}/{parameters?}', function ($route, $parameters = null) {
-
     if ( ! is_null($parameters)) {
         $parameters = json_decode($parameters, true, 2);
     }
@@ -24,5 +23,4 @@ Route::get('/router/{route}/{parameters?}', function ($route, $parameters = null
     return response()->json([
         'message' => 'Route ['.$route.'] not found.',
     ], 404);
-
 })->middleware('auth:api');

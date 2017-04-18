@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Auth;
 
-use DB;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use InvalidArgumentException;
 use Tests\Feature\Auth\Mocks\GithubMock;
