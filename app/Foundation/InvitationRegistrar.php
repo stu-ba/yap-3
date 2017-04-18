@@ -151,8 +151,12 @@ class InvitationRegistrar
      *
      * @return InvitationRegistrar
      */
-    private function setOptions(array $options): self
+    protected function setOptions(array $options): self
     {
+        $options = array_map(function ($option) {
+            return filter_var($option, FILTER_VALIDATE_BOOLEAN);
+        }, $options);
+
         $this->options = array_merge($this->options, array_filter($options));
 
         return $this;
