@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="yap-token" content="{{ yap_token() }}">
 
-    <title>{{ $title ?? 'Yap 3.0' }}</title>
+    <title>{{ isset($title) ? $title . ' - ' : null }}Yap 3.0</title>
 
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
     <script>
