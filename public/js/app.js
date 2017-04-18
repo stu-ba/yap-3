@@ -11267,6 +11267,12 @@ function inviteUser() {
     swal({
         title: 'Invite user via email.',
         input: 'email',
+        inputAttributes: {
+            autocomplete: 'off',
+            autocorrect: 'off',
+            autocapitalize: 'off',
+            spellcheck: false
+        },
         showCancelButton: true,
         confirmButtonText: 'Invite',
         cancelButtonText: 'More options',

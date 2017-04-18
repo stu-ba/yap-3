@@ -24,7 +24,7 @@
                             <div class="col-md-12">
                                 <div class="form-group label-floating {{ !is_null(old('email', $email)) ? '' : 'is-empty' }}">
                                     <label class="control-label">Email</label>
-                                    <input type="email" value="{{ old('email', $email) }}" class="form-control" name="email" required autofocus autocomplete="off">
+                                    <input type="email" value="{{ old('email', $email) }}" class="form-control" name="email" required autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                                     <span class="material-input"></span></div>
                             </div>
                         </div>
