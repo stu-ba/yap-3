@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'documentation-font';
-  src:  url('fonts/documentation-font.eot?hj1sp');
-  src:  url('fonts/documentation-font.eot?hj1sp#iefix') format('embedded-opentype'),
+  src: url('fonts/documentation-font.eot?hj1sp');
+  src: url('fonts/documentation-font.eot?hj1sp#iefix') format('embedded-opentype'),
   url('fonts/documentation-font.ttf?hj1sp') format('truetype'),
   url('fonts/documentation-font.woff?hj1sp') format('woff'),
   url('fonts/documentation-font.svg?hj1sp#documentation-font') format('svg');
@@ -27,57 +27,75 @@
 .icon-film:before {
   content: "\f008";
 }
+
 .icon-info-circle:before {
   content: "\f05a";
 }
+
 .icon-exclamation-circle:before {
   content: "\f06a";
 }
+
 .icon-exclamation-triangle:before {
   content: "\f071";
 }
+
 .icon-warning:before {
   content: "\f071";
 }
+
 .icon-github-square:before {
   content: "\f092";
 }
+
 .icon-github:before {
   content: "\f09b";
 }
+
 .icon-chain:before {
   content: "\f0c1";
 }
+
 .icon-link:before {
   content: "\f0c1";
 }
+
 .icon-lightbulb-o:before {
   content: "\f0eb";
 }
+
 .icon-github-alt:before {
   content: "\f113";
 }
+
 .icon-code-fork:before {
   content: "\f126";
 }
+
 .icon-exclamation:before {
   content: "\f12a";
 }
+
 .icon-youtube-play:before {
   content: "\f16a";
 }
+
 .icon-stack-overflow:before {
   content: "\f16c";
 }
+
 .icon-git-square:before {
   content: "\f1d2";
 }
+
 .icon-git:before {
   content: "\f1d3";
 }
+
 .icon-at:before {
   content: "\f1fa";
 }
+
 .icon-hashtag:before {
   content: "\f292";
 }

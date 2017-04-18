@@ -9,13 +9,13 @@ $panel-default-border: $laravel-border-color;
 $panel-inner-border: $laravel-border-color;
 
 // Brands
-$brand-primary:         darken(#309cd4, 6.5%) !default; // #337ab7
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
-$brand-warning:         #ffa21a !default;
-$brand-danger:          #f55a4e !default;
+$brand-primary: darken(#309cd4, 6.5%) !default; // #337ab7
+$brand-success: #5cb85c !default;
+$brand-info: #5bc0de !default;
+$brand-warning: #ffa21a !default;
+$brand-danger: #f55a4e !default;
 
-$curious_blue: #309cd4;
+$curious_blue: $brand-primary;
 $eastern_blue: #1b7fba;
 $black_haze: #f1f3f2;
 $emperor: #4f4f4f;

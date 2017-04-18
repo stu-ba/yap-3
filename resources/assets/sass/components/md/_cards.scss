@@ -68,6 +68,11 @@
       color: rgba($white-color, .62);
     }
 
+    a.support {
+      float: right;
+      margin-left: 32px;
+    }
+
     &.card-chart {
       padding: 0;
       min-height: 160px;

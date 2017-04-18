@@ -12,16 +12,13 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
-
 //variables and mixins
 @import "../components/md/variables";
 @import "../components/md/mixins";
 @import "../components/md/shadows";
-
 //plugin css
 @import "../components/md/plugins/_plugin-nouislider";
 @import "../components/md/plugins/_animate";
-
 // Core CSS
 @import "../components/md/typography";
 @import "../components/md/sidebar-and-main-panel";
@@ -41,7 +38,6 @@
 @import "../components/md/navbars";
 @import "../components/md/popups";
 @import "../components/md/footers";
-
 // Fancy Stuff
 @import "../components/md/dropdown";
 @import "../components/md/cards";
@@ -49,16 +45,3 @@
 @import "../components/md/chartist";
 @import "../components/md/responsive";
 @import "../components/md/sections";
-
-.taiga-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-
-i.fa + span {
-  margin-left: 12px;
-}

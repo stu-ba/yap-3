@@ -1,13 +1,9 @@
-
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300|Material+Icons);
-
 // Variables
 @import "core/variables";
-
 // Bootstrap
 @import "components/bootstrap";
-
 // Material-dashboard
 @import "components/md";
 
@@ -16,13 +12,33 @@ $fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 @import "../../../node_modules/sweetalert2/dist/sweetalert2.css";
 
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
-.material-icons.md-64 { font-size: 64px; }
-.material-icons.md-90 { font-size: 90px; }
-.material-icons.md-128 { font-size: 128px; }
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+.material-icons.md-64 {
+  font-size: 64px;
+}
+
+.material-icons.md-90 {
+  font-size: 90px;
+}
+
+.material-icons.md-128 {
+  font-size: 128px;
+}
 
 .btn-github {
   padding: 4px 10px;
@@ -36,7 +52,27 @@ $fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
   background-color: black !important;
 }
 
+.color-black {
+  color: black !important;
+}
+
+sup.font-size-half {
+  font-size: 0.70em;
+}
+
 span.hover-tip {
   cursor: default !important;
-  //border-bottom: 1px solid #f5f5f5;
+}
+
+.taiga-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+i.fa + span {
+  margin-left: 12px;
 }

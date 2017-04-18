@@ -12,7 +12,7 @@
   }
 
   p {
-    font-size: 14.5px;
+    font-size: $font-size-base;
     line-height: 1.70;
   }
 
@@ -112,7 +112,8 @@
     }
   }
 
-  blockquote {}
+  blockquote {
+  }
 }
 
 .docs blockquote.has-icon {
@@ -162,7 +163,7 @@
       width: 24px;
       height: 32px;
       path {
-        fill:white;
+        fill: white;
       }
     }
   }
@@ -176,7 +177,7 @@
   overflow: hidden;
 }
 
-@media (max-width:1080px) {
+@media (max-width: 1080px) {
   .docs article {
     margin-left: 200px;
     padding: 15px 30px 30px;
@@ -188,7 +189,7 @@
   }
 }
 
-@media (max-width:780px) {
+@media (max-width: 780px) {
   .docs article {
     margin-left: 0px;
     h1 {
