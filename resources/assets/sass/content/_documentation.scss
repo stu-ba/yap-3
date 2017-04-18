@@ -113,6 +113,8 @@
   }
 
   blockquote {
+    font-size: $font-size-base;
+    background-color: #9e9e9e;
   }
 }
 
@@ -121,6 +123,10 @@
 
   &.warning {
     @include quotes(red);
+  }
+
+  &.note {
+    @include quotes($brand-primary);
   }
 
   &.tip {
