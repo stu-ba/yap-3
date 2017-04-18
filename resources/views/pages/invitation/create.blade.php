@@ -4,7 +4,7 @@
         <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-header" data-background-color="blue">
-                    @include('components.html.card-support', ['page' => 'administration-invitations'])
+                    @include('components.html.card-support', ['page' => 'administration-invitations#tedious'])
                     <h4 class="title">Create invitation</h4>
                     <p class="category">Check options as you see fit.</p>
                 </div>
