@@ -160,9 +160,31 @@ if ( ! function_exists('route_exists')) {
 }
 
 if ( ! function_exists('date_with_hovertip')) {
-    function date_with_hovertip(\Carbon\Carbon $date, $position = 'top'): string
-    {
-        return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'">'.$date->diffForHumans().' <sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
+    function date_with_hovertip(
+        ?\Carbon\Carbon $date,
+        $position = 'top',
+        ?\Carbon\Carbon $hourglass_from = null
+    ): string {
+
+        if (is_null($date) && ! is_null($hourglass_from)) {
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Forever."><i>'.svg('infinity-icon', 'infinity-icon fa-lg').'</i></span>';
+        } elseif ( ! is_null($hourglass_from) && $date->greaterThan($hourglass_from) && \Carbon\Carbon::now()->lessThan($date)) {
+            $difference = $hourglass_from->diffInMinutes($date) / 4;
+
+            if ($hourglass_from->diffInMinutes() < $difference) {
+                $hourglass = 'start';
+            } elseif ($hourglass_from->diffInMinutes() > $difference && $hourglass_from->diffInMinutes() < $difference * 3) {
+                $hourglass = 'half';
+            } else {
+                $hourglass = 'end';
+            }
+
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'"><i class="fa fa-hourglass-'.$hourglass.'"></i></span>';
+        } elseif (is_null($date)) {
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Date not supplied!"><i class="fa fa-meh-o"></i></span>';
+        } else {
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'">'.$date->diffForHumans().' <sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
+        }
     }
 }
 
