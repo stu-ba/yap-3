@@ -162,7 +162,7 @@ if ( ! function_exists('route_exists')) {
 if ( ! function_exists('date_with_hovertip')) {
     function date_with_hovertip(\Carbon\Carbon $date, $position = 'top'): string
     {
-        return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'">'.$date->diffForHumans().'</span>';
+        return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'">'.$date->diffForHumans().' <sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
     }
 }
 
