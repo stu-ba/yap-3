@@ -4,6 +4,7 @@ namespace Yap\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Yap\Models\Invitation
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $inviter
  * @property-read \Yap\Models\User $user
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation active()
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation recent($num = 10)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereDepletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereEmail($value)
@@ -81,6 +84,24 @@ class Invitation extends Model
     public function inviter()
     {
         return $this->belongsTo(User::class, 'invited_by');
+    }
+
+
+    /**
+     * @param Builder $query
+     *
+     * @param int     $num
+     *
+     * @return Builder
+     */
+    public function scopeRecent($query, int $num = 10): Builder
+    {
+        return $query->select(['invited_by','email', 'valid_until', 'created_at', 'updated_at'])->orderBy('updated_at', 'desc')->limit($num);
+    }
+
+    public function scopeActive($query): Builder
+    {
+        return $query->whereIsDepleted(false);
     }
 
     public function swapUser(User $user): self

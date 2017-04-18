@@ -16,7 +16,7 @@
             <li class="{{ set_active_paths(['users*', 'profile*', 'invitations*']) }}">
                 <a href="{{ route('users.index') }}">
                     <i class="fa fa-lg fa-users"></i>
-                    <p>Users</p>
+                    <p>Users{!! set_active_paths('invitations*', ' <span class="fa fa-angle-right"></span> Invitations') !!}</p>
                 </a>
             </li>
             <li>
@@ -28,7 +28,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i>{!! svg('taiga-icon', 'taiga-icon taiga-icon fa-lg') !!}</i>
+                    <i>{!! svg('taiga-icon', 'taiga-icon fa-lg') !!}</i>
                     <p>Switch to Taiga</p>
                 </a>
             </li>
