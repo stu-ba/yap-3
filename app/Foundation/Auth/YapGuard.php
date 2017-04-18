@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Kyslik\Django\Signing\Exceptions\BadSignatureException;
 use Kyslik\Django\Signing\Signer;
 
-class TokenGuard implements Guard
+class YapGuard implements Guard
 {
     use GuardHelpers;
 
@@ -64,33 +64,15 @@ class TokenGuard implements Guard
             return $this->user;
         }
 
-        $user = null;
-
-        $token = $this->getTokenForRequest();
-
-        if (! empty($token)) {
-            $user = $this->provider->retrieveByCredentials(
-                $this->getCredentialsForToken($token)
-            );
-        }
-
-        return $this->user = $user;
+        return $this->user = $this->provider->retrieveByCredentials(
+            $this->getCredentials()
+        );
     }
 
-    /**
-     * Get the token for the current request.
-     *
-     * @return string
-     */
-    public function getTokenForRequest()
-    {
-        return $this->request->bearerToken();
-    }
-
-    public function getCredentialsForToken(string $token): array {
+    public function getCredentials(): array {
 
         try {
-            $credentials = $this->signer->loads($token);
+            $credentials = $this->signer->loads($this->request->bearerToken() ?? '');
         } catch (BadSignatureException $exception) {
             return [];
         }

@@ -5,7 +5,7 @@ namespace Yap\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Kyslik\Django\Signing\Signer;
-use Yap\Foundation\Auth\TokenGuard;
+use Yap\Foundation\Auth\YapGuard;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -28,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::extend('yap', function ($app, $name, array $config) {
-            $guard = new TokenGuard(
+            $guard = new YapGuard(
                 $this->app['auth']->createUserProvider($config['provider']),
                 $this->app['request'],
                 $this->app->make(Signer::class)

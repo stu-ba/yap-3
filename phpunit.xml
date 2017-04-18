@@ -29,6 +29,7 @@
         <env name="GITHUB_CLIENT_ID" value="12345"/>
         <env name="GITHUB_SECRET" value="09876"/>
         <env name="GITHUB_CALLBACK" value="http://test.dev/auth/github/callback"/>
+        <env name="SIGNER_SECRET" value="some-random"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
