@@ -204,7 +204,7 @@ class InvitationRegistrar
     private function handleBannedUser($user)
     {
         if ( ! is_null($user) && $user->is_banned) {
-            throw new InvitationRegistrarException('User specified by email \''.$this->email.'\' is banned.', 0);
+            throw new InvitationRegistrarException('User with email \''.$this->email.'\' is banned.', 0);
         }
     }
 
@@ -267,7 +267,7 @@ class InvitationRegistrar
     private function invitationAndUserFound($user): void
     {
         if ($user->is_confirmed) {
-            throw new InvitationRegistrarException('User specified by email \''.$this->email.'\' is already confirmed.',
+            throw new InvitationRegistrarException('User with email \''.$this->email.'\' is already confirmed.',
                 1);
         }
         //TODO: this should never happen
