@@ -120,12 +120,11 @@ if ( ! function_exists('set_active_filter')) {
 }
 
 if ( ! function_exists('yap_token')) {
+
     /**
-     * Get the CSRF token value.
+     * Get signed token.
      *
      * @return string
-     *
-     * @throws \RuntimeException
      */
     function yap_token()
     {
@@ -133,10 +132,20 @@ if ( ! function_exists('yap_token')) {
         $user = auth()->user();
 
         if ( ! is_null($user)) {
-            return $signer->setMaxAge(5)->dumps(array_only($user->toArray(), ['id', 'username']));
+            return $signer->dumps(array_only($user->toArray(), ['id', 'username']));
         }
 
         return '';
+    }
+}
+
+if (! function_exists('alert')) {
+
+    function alert(string $type, string $message) {
+        $levels = config('prologue.alerts.levels');
+        if (in_array(mb_strtolower($type), $levels)) {
+            \Prologue\Alerts\Facades\Alert::{$type}($message)->flash();
+        }
     }
 }
 

@@ -2,7 +2,6 @@
 
 namespace Yap\Http\Controllers;
 
-use Prologue\Alerts\Facades\Alert;
 use Yap\Exceptions\InvitationRegistrarException;
 use Yap\Foundation\InvitationRegistrar;
 use Yap\Http\Requests\StoreInvitation;
@@ -50,13 +49,13 @@ class InvitationController extends Controller
     protected function flashAlert(Invitation $invitation): void
     {
         if ($invitation->is_depleted) {
-            Alert::info('User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.')->flash();
+            alert('info', 'User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.');
         } elseif ($invitation->wasRecentlyCreated) {
-            Alert::success('Invitation for potential user with email \''.$invitation->email.'\' was created.')->flash();
+            alert('success', 'Invitation for potential user with email \''.$invitation->email.'\' was created.');
         } elseif (is_null($invitation->valid_until)) {
-            Alert::info('Invitation for potential user with email \''.$invitation->email.'\' is now valid forever.')->flash();
+            alert('info', 'Invitation for potential user with email \''.$invitation->email.'\' is now valid forever.');
         } else {
-            Alert::info('Invitation for potential user with email \''.$invitation->email.'\' was prolonged.')->flash();
+            alert('info', 'Invitation for potential user with email \''.$invitation->email.'\' was prolonged.');
         }
     }
 
@@ -67,9 +66,9 @@ class InvitationController extends Controller
     protected function handleException($exception): void
     {
         if ($exception->getCode() === 0) {
-            Alert::error($exception->getMessage())->flash();
+            alert('error', $exception->getMessage());
         } else {
-            Alert::info($exception->getMessage())->flash();
+            alert('info', $exception->getMessage());
         }
     }
 }
