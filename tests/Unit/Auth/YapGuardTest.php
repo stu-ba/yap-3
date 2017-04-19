@@ -26,7 +26,7 @@ class AuthTokenGuardTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->signer = resolve(Signer::class);
+        $this->signer      = resolve(Signer::class);
         $this->credentials = ['id' => -1, 'username' => 'neo'];
     }
 
@@ -39,9 +39,10 @@ class AuthTokenGuardTest extends TestCase
 
     public function testUserCanBeRetrievedByBearerToken()
     {
-        $token = $this->signer->dumps($this->credentials);
+        $token    = $this->signer->dumps($this->credentials);
         $provider = Mockery::mock(UserProvider::class);
-        $provider->shouldReceive('retrieveByCredentials')->once()->with($this->credentials)->andReturn((object)$this->credentials);
+        $provider->shouldReceive('retrieveByCredentials')->once()->with($this->credentials)
+                 ->andReturn((object)$this->credentials);
         $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
 
         $guard = new YapGuard($provider, $request, $this->signer);
@@ -55,9 +56,9 @@ class AuthTokenGuardTest extends TestCase
 
     public function testGetCredentialsSucceeds()
     {
-        $token = $this->signer->dumps($this->credentials);
+        $token    = $this->signer->dumps($this->credentials);
         $provider = Mockery::mock(UserProvider::class);
-        $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
+        $request  = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
 
         $guard = new YapGuard($provider, $request, $this->signer);
 
@@ -68,10 +69,10 @@ class AuthTokenGuardTest extends TestCase
     public function testGetCredentialsWhenTokenIsExpired()
     {
         $maxAge = config('auth.guards.yap.expire', 30);
-        $token = $this->signer->setTimestamp(time() - $maxAge * 2)->dumps($this->credentials);
+        $token  = $this->signer->setTimestamp(time() - $maxAge * 2)->dumps($this->credentials);
 
         $provider = Mockery::mock(UserProvider::class);
-        $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
+        $request  = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
 
         $guard = new YapGuard($provider, $request, $this->signer);
 
@@ -82,7 +83,7 @@ class AuthTokenGuardTest extends TestCase
     public function testGetCredentialsFails()
     {
         $provider = Mockery::mock(UserProvider::class);
-        $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer abc']);
+        $request  = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer abc']);
 
         $guard = new YapGuard($provider, $request, $this->signer);
 
@@ -93,7 +94,7 @@ class AuthTokenGuardTest extends TestCase
     public function testValidateCanDetermineIfCredentialsAreValid()
     {
         $provider = Mockery::mock(UserProvider::class);
-        $user = new AuthTokenGuardTestUser;
+        $user     = new AuthTokenGuardTestUser;
 
         $provider->shouldReceive('retrieveByCredentials')->once()->with($this->credentials)->andReturn($user);
         $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer abc']);
@@ -119,7 +120,7 @@ class AuthTokenGuardTest extends TestCase
     public function testValidateIfApiTokenIsInvalid()
     {
         $provider = Mockery::mock(UserProvider::class);
-        $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer abc']);
+        $request  = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer abc']);
 
         $guard = new YapGuard($provider, $request, $this->signer);
 

@@ -11,7 +11,9 @@ use Yap\Models\User;
 
 class InvitationTest extends TestCase
 {
+
     use DatabaseMigrations;
+
 
     public function testInvitationThrowsExceptionIfTokenDoesNotExists()
     {
@@ -19,6 +21,7 @@ class InvitationTest extends TestCase
         $invitation = resolve(Invitation::class);
         $invitation->whereToken('abc')->firstOrFail();
     }
+
 
     public function testTokenIsNotValidBecauseInviterIsBanned()
     {
@@ -28,6 +31,7 @@ class InvitationTest extends TestCase
         $invitation = factory(Invitation::class, 'empty')->create(['invited_by' => $bannedUser->id]);
         $this->assertTrue($invitation->isDepleted());
     }
+
 
     public function testTokenIsDepleted()
     {
@@ -39,7 +43,9 @@ class InvitationTest extends TestCase
         $this->assertTrue($invitation->isDepleted());
     }
 
-    public function testIsProlonged() {
+
+    public function testIsProlonged()
+    {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
         $invitation->prolong();
@@ -48,7 +54,9 @@ class InvitationTest extends TestCase
         $this->assertTrue(Carbon::now()->lt($invitation->valid_until));
     }
 
-    public function testInviterIsUpdated() {
+
+    public function testInviterIsUpdated()
+    {
         /** @var User $user */
         $user = factory(User::class)->states(['admin'])->create();
         /** @var Invitation $invitation */
@@ -58,7 +66,9 @@ class InvitationTest extends TestCase
         $this->assertEquals($user->id, $invitation->inviter->id);
     }
 
-    public function testInviterIsNotUpdated() {
+
+    public function testInviterIsNotUpdated()
+    {
         /** @var User $user */
         $user = factory(User::class)->create();
         /** @var Invitation $invitation */
@@ -68,12 +78,15 @@ class InvitationTest extends TestCase
         $this->assertNotEquals($user->id, $invitation->inviter->id);
     }
 
-    public function testMakeIndefinite() {
+
+    public function testMakeIndefinite()
+    {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
         $invitation->makeIndefinite();
         $this->assertNull($invitation->valid_until);
     }
+
 
     public function testTokenIsNotValidBecauseItExpired()
     {
@@ -82,12 +95,14 @@ class InvitationTest extends TestCase
         $this->assertTrue($invitation->isDepleted());
     }
 
+
     public function testTokenIsValid()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $this->assertFalse($invitation->isDepleted());
     }
+
 
     public function testTokenIsValidForever()
     {
@@ -96,6 +111,7 @@ class InvitationTest extends TestCase
         $this->assertFalse($invitation->isDepleted());
     }
 
+
     public function testInvitationHasInviter()
     {
         /** @var Invitation $invitation */
@@ -103,12 +119,14 @@ class InvitationTest extends TestCase
         $this->assertInstanceOf(User::class, $invitation->inviter);
     }
 
+
     public function testInvitationHasUser()
     {
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $this->assertInstanceOf(User::class, $invitation->user);
     }
+
 
     public function testInvitationDepletion()
     {
@@ -118,6 +136,7 @@ class InvitationTest extends TestCase
 
         $this->assertTrue($invitation->is_depleted);
     }
+
 
     public function testDetermineValidUntil()
     {
@@ -132,20 +151,21 @@ class InvitationTest extends TestCase
         $this->assertNotNull($invitation->valid_until);
     }
 
-    public function testInvitationUserIsSwapped() {
+
+    public function testInvitationUserIsSwapped()
+    {
         // swap filled user with empty user
         $invitation = factory(Invitation::class, 'empty')->create();
-        $user = factory(User::class)->create();
+        $user       = factory(User::class)->create();
 
         $invitation->swapUser($user);
         $this->assertEquals($invitation->user_id, $user->id);
 
         // swap empty user with already confirmed user (swap only relations)
-        $invitation = factory(Invitation::class)->create();
+        $invitation  = factory(Invitation::class)->create();
         $invitation2 = factory(Invitation::class, 'empty')->create();
 
         $invitation2->swapUser($invitation->user);
         $this->assertEquals($invitation->user_id, $invitation2->user_id);
-
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 trait GithubMock
 {
+
     /**
      * Mock the Socialite Factory, so we can hijack the OAuth Request.
      *
@@ -30,6 +31,26 @@ trait GithubMock
         $this->app->instance(SocialiteOriginal::class, $stub);
     }
 
+
+    /**
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    protected function mockSocialiteUser(array $attributes)
+    {
+        $socialiteUser = $this->createMock(User::class);
+        foreach ($attributes as $attribute => $value) {
+            $socialiteUser->{$attribute} = $value;
+            if ( ! in_array($attribute, ['user', 'token'])) {
+                $socialiteUser->expects($this->any())->method('get'.$attribute)->willReturn($value);
+            }
+        }
+
+        return $socialiteUser;
+    }
+
+
     public function mockGithubRedirect($token)
     {
         $redirectResponse = RedirectResponse::create($this->buildGithubLoginUrl($token), 302);
@@ -49,6 +70,7 @@ trait GithubMock
         $this->app->instance(SocialiteOriginal::class, $stub);
     }
 
+
     /**
      * @param string $encryptedToken
      *
@@ -59,69 +81,16 @@ trait GithubMock
     protected function buildGithubLoginUrl(string $encryptedToken): string
     {
         $query = http_build_query([
-            'client_id' => env('GITHUB_CLIENT_ID'),
-            'redirect_uri' => config('services.github.redirect').'/'.$encryptedToken,
-            'scope' => 'user:email',
+            'client_id'     => env('GITHUB_CLIENT_ID'),
+            'redirect_uri'  => config('services.github.redirect').'/'.$encryptedToken,
+            'scope'         => 'user:email',
             'response_type' => 'code',
-            'state' => 'abc123',
+            'state'         => 'abc123',
         ]);
 
         return 'https://github.com/login/oauth/authorize?'.$query;
     }
 
-    /**
-     * @param array $attributes
-     *
-     * @return mixed
-     */
-    protected function mockSocialiteUser(array $attributes)
-    {
-        $socialiteUser = $this->createMock(User::class);
-        foreach ($attributes as $attribute => $value) {
-            $socialiteUser->{$attribute} = $value;
-            if (! in_array($attribute, ['user', 'token'])) {
-                $socialiteUser->expects($this->any())->method('get'.$attribute)->willReturn($value);
-            }
-        }
-
-        return $socialiteUser;
-    }
-
-    /**
-     * @param array $attributes
-     *
-     * @return array
-     */
-    private function dummyGithubUserData(array $attributes = []): array
-    {
-        $faker = Factory::create();
-        $data = [
-            'token' => str_random(32),
-            'id' => rand(4, 32),
-            'email' => $faker->safeEmail,
-            'nickname' => $faker->userName,
-            'name' => $faker->firstName.' '.$faker->lastName,
-            'avatar' => $faker->imageUrl(),
-            'user' => ['bio' => 'abc'],
-        ];
-
-        return array_merge($data, $attributes);
-    }
-
-    /**
-     * @param $data
-     *
-     * @return mixed
-     */
-    private function transformUserData($data)
-    {
-        $data['github_id'] = $data['id'];
-        $data['username'] = $data['nickname'];
-        $data['bio'] = $data['user']['bio'];
-        unset($data['id'], $data['nickname'], $data['user'], $data['token']);
-
-        return $data;
-    }
 
     /**
      * @param array $attributes
@@ -131,9 +100,47 @@ trait GithubMock
     private function generateDummyUserDataAndGithubUser(array $attributes = []): array
     {
         $githubUserData = $this->dummyGithubUserData($attributes);
-        $githubUser = $this->mockSocialiteUser($githubUserData);
-        $userData = $this->transformUserData($githubUserData);
+        $githubUser     = $this->mockSocialiteUser($githubUserData);
+        $userData       = $this->transformUserData($githubUserData);
 
         return [$githubUser, $userData];
+    }
+
+
+    /**
+     * @param array $attributes
+     *
+     * @return array
+     */
+    private function dummyGithubUserData(array $attributes = []): array
+    {
+        $faker = Factory::create();
+        $data  = [
+            'token'    => str_random(32),
+            'id'       => rand(4, 32),
+            'email'    => $faker->safeEmail,
+            'nickname' => $faker->userName,
+            'name'     => $faker->firstName.' '.$faker->lastName,
+            'avatar'   => $faker->imageUrl(),
+            'user'     => ['bio' => 'abc'],
+        ];
+
+        return array_merge($data, $attributes);
+    }
+
+
+    /**
+     * @param $data
+     *
+     * @return mixed
+     */
+    private function transformUserData($data)
+    {
+        $data['github_id'] = $data['id'];
+        $data['username']  = $data['nickname'];
+        $data['bio']       = $data['user']['bio'];
+        unset($data['id'], $data['nickname'], $data['user'], $data['token']);
+
+        return $data;
     }
 }

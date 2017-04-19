@@ -14,7 +14,9 @@ use Yap\Models\User;
 
 class UserTest extends TestCase
 {
+
     use DatabaseMigrations, GithubMock;
+
 
     public function testUserIsLoginable()
     {
@@ -22,6 +24,7 @@ class UserTest extends TestCase
         $user = factory(User::class)->states(['confirmed'])->create();
         $this->assertTrue($user->logginable());
     }
+
 
     public function testUserIsPromoted()
     {
@@ -35,6 +38,7 @@ class UserTest extends TestCase
         $this->assertTrue($user->is_admin, 'Test that user is an administrator.');
     }
 
+
     public function testUserIsPromotedWithoutEvent()
     {
         $user = factory(User::class, 'empty')->create();
@@ -44,6 +48,7 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->is_admin, 'Test that user is basic user.');
     }
+
 
     public function testUserIsDemoted()
     {
@@ -58,6 +63,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->is_admin, 'Test that user is basic user.');
     }
 
+
     public function testUserIsDemotedWithoutEvent()
     {
         $user = factory(User::class, 'empty')->states(['admin'])->create();
@@ -68,6 +74,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->is_admin, 'Test that user is basic user.');
     }
 
+
     public function testBannedExceptionIsThrownUponLoginable()
     {
         $this->expectException(UserBannedException::class);
@@ -75,6 +82,7 @@ class UserTest extends TestCase
         $user = factory(User::class)->states(['banned'])->create();
         $user->logginable();
     }
+
 
     public function testNotConfirmedExceptionIsThrownUponLoginable()
     {
@@ -84,11 +92,12 @@ class UserTest extends TestCase
         $user->logginable();
     }
 
+
     public function testUpdatingUserDoesNotChangeGithubId()
     {
-        $user = factory(User::class)->create();
+        $user             = factory(User::class)->create();
         $githubIdOriginal = $user->github_id;
-        $githubId = rand(10, 30);
+        $githubId         = rand(10, 30);
         $user->update(['name' => 'Joe', 'github_id' => $githubId]);
 
         $this->assertEquals('Joe', $user->name);
@@ -96,24 +105,28 @@ class UserTest extends TestCase
         $this->assertEquals($githubIdOriginal, $user->github_id);
     }
 
-    public function testSwappingConfirmedUser() {
+
+    public function testSwappingConfirmedUser()
+    {
         $userConfirmed = factory(User::class)->states(['confirmed'])->create();
-        $userEmpty = factory(User::class, 'empty')->create();
+        $userEmpty     = factory(User::class, 'empty')->create();
 
         $userEmpty->notify(new \Yap\Notifications\PromotedNotification);
         $userEmpty->notify(new \Yap\Notifications\DemotedNotification);
 
         $userConfirmed->swapWith($userEmpty);
 
-        $this->assertEquals(2 , $userConfirmed->notifications()->count());
+        $this->assertEquals(2, $userConfirmed->notifications()->count());
         $this->assertNull($userEmpty->fresh());
 
         $this->markTestIncomplete('Test for swapping every relation!');
     }
 
-    public function testSwappingEmptyUser() {
+
+    public function testSwappingEmptyUser()
+    {
         $userEmpty = factory(User::class, 'empty')->create();
-        $user = factory(User::class)->create();
+        $user      = factory(User::class)->create();
 
         $userEmpty->swapWith($user);
 

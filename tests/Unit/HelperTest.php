@@ -3,11 +3,10 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class HelperTest extends TestCase
 {
+
     public function testSetActiveFilter()
     {
         request()->merge(['filter' => 'all']);

@@ -12,10 +12,12 @@ use Yap\Models\User;
 
 class AuthenticableTest extends TestCase
 {
+
     use DatabaseMigrations, GithubMock;
 
     /** @var ControllerStub $authenticable */
     private $authenticable;
+
 
     /**
      * Sets up the fixture.
@@ -28,6 +30,7 @@ class AuthenticableTest extends TestCase
         parent::setUp();
     }
 
+
     public function testUserIsLoggedIn()
     {
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
@@ -37,6 +40,7 @@ class AuthenticableTest extends TestCase
         $this->authenticable->attempt($user);
         $this->seeIsAuthenticatedAs($user);
     }
+
 
     public function testBannedUserCanNotLogIn()
     {
@@ -49,6 +53,7 @@ class AuthenticableTest extends TestCase
         $this->dontSeeIsAuthenticated();
     }
 
+
     public function testNotConfirmedUserCanNotLogIn()
     {
         $this->expectException(UserNotConfirmedException::class);
@@ -59,6 +64,7 @@ class AuthenticableTest extends TestCase
         $this->authenticable->attempt($user);
         $this->dontSeeIsAuthenticated();
     }
+
 
     public function testResponseHasCookie()
     {

@@ -30,8 +30,9 @@ class InvitationsTest extends TestCase
         parent::setUp();
 
         $this->administrator = factory(Invitation::class, 'admin')->create()->user;
-        $this->data = ['email' => 'johnny.bravo@cartoon.net'];
+        $this->data          = ['email' => 'johnny.bravo@cartoon.net'];
     }
+
 
     // Tests for API, consumed by applications JavaScript
 
@@ -72,9 +73,9 @@ class InvitationsTest extends TestCase
 
     public function testInvitationCreationUsingApiFailsWithNonUniqueEmail()
     {
-        $invitation = factory(Invitation::class)->create();
+        $invitation      = factory(Invitation::class)->create();
         $invitationEmail = $invitation->email;
-        $userEmail = $invitation->user->email;
+        $userEmail       = $invitation->user->email;
 
         $this->withoutMiddleware();
         $this->actingAs($this->administrator, 'yap');
@@ -103,7 +104,7 @@ class InvitationsTest extends TestCase
 
     public function testInvitationCreationRouteAndRecentInvitations()
     {
-        $invitations = factory(Invitation::class, 'empty', 5)->create();
+        $invitations        = factory(Invitation::class, 'empty', 5)->create();
         $invitationConsumed = factory(Invitation::class)->create();
 
         $this->actingAs($this->administrator);

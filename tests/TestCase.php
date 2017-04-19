@@ -44,14 +44,18 @@ abstract class TestCase extends BaseTestCase
         return $this->postJson($uri, $data, array_merge($headers, ['X-Requested-With' => 'XMLHttpRequest']));
     }
 
+
     protected function assertStatus(int $status)
     {
         return $this->assertResponseStatus($status);
     }
 
-    protected function assertJsonArray(array $data, $message = '') {
+
+    protected function assertJsonArray(array $data, $message = '')
+    {
         return $this->assertJson(json_encode($data), $message);
     }
+
 
     /**
      * Disable Laravel's exception handling.

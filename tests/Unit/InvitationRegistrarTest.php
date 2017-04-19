@@ -19,6 +19,7 @@ use Yap\Models\User;
 
 class InvitationRegistrarTest extends TestCase
 {
+
     use DatabaseMigrations, ForceSyncQueueDriver;
 
     /** @var MailFakeInvitationRegistrar $registrar */
@@ -27,12 +28,14 @@ class InvitationRegistrarTest extends TestCase
     /** @var Invitation $invitation */
     private $invitation;
 
+
     public function setUp()
     {
         parent::setUp();
-        $this->registrar = resolve(MailFakeInvitationRegistrar::class);
+        $this->registrar  = resolve(MailFakeInvitationRegistrar::class);
         $this->invitation = resolve(Invitation::class);
     }
+
 
     public function testBareInvitationIsMade()
     {
@@ -75,6 +78,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testInvitationUrgedEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
@@ -84,6 +88,7 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
+
 
     public function testInvitationProlongedEmailIsSent()
     {
@@ -95,6 +100,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testInvitationUrgeIfProlongedToIndefiniteEmailIsSent()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => Carbon::now()->subDay()]);
@@ -104,6 +110,7 @@ class InvitationRegistrarTest extends TestCase
             return $mail->invitation->email === $invitation->email;
         });
     }
+
 
     public function testInvitationUrgeEmailIsSent()
     {
@@ -115,6 +122,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testInvitationProlongedEmailIsNotSentAfterDemotedToDefinite()
     {
         $invitation = factory(Invitation::class, 'empty')->create(['valid_until' => 0]);
@@ -123,6 +131,7 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->mailer->assertNothingSent();
     }
 
+
     public function testNoEmailIsSentIfProlongedDuringValidUntilPeriod()
     {
         $invitation = factory(Invitation::class, 'empty')->create();
@@ -130,6 +139,7 @@ class InvitationRegistrarTest extends TestCase
         $this->assertEquals($invitation->email, $this->invitation->first()->email);
         $this->registrar->mailer->assertNothingSent();
     }
+
 
     public function testEmailIsSentIfProlongedDuringValidUntilPeriodAndForceResendOptionIsPassed()
     {
@@ -141,6 +151,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testBannedExceptionIsThrown()
     {
         $user = factory(User::class)->states(['banned'])->create();
@@ -149,32 +160,38 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->invite($user->email);
     }
 
+
     public function testBannedExceptionIsThrownThroughInvitationEmail()
     {
-        $user = factory(User::class)->states(['banned'])->create();
+        $user       = factory(User::class)->states(['banned'])->create();
         $invitation = factory(Invitation::class)->create(['user_id' => $user->id]);
         $this->expectException(InvitationRegistrarException::class);
         $this->expectExceptionCode(0);
         $this->registrar->invite($invitation->email);
     }
 
+
     public function testConfirmedExceptionIsThrownWhenEmailsAreSame()
     {
-        $user = factory(User::class)->states(['confirmed'])->create();
+        $user       = factory(User::class)->states(['confirmed'])->create();
         $invitation = factory(Invitation::class)->create(['email' => $user->email]);
         $this->expectException(InvitationRegistrarException::class);
         $this->expectExceptionCode(1);
         $this->registrar->invite($invitation->email);
     }
 
-    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentUserEmailUsed() {
+
+    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentUserEmailUsed()
+    {
         $invitation = factory(Invitation::class)->create();
         $this->expectException(InvitationRegistrarException::class);
         $this->expectExceptionCode(1);
         $this->registrar->invite($invitation->user->email);
     }
 
-    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentInvitationEmailUsed() {
+
+    public function testConfirmedExceptionIsThrownWhenEmailsAreDifferentInvitationEmailUsed()
+    {
         $invitation = factory(Invitation::class)->create();
         $this->expectException(InvitationRegistrarException::class);
         $this->expectExceptionCode(1);
@@ -194,6 +211,7 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->invite($invitation->user->email);
     }
 
+
     public function testCaseThatNeverHappensBecauseUserRegistrarTakesCareOfIt()
     {
         //this is case: user registrar does not allow creating $user without associating it with invitation
@@ -206,6 +224,7 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->invite($invitation->email);
     }
 
+
     public function testUserIsConfirmedAndEmailIsSent()
     {
         /** @var User $user */
@@ -214,7 +233,7 @@ class InvitationRegistrarTest extends TestCase
 
         /** @var Invitation $invitation */
         $invitation = $this->invitation->whereEmail($user->email)->first();
-        $user = $user->fresh();
+        $user       = $user->fresh();
 
         $this->assertTrue($invitation->isDepleted(), 'Invitation is depleted.');
         $this->assertTrue($user->is_confirmed, 'User is confirmed');
@@ -224,6 +243,7 @@ class InvitationRegistrarTest extends TestCase
         });
     }
 
+
     public function testUserIsConfirmedAndIsAdmin()
     {
         /** @var User $user */
@@ -232,7 +252,7 @@ class InvitationRegistrarTest extends TestCase
 
         /** @var Invitation $invitation */
         $invitation = $this->invitation->whereEmail($user->email)->first();
-        $user = $user->fresh();
+        $user       = $user->fresh();
 
         $this->assertTrue($invitation->isDepleted(), 'Invitation is depleted.');
         $this->assertTrue($user->is_confirmed, 'User is confirmed.');
@@ -246,7 +266,9 @@ class InvitationRegistrarTest extends TestCase
 
 class MailFakeInvitationRegistrar extends InvitationRegistrar
 {
+
     public $mailer;
+
 
     public function __construct(User $user, Invitation $invitation, Mailer $mailer)
     {

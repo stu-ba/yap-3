@@ -41,7 +41,7 @@ class MaintainerTest extends TestCase
     public function testGitignoreIsUpdated()
     {
         /** @var Filesystem $files */
-        $files = resolve(\Illuminate\Filesystem\Filesystem::class);
+        $files     = resolve(\Illuminate\Filesystem\Filesystem::class);
         $gitignore = base_path('tests/Unit/Documentation/Stubs/.gitignore');
         $this->maintainer->setPath('tests/Unit/Documentation/Stubs/downloads/');
         $files->put($gitignore, "/joe\n");
@@ -124,6 +124,7 @@ class Maintainer extends MaintainerOriginal
     {
         $this->path = base_path($path);
     }
+
 
     //Testing protected method
     public function gitignore(): void

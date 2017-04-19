@@ -33,7 +33,7 @@ class CompilerTest extends TestCase
             'integration-testing' => 'Integration Testing',
             'team-leader'         => 'Team Leader',
             'team-member'         => 'Team Member',
-            'unit-testing'        => 'Unit Testing'
+            'unit-testing'        => 'Unit Testing',
         ];
 
         $files = new Filesystem();
@@ -42,7 +42,7 @@ class CompilerTest extends TestCase
 
         foreach ($pages as $page => $title) {
             $compiled = str_replace('{{name}}', $title, $stub);
-            $html = $this->compiler->get($page);
+            $html     = $this->compiler->get($page);
             $this->assertEquals($compiled, $html);
         }
     }

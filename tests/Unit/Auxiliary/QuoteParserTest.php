@@ -14,7 +14,7 @@ class QuoteParserTest extends TestCase
         $text = 'Some informative text here.';
 
         foreach (config('documentation.icons') as $icon => $svg) {
-            $html = (new BlockQuoteParser)->text('> {'.$icon.'} '.$text);
+            $html     = (new BlockQuoteParser)->text('> {'.$icon.'} '.$text);
             $expected = $this->wrap($icon, $svg, $text);
             $this->assertEquals($expected, $html);
         }
@@ -30,8 +30,8 @@ class QuoteParserTest extends TestCase
 
     public function testMarkdownIsCompiled()
     {
-        $files = new Filesystem();
-        $stub['md'] = $files->get(base_path('tests/Unit/Auxiliary/Stubs/dummy.md'));
+        $files        = new Filesystem();
+        $stub['md']   = $files->get(base_path('tests/Unit/Auxiliary/Stubs/dummy.md'));
         $stub['html'] = $files->get(base_path('tests/Unit/Auxiliary/Stubs/dummy-compiled.html'));
 
         $html = (new BlockQuoteParser)->text($stub['md']);

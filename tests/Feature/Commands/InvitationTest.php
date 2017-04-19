@@ -33,7 +33,7 @@ class InvitationTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->kernel = resolve(Kernel::class);
+        $this->kernel     = resolve(Kernel::class);
         $this->invitation = resolve(Invitation::class);
     }
 

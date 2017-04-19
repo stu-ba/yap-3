@@ -32,9 +32,7 @@ class IndexTest extends TestCase
         $this->actingAs($this->administrator);
         $this->visitRoute('users.index');
 
-        $this->assertResponseOk()
-             ->seeText('User listing')
-             ->seeText($this->administrator->name);
+        $this->assertResponseOk()->seeText('User listing')->seeText($this->administrator->name);
     }
 
 
