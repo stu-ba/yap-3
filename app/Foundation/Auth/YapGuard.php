@@ -11,6 +11,7 @@ use Kyslik\Django\Signing\Signer;
 
 class YapGuard implements Guard
 {
+
     use GuardHelpers;
 
     /**
@@ -46,9 +47,10 @@ class YapGuard implements Guard
     {
         $this->request = $request;
         $this->provider = $provider;
-        $this->signer = $signer;
+        $this->signer = $signer->setMaxAge(config('auth.guards.yap.expire', 30));
         $this->storageFields = ['id', 'username'];
     }
+    
 
     /**
      * Get the currently authenticated user.
@@ -60,25 +62,29 @@ class YapGuard implements Guard
         // If we've already retrieved the user for the current request we can just
         // return it back immediately. We do not want to fetch the user data on
         // every call to this method because that would be tremendously slow.
-        if (! is_null($this->user)) {
+        if ( ! is_null($this->user)) {
             return $this->user;
         }
 
-        return $this->user = $this->provider->retrieveByCredentials(
-            $this->getCredentials()
-        );
+        return $this->user = $this->provider->retrieveByCredentials($this->getCredentials());
     }
 
-    public function getCredentials(): array {
+
+    public function getCredentials(): array
+    {
 
         try {
             $credentials = $this->signer->loads($this->request->bearerToken() ?? '');
         } catch (BadSignatureException $exception) {
             return [];
         }
+        finally {
+            //signer is singleton so set max age to default value
+            $this->signer->setMaxAge(config('django-signer.default_max_age', 60 * 60));
+        }
 
         foreach ($this->storageFields as $field) {
-            if (!array_key_exists($field, $credentials)) {
+            if ( ! array_key_exists($field, $credentials)) {
                 return [];
             }
         }
@@ -86,16 +92,18 @@ class YapGuard implements Guard
         return array_only($credentials, $this->storageFields);
     }
 
+
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param  array $credentials
+     *
      * @return bool
      */
     public function validate(array $credentials = [])
     {
         foreach ($this->storageFields as $field) {
-            if (!array_key_exists($field, $credentials)) {
+            if ( ! array_key_exists($field, $credentials)) {
                 return false;
             }
         }
@@ -107,10 +115,12 @@ class YapGuard implements Guard
         return false;
     }
 
+
     /**
      * Set the current request instance.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return $this
      */
     public function setRequest(Request $request)

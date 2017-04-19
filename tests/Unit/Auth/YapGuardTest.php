@@ -67,12 +67,12 @@ class AuthTokenGuardTest extends TestCase
 
     public function testGetCredentialsWhenTokenIsExpired()
     {
-        $token = $this->signer->setTimestamp(time() - 99)->dumps($this->credentials);
+        $maxAge = config('auth.guards.yap.expire');
+        $token = $this->signer->setTimestamp(time() - $maxAge * 2)->dumps($this->credentials);
 
         $provider = Mockery::mock(UserProvider::class);
         $request = Request::create('/', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
 
-        $this->signer->setMaxAge(10);
         $guard = new YapGuard($provider, $request, $this->signer);
 
         $this->assertEmpty($guard->getCredentials());
