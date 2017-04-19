@@ -142,7 +142,7 @@ class User extends Authenticatable
     }
 
 
-    public function scopeFilter(Builder $query, string $filterName = 'all'): Builder
+    public function scopeFilter(Builder $query, string $filterName = null): Builder
     {
         switch ($filterName) {
             case 'banned':
@@ -152,7 +152,7 @@ class User extends Authenticatable
             case 'admins':
                 return $query->isAdmin();
             default:
-                return $query;
+                return $query->banned(false);
         }
     }
 
