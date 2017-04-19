@@ -41,8 +41,13 @@ return [
             'provider' => 'users',
         ],
 
-        'api' => [
+        'yap' => [
             'driver' => 'yap',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'token',
             'provider' => 'users',
         ],
     ],

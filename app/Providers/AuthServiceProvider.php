@@ -29,9 +29,9 @@ class AuthServiceProvider extends ServiceProvider
 
         Auth::extend('yap', function ($app, $name, array $config) {
             $guard = new YapGuard(
-                $this->app['auth']->createUserProvider($config['provider']),
-                $this->app['request'],
-                $this->app->make(Signer::class)
+                $app['auth']->createUserProvider($config['provider']),
+                $app['request'],
+                $app->make(Signer::class)
             );
 
             $this->app->refresh('request', $guard, 'setRequest');
