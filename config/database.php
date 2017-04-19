@@ -33,18 +33,6 @@ return [
 
     'connections' => [
 
-        'sqlite' => [
-            'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
-        ],
-
-        'testing' => [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ],
-
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -66,6 +54,25 @@ return [
             'database' => env('DB_DATABASE', 'yap'),
             'username' => env('DB_USERNAME', 'yap'),
             'password' => env('DB_PASSWORD', null),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'testing' => [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ],
+
+        'testing_travis' => [
+            'driver' => 'pgsql',
+            'host' => null,
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'travis_ci_test',
+            'username' => 'postgres',
+            'password' => null,
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',

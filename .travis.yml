@@ -6,6 +6,13 @@ sudo: false
 php:
   - 7.1
 
+env:
+  - DB_CONNECTION=testing
+  - DB_CONNECTION=testing_travis
+
+addons:
+  postgresql: "9.4"
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -19,6 +26,7 @@ install:
 
 before_script:
   - cp .env.travis .env
+  - psql -c 'create database travis_ci_test;' -U postgres
   - travis_retry php artisan key:generate
   - travis_retry php artisan optimize
 
