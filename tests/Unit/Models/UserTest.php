@@ -116,7 +116,7 @@ class UserTest extends TestCase
 
         $userConfirmed->swapWith($userEmpty);
 
-        $this->assertEquals(2, $userConfirmed->notifications()->count());
+        $this->assertEquals(2, $userConfirmed->notifications->count());
         $this->assertNull($userEmpty->fresh());
 
         $this->markTestIncomplete('Test for swapping every relation!');
