@@ -44,6 +44,7 @@ return [
         'yap' => [
             'driver' => 'yap',
             'provider' => 'users',
+            'expire' => 60 * 30,
         ],
 
         'api' => [
