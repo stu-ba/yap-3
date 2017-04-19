@@ -3,14 +3,13 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Mockery;
 use Tests\ForceArrayMailerDriver;
 use Tests\ForceSyncQueueDriver;
 use Tests\TestCase;
 use Yap\Models\Invitation;
 use Yap\Models\User;
 
-class InvitationTest extends TestCase
+class InvitationsTest extends TestCase
 {
 
     use DatabaseMigrations, ForceSyncQueueDriver, ForceArrayMailerDriver;
@@ -33,13 +32,6 @@ class InvitationTest extends TestCase
         $this->administrator = factory(Invitation::class, 'admin')->create()->user;
         $this->data = ['email' => 'johnny.bravo@cartoon.net'];
     }
-
-
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
 
     // Tests for API, consumed by applications JavaScript
 
