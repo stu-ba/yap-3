@@ -3,6 +3,7 @@
 namespace Yap\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Yap\Http\Middleware\OnlyXmlHttp;
 
 class Kernel extends HttpKernel
 {
@@ -37,6 +38,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            OnlyXmlHttp::class,
             'throttle:60,1',
             'bindings',
         ],
