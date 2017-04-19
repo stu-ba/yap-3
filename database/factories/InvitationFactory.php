@@ -21,7 +21,7 @@ $factory->defineAs(Yap\Models\Invitation::class, 'unconfirmed', function (Faker\
 
 $factory->defineAs(Yap\Models\Invitation::class, 'admin', function (Faker\Generator $faker) {
     return [
-        'user_id' => factory(Yap\Models\User::class)->states(['admin'])->create()->id,
+        'user_id' => factory(Yap\Models\User::class)->states(['admin', 'confirmed'])->create()->id,
         'email' => $faker->unique()->safeEmail,
         'is_depleted' => true,
         'depleted_at' => \Carbon\Carbon::now()->addDay(rand(1, 5)),
@@ -30,7 +30,7 @@ $factory->defineAs(Yap\Models\Invitation::class, 'admin', function (Faker\Genera
 
 $factory->defineAs(Yap\Models\Invitation::class, 'banned', function (Faker\Generator $faker) {
     return [
-        'user_id' => factory(Yap\Models\User::class)->states(['banned'])->create()->id,
+        'user_id' => factory(Yap\Models\User::class)->states(['banned', 'confirmed'])->create()->id,
         'email' => $faker->unique()->safeEmail,
         'is_depleted' => true,
         'depleted_at' => \Carbon\Carbon::now()->addDay(rand(1, 5)),
