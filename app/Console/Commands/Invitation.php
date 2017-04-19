@@ -60,7 +60,7 @@ class Invitation extends Command
 
         $this->info('Running invitation registrar...', 'vvv');
         $invitation = $this->registrar->invite($email, $this->makeOptions());
-        $this->invite($invitation);
+        $this->displayOutput($invitation);
     }
 
 
@@ -90,16 +90,13 @@ class Invitation extends Command
     }
 
 
-    /**
-     * @param $invitation
-     */
-    private function invite($invitation): void
+    private function displayOutput(\Yap\Models\Invitation $invitation): void
     {
         if ($invitation->is_depleted) {
             $this->info('User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.');
 
             return;
-        } elseif ($invitation->created_at->diffInSeconds() <= 4) {
+        } elseif ($invitation->wasRecentlyCreated) {
             $this->info('Invitation for potential user with email \''.$invitation->email.'\' was created.');
         } elseif (is_null($invitation->valid_until)) {
             $this->info('Invitation for potential user with email \''.$invitation->email.'\' is now valid forever.');

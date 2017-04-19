@@ -76,7 +76,7 @@ class InvitationRegistrar
         if (is_null($invitation) && is_null($user)) {
             $this->makeBare()->mail(new UserInvited($this->user->invitations->first()));
 
-            return $this->user->invitations->first();
+            return $this->invitation;
         } elseif ( ! is_null($invitation) && ! is_null($user)) {
             // This always throws exception catch it!
             $this->invitationAndUserFound($user);
@@ -168,7 +168,7 @@ class InvitationRegistrar
     private function setInviter(): self
     {
         if (is_null($this->inviter)) {
-            $this->inviter = auth()->user() ?? auth('api')->user() ?? systemAccount();
+            $this->inviter = auth()->user() ?? auth('yap')->user() ?? systemAccount();
         }
 
         return $this;
@@ -253,6 +253,9 @@ class InvitationRegistrar
         $this->user->fill(['is_admin' => $this->options['admin']])->save();
         $this->user->invitations()->save($this->invitation);
 
+        $this->invitation = $this->user->invitations->first();
+        $this->invitation->wasRecentlyCreated = true;
+
         return $this;
     }
 
@@ -267,8 +270,7 @@ class InvitationRegistrar
     private function invitationAndUserFound($user): void
     {
         if ($user->is_confirmed) {
-            throw new InvitationRegistrarException('User with email \''.$this->email.'\' is already confirmed.',
-                1);
+            throw new InvitationRegistrarException('User with email \''.$this->email.'\' is already confirmed.', 1);
         }
         //TODO: this should never happen
         throw new InvitationRegistrarException('User is not confirmed but invitation is depleted. Someone has fiddled with database.',

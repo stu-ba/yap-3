@@ -14,6 +14,7 @@ class StoreInvitation extends FormRequest
      */
     public function authorize()
     {
+        //authorization logic will come here // only admins are allowed to store invitation throu this controller
         return true;
     }
 
@@ -27,14 +28,13 @@ class StoreInvitation extends FormRequest
     {
         if ($this->isXmlHttpRequest()) {
             return [
-                'email' => 'required|email|unique:invitations',
+                'email' => 'required|email|unique:invitations|unique:users',
             ];
         }
 
         return [
             'email' => 'required|email',
         ];
-
     }
 
 
