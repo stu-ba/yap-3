@@ -50,7 +50,7 @@ class YapGuard implements Guard
         $this->signer = $signer->setMaxAge(config('auth.guards.yap.expire', 30));
         $this->storageFields = ['id', 'username'];
     }
-    
+
 
     /**
      * Get the currently authenticated user.

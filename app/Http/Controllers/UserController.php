@@ -10,11 +10,10 @@ class UserController extends Controller
 
     public function index(User $user, Request $request)
     {
-        $users = $user->filled()->filter($request->get('filter', 'all'))->sortable()->paginate(10);
+        $users = $user->filled()->filter($request->get('filter', null))->sortable(['username'])->paginate(10);
 
         return view('pages.user.index')->with([
             'users' => $users,
-            'title' => 'test',
         ]);
     }
 

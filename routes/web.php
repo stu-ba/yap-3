@@ -10,11 +10,8 @@ Route::get('/a', function () {
 
 Route::get('/logme', function () {
     auth()->login(\Yap\Models\User::whereUsername('Kyslik')->first());
-    Alert::success('You have successfully logged in');
-    Alert::warning('Some warning');
-    Alert::info('Some warning')->flash();
-    Alert::error('Some warning')->flash();
-    Alert::danger('Some warning')->flash();
+
+    alert('success', 'You have successfully logged in');
 
     return redirect()->route('users.index');
 });
@@ -36,8 +33,8 @@ Route::group(['middleware' => ['auth']],
                 'show',
                 'edit',
                 'update',
-                'store'
-            ]
+                'store',
+            ],
         ]);
 
         Route::get('invitations/create/{email?}', 'InvitationController@create')->name('invitations.create');
