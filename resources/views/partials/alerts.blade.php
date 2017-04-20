@@ -7,7 +7,7 @@
         @foreach (Alert::getMessages() as $type => $messages)
             @foreach ($messages as $message)
                 <div class="alert alert-{{ $type }} alert-with-icon" data-notify="container">
-                    <i data-notify="icon" class="fa fa-2x fa-check-circle"></i>
+                    <i data-notify="icon" class="fa fa-2x fa-{{ $type }}"></i>
                     <span data-notify="message">{!! $message !!}</span>
                 </div>
             @endforeach

@@ -29,7 +29,7 @@ if ( ! function_exists('svg')) {
         try {
             $contents = trim(preg_replace('/\s+/', ' ', file_get_contents(public_path('svg/'.$src.'.svg'))));
             if ( ! is_null($class)) {
-                $class = 'class="'.$class.'">';
+                $class    = 'class="'.$class.'">';
                 $contents = str_replace_first('>', $class, $contents);
             }
 
@@ -129,7 +129,7 @@ if ( ! function_exists('yap_token')) {
     function yap_token()
     {
         $signer = app(\Kyslik\Django\Signing\Signer::class);
-        $user = auth()->user();
+        $user   = auth()->user();
 
         if ( ! is_null($user)) {
             return $signer->dumps(array_only($user->toArray(), ['id', 'username']));
@@ -139,13 +139,29 @@ if ( ! function_exists('yap_token')) {
     }
 }
 
-if (! function_exists('alert')) {
+if ( ! function_exists('alert')) {
 
-    function alert(string $type, string $message) {
+    function alert(string $type, string $message)
+    {
         $levels = config('prologue.alerts.levels');
         if (in_array(mb_strtolower($type), $levels)) {
             \Prologue\Alerts\Facades\Alert::{$type}($message)->flash();
         }
+    }
+}
+
+if ( ! function_exists('fa')) {
+
+    /**
+     * Takes icon setting from configuration file and returns it.
+     *
+     * @param string $icon
+     *
+     * @return null|string
+     */
+    function fa(string $icon): ?string
+    {
+        return config('yap.icons.'.$icon, null);
     }
 }
 
@@ -170,14 +186,15 @@ if ( ! function_exists('route_exists')) {
 
 if ( ! function_exists('date_with_hovertip')) {
     function date_with_hovertip(
-        ?\Carbon\Carbon $date,
-        $position = 'top',
-        ?\Carbon\Carbon $hourglass_from = null
+        ?\Carbon\Carbon $date, $position = 'top', ?\Carbon\Carbon $hourglass_from = null
     ): string {
 
         if (is_null($date) && ! is_null($hourglass_from)) {
-            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Forever."><i>'.svg('infinity-icon', 'infinity-icon fa-lg').'</i></span>';
-        } elseif ( ! is_null($hourglass_from) && $date->greaterThan($hourglass_from) && \Carbon\Carbon::now()->lessThan($date)) {
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Forever."><i>'.svg('infinity-icon',
+                    'infinity-icon fa-lg').'</i></span>';
+        } elseif ( ! is_null($hourglass_from) && $date->greaterThan($hourglass_from) && \Carbon\Carbon::now()
+                                                                                                      ->lessThan($date)
+        ) {
             $difference = $hourglass_from->diffInMinutes($date) / 4;
 
             if ($hourglass_from->diffInMinutes() < $difference) {

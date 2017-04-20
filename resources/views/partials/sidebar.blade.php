@@ -9,20 +9,20 @@
         <ul class="nav">
             <li class="{{ set_active_paths(['home*']) }}">
                 <a href="#">
-                    <i class="fa fa-lg fa-home"></i>
+                    <i class="fa fa-lg {{ fa('home') }}"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             <li class="{{ set_active_paths(['users*', 'profile*', 'invitations*']) }}">
                 <a href="{{ route('users.index') }}">
-                    <i class="fa fa-lg fa-users"></i>
+                    <i class="fa fa-lg {{ fa('users') }}"></i>
                     <p>Users{!! set_active_paths('invitations*', ' <span class="fa fa-angle-right"></span> Invitations') !!}</p>
                 </a>
             </li>
             <li>
                 <a href="#">
                     <span class="notification">5</span>
-                    <i class="fa fa-lg fa-bell"></i>
+                    <i class="fa fa-lg {{ fa('notification') }}"></i>
                     <p>Notifications</p>
                 </a>
             </li>
@@ -34,13 +34,13 @@
             </li>
             <li>
                 <a href="{{ route('logout') }}">
-                    <i class="fa fa-lg fa-sign-out"></i>
+                    <i class="fa fa-lg {{ fa('logout') }}"></i>
                     <p>Log out</p>
                 </a>
             </li>
             <li class="user-guide">
                 <a href="{{ route('docs') }}">
-                    <i class="fa fa-lg fa-support"></i>
+                    <i class="fa fa-lg {{ fa('help') }}"></i>
                     <p>User Guide</p>
                 </a>
             </li>

@@ -26,7 +26,6 @@ install:
 
 before_script:
   - cp .env.travis .env
-#  - psql -c 'create database travis_ci_test;' -U postgres
   - travis_retry php artisan key:generate
   - travis_retry php artisan optimize
 

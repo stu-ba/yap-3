@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header" data-background-color="blue">
                     @include('components.html.card-support', ['page' => 'users#listing'])
-                    <a href="{{ route('invitations.create') }}" class="btn btn-xs btn-white pull-right invite-user"><i class="fa fa-envelope"></i> <span class="hidden-xs">Invite</span></a>
+                    <a href="{{ route('invitations.create') }}" class="btn btn-xs btn-white pull-right invite-user"><i class="fa {{ fa('invite') }}"></i> <span class="hidden-xs">Invite</span></a>
                     <h4 class="title">User listing</h4>
                     <p class="category">Users may be filtered and sorted.</p>
                 </div>
@@ -14,25 +14,25 @@
                     <ul class="nav nav-tabs">
                         <li class="{{ set_active_filter('all', ['colleagues', 'banned', 'admins']) ?? 'active' }}">
                             <a href="{{ route('users.index', ['filter' => 'all']) }}">
-                                <i class="fa fa-lg fa-asterisk"></i><span class="hidden-xs">all</span>
+                                <i class="fa fa-lg {{ fa('all') }}"></i><span class="hidden-xs">all</span>
                                 <div class="ripple-container"></div>
                             </a>
                         </li>
                         <li class="{{ set_active_filter('colleagues') }}">
                             <a href="{{ route('users.index', ['filter' => 'colleagues']) }}">
-                                <i class="fa fa-lg fa-users"></i><span class="hidden-xs">colleagues</span>
+                                <i class="fa fa-lg {{ fa('colleagues') }}"></i><span class="hidden-xs">colleagues</span>
                                 <div class="ripple-container"></div>
                             </a>
                         </li>
                         <li class="{{ set_active_filter('banned') }}">
                             <a href="{{ route('users.index', ['filter' => 'banned']) }}">
-                                <i class="fa fa-lg fa-user-times"></i><span class="hidden-xs">banned</span>
+                                <i class="fa fa-lg {{ fa('banned') }}"></i><span class="hidden-xs">banned</span>
                                 <div class="ripple-container"></div>
                             </a>
                         </li>
                         <li class="{{ set_active_filter('admins') }}">
                             <a href="{{ route('users.index', ['filter' => 'admins']) }}">
-                                <i class="fa fa-lg fa-tty"></i><span class="hidden-xs">admins</span>
+                                <i class="fa fa-lg {{ fa('admin') }}"></i><span class="hidden-xs">admins</span>
                                 <div class="ripple-container"></div>
                             </a>
                         </li>
@@ -58,9 +58,9 @@
                                     <td>{!! date_with_hovertip($user->created_at) !!}</td>
                                     <td>{!! date_with_hovertip($user->updated_at) !!}</td>
                                     <td>
-                                        @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => 'fa-user-o'])
-                                        @include('components.html.fa-button', ['href' => route('users.edit', ['user' => $user->username]), 'tooltip' => 'Edit user', 'class' => 'btn btn-primary btn-xs','icon' => 'fa-pencil'])
-                                        @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => 'fa-github'])
+                                        @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('profile')])
+                                        @include('components.html.fa-button', ['href' => route('users.edit', ['user' => $user->username]), 'tooltip' => 'Edit user', 'class' => 'btn btn-primary btn-xs', 'icon' => fa('edit')])
+                                        @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => fa('github')])
                                     </td>
                                 </tr>
                             @endforeach

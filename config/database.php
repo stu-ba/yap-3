@@ -32,7 +32,7 @@ return [
     */
 
     'connections' => [
-
+        // TODO: main development, remove me after
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -78,7 +78,7 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
-
+        // TODO: remove me later on
         'testing_pgsql' => [
             'driver' => 'pgsql',
             'host' => '192.168.6.199', //env('DB_HOST', null),
