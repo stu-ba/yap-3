@@ -27,12 +27,12 @@ $factory->defineAs(Yap\Models\User::class, 'system', function () {
 
     return [
         'taiga_id' => 0,
-        'github_id' => 0,
-        'email' => Config::get('mail.from.address'),
-        'username' => 'Neo',
-        'name' => 'Thomas A. Anderson',
-        'bio' => 'I followed the white rabbit.',
-        'ban_reason' => 'You invited yourself.',
+        'github_id' => config('yap.github.id'),
+        'email' => config('mail.from.address'),
+        'username' => 'ytrium',
+        'name' => 'Mr. Yap',
+        'bio' => 'I am not human.',
+        'ban_reason' => null,
         'is_admin' => true,
         'is_banned' => false,
         'is_confirmed' => true,

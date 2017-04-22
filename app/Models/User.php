@@ -138,7 +138,7 @@ class User extends Authenticatable
      */
     public function scopeFilled(Builder $query): Builder
     {
-        return $query->whereNotNull('email')->where('github_id', '<>', 0);
+        return $query->whereNotNull('email');
     }
 
 
@@ -180,7 +180,7 @@ class User extends Authenticatable
      */
     public function system()
     {
-        return $this->whereGithubId(0)->whereIsAdmin(true)->first();
+        return $this->whereGithubId(config('yap.github.id'))->whereIsAdmin(true)->first();
     }
 
     public function logginable(): bool

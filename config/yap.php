@@ -9,6 +9,8 @@ return [
     'github'      => [
         'organisation' => 'stu-ba',
         'source_code'  => 'https://github.com/stu-ba/yap-3',
+        // Id of ytrium user (main user of yap application) for github
+        'id' => 26739569,
     ],
     'icons'       => [
         'home'         => 'fa-home',
@@ -25,5 +27,10 @@ return [
         'banned'       => 'fa-user-times',
         'all'          => 'fa-asterisk',
         'invite'       => 'fa-envelope',
+    ],
+
+    'placeholders' => [
+        'name' => 'Joe Little Carrot',
+        'bio' => 'I simply can not code in ones and zeros.'
     ],
 ];
