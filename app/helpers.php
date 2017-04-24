@@ -165,6 +165,14 @@ if ( ! function_exists('fa')) {
     }
 }
 
+if ( ! function_exists('avatar')) {
+
+    function avatar(\Yap\Models\User $user)
+    {
+        return $user->avatar ?? 'http://api.adorable.io/avatar/'.$user->username;
+    }
+}
+
 if ( ! function_exists('route_exists')) {
     /**
      * @param $route
