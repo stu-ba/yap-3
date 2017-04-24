@@ -7,9 +7,11 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Laravel\Socialite\Two\InvalidStateException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -27,6 +29,7 @@ class Handler extends ExceptionHandler
         \Yap\Exceptions\UserNotConfirmedException::class,
     ];
 
+
     /**
      * Report or log an exception.
      *
@@ -40,6 +43,7 @@ class Handler extends ExceptionHandler
     {
         parent::report($exception);
     }
+
 
     /**
      * Render an exception into an HTTP response.
@@ -66,10 +70,12 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
+
     protected function banned($request, UserBannedException $exception)
     {
         return abort(403);
     }
+
 
     /**
      * Convert an authentication exception into an unauthenticated response.
@@ -88,6 +94,7 @@ class Handler extends ExceptionHandler
         return redirect()->guest(route('login'));
     }
 
+
     /**
      * Prepare response containing exception render.
      *
@@ -98,11 +105,11 @@ class Handler extends ExceptionHandler
      */
     protected function prepareResponse($request, Exception $e)
     {
-        if (! $this->isHttpException($e) && config('app.debug')) {
+        if ( ! $this->isHttpException($e) && config('app.debug')) {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
 
-        if (! $this->isHttpException($e)) {
+        if ( ! $this->isHttpException($e)) {
             $e = new HttpException(500, $e->getMessage());
         }
 
