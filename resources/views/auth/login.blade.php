@@ -36,7 +36,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <span class="pull-right">Made with <i class="fa fa-heart text-danger"></i>.</span>
+                            <span class="pull-left"><a href="{{ route('docs') }}"><i class="fa {{ fa('help') }}"></i> User guide</span></a><span class="pull-right">Made with <i class="fa fa-heart text-danger"></i>.</span>
                         </div>
                     </div>
                 </div>

@@ -3627,12 +3627,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kyslik/TaigaLaravel.git",
-                "reference": "8794b33017c29c649d3e2f6723069328c5dc2a43"
+                "reference": "41a5a7b2592a0aff848c74a3323b02f7caa38cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kyslik/TaigaLaravel/zipball/8794b33017c29c649d3e2f6723069328c5dc2a43",
-                "reference": "8794b33017c29c649d3e2f6723069328c5dc2a43",
+                "url": "https://api.github.com/repos/Kyslik/TaigaLaravel/zipball/41a5a7b2592a0aff848c74a3323b02f7caa38cf4",
+                "reference": "41a5a7b2592a0aff848c74a3323b02f7caa38cf4",
                 "shasum": ""
             },
             "require": {
@@ -3666,7 +3666,7 @@
             "support": {
                 "source": "https://github.com/Kyslik/TaigaLaravel/tree/yap"
             },
-            "time": "2017-04-24T17:31:03+00:00"
+            "time": "2017-04-24T18:11:12+00:00"
         },
         {
             "name": "tzk/taiga-php",

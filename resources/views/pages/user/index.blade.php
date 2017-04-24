@@ -53,7 +53,7 @@
                             @foreach ($users as $user)
                                 <tr>
                                     {{--<td>{{ $user->id }}</td>--}}
-                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->name ?? config('yap.placeholders.name') }}</td>
                                     <td>{{ $user->username }}</td>
                                     <td>{!! date_with_hovertip($user->created_at) !!}</td>
                                     <td>{!! date_with_hovertip($user->updated_at) !!}</td>

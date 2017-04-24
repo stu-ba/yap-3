@@ -131,21 +131,21 @@
     }
 
     div {
-      display: inline-block;
+      display: block;
     }
     .author {
       color: $gray-color;
     }
     .stats {
-      line-height: 22px;
+      height: 20px;
+      line-height: 20px;
       color: $gray-color;
       font-size: $font-size-small;
 
-      .material-icons {
-        position: relative;
-        top: 4px;
-        font-size: $font-paragraph;
+      a {
+        color: $gray-color;
       }
+
     }
 
     h6 {
