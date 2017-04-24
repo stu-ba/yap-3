@@ -15,6 +15,16 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Kyslik/TaigaLaravel"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Kyslik/TaigaPHP"
+        }
+    ],
     "require": {
         "php": ">=7.1.0",
         "erusev/parsedown-extra": "0.7.*",
@@ -27,13 +37,14 @@
         "madewithlove/illuminate-psr-cache-bridge": "1.0.*",
         "php-http/guzzle6-adapter": "^1.1",
         "prologue/alerts": "^0.4.1",
-        "symfony/dom-crawler": "3.2.*"
+        "symfony/dom-crawler": "3.2.*",
+        "tzk/taiga-laravel": "dev-yap",
+        "fzaninotto/faker": "~1.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "2.3.*",
         "barryvdh/laravel-ide-helper": "2.3.*",
         "doctrine/dbal": "~2.3",
-        "fzaninotto/faker": "~1.4",
         "laravel/browser-kit-testing": "^1.0",
         "laravel/tinker": "~1.0",
         "mockery/mockery": "0.9.*",
@@ -75,5 +86,7 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
