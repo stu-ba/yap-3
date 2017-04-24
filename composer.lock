@@ -1023,16 +1023,16 @@
         },
         {
             "name": "kyslik/django-signer",
-            "version": "0.0.3",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kyslik/django-signer.git",
-                "reference": "41b6a497bdf0e73dde88b61aaadeda8a4bfa2015"
+                "reference": "932e392c2ce095fa31cf64e692c257dd8e33bc3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kyslik/django-signer/zipball/41b6a497bdf0e73dde88b61aaadeda8a4bfa2015",
-                "reference": "41b6a497bdf0e73dde88b61aaadeda8a4bfa2015",
+                "url": "https://api.github.com/repos/Kyslik/django-signer/zipball/932e392c2ce095fa31cf64e692c257dd8e33bc3a",
+                "reference": "932e392c2ce095fa31cf64e692c257dd8e33bc3a",
                 "shasum": ""
             },
             "require": {
@@ -1069,7 +1069,7 @@
                 "sign",
                 "timestamp"
             ],
-            "time": "2017-03-07T11:23:22+00:00"
+            "time": "2017-04-24T18:55:18+00:00"
         },
         {
             "name": "laravel/framework",
