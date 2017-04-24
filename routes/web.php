@@ -1,5 +1,7 @@
 <?php
 
+use Kyslik\Django\Signing\Signer;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -36,6 +38,15 @@ Route::group(['middleware' => ['auth']],
                 'store',
             ],
         ]);
+
+        Route::get('/taiga/{id?}', function($id = null) {
+            /**@var Signer $signer */
+            $signer = resolve(Signer::class);
+            $data = ['user_authentication_id' => $id ?? auth()->user()->taiga_id];
+            $token = $signer->setTimestamp(time() - 20)->dumps($data);
+            //d($signer->loads($token));
+            return ' 192... - <a href="'.url('http://192.168.6.199:8080/login/'.$token.'?next=discover').'">'.url('http://192.168.6.199:8080/login/'.$token).'</a><br><br> localhost - <a href="'.url('http://localhost:9001/login/'.$token.'?next=discover').'">'.url('http://localhost:9001/login/'.$token).'</a>';
+        });
 
         Route::get('invitations/create/{email?}', 'InvitationController@create')->name('invitations.create');
         Route::post('invitations', 'InvitationController@store')->name('invitations.store');
