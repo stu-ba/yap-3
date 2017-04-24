@@ -10,7 +10,7 @@ return [
         'organisation' => 'stu-ba',
         'source_code'  => 'https://github.com/stu-ba/yap-3',
         // Id of ytrium user (main user of yap application) for github
-        'id' => 26739569,
+        'id'           => 26739569,
     ],
     'icons'       => [
         'home'         => 'fa-home',
@@ -31,6 +31,6 @@ return [
 
     'placeholders' => [
         'name' => 'Joe Little Carrot',
-        'bio' => 'I simply can not code in ones and zeros.'
+        'bio'  => 'I simply can not code in ones and zeros.',
     ],
 ];
