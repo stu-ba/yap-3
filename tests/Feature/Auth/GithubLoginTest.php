@@ -119,7 +119,7 @@ class GithubLogin extends TestCase
         $this->get(route('login.callback'));
         $invitation = $invitation->fresh();
 
-        $this->assertTrue($invitation->is_depleted);
+        $this->assertNotNull($invitation->depleted_at);
         $this->assertTrue($invitation->user->is_confirmed);
         $this->seeIsAuthenticatedAs($invitation->user);
         $this->seeCookie('github_token', $githubToken);

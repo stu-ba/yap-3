@@ -108,7 +108,7 @@ class UserRegistrar
     {
         if ( ! is_null($this->userByGithub)) {
             if ($this->userByGithub->is_confirmed) {
-                if (!$this->invitation->is_depleted) {
+                if (is_null($this->invitation->depleted_at)) {
                     $this->invitation->swapUser($this->userByGithub)->deplete();
                 }
 

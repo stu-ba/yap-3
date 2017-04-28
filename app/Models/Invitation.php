@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $invited_by
  * @property string $email
  * @property string $token
- * @property bool $is_depleted
  * @property \Carbon\Carbon $depleted_at
  * @property \Carbon\Carbon $valid_until
  * @property \Carbon\Carbon $created_at
@@ -28,7 +27,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereEmail($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereInvitedBy($value)
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereIsDepleted($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereToken($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereUserId($value)
@@ -42,7 +40,6 @@ class Invitation extends Model
         'invited_by',
         'email',
         'token',
-        'is_depleted',
         'depleted_at',
         'valid_until',
     ];
@@ -57,7 +54,6 @@ class Invitation extends Model
     protected $casts = [
         'user_id' => 'int',
         'invited_by' => 'int',
-        'is_depleted' => 'boolean',
     ];
 
     /**
@@ -96,12 +92,13 @@ class Invitation extends Model
      */
     public function scopeRecent($query, int $num = 10): Builder
     {
-        return $query->select(['invited_by','email', 'valid_until', 'created_at', 'updated_at'])->orderBy('updated_at', 'desc')->limit($num);
+        return $query->select(['invited_by', 'email', 'valid_until', 'created_at', 'updated_at'])->orderBy('updated_at', 'desc')->limit($num);
     }
 
-    public function scopeActive($query): Builder
+    public function scopeActive(Builder $query): Builder
     {
-        return $query->whereIsDepleted(false);
+
+        return $query->whereNull('depleted_at');
     }
 
     public function swapUser(User $user): self
@@ -118,7 +115,7 @@ class Invitation extends Model
 
     public function isDepleted(): bool
     {
-        if ($this->inviter->isBanned() || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
+        if ($this->inviter->isBanned() || !is_null($this->depleted_at) || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
             return true;
         }
 
@@ -127,7 +124,6 @@ class Invitation extends Model
 
     public function deplete(): self
     {
-        $this->is_depleted = true;
         $this->depleted_at = Carbon::now();
         $this->save();
 
@@ -171,7 +167,7 @@ class Invitation extends Model
      */
     public function makeIndefinite(): self
     {
-        if (!$this->is_depleted && ! is_null($this->valid_until)) {
+        if (is_null($this->depleted_at) && ! is_null($this->valid_until)) {
             $this->valid_until = null;
             $this->save();
         }

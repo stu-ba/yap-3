@@ -21,7 +21,6 @@ class CreateInvitationsTable extends Migration
             $table->unsignedInteger('invited_by');
             $table->string('email')->unique();
             $table->string('token', 128)->unique();
-            $table->boolean('is_depleted')->default(false);
             $table->timestamp('depleted_at')->nullable();
             $table->timestamp('valid_until')->nullable();
             $table->timestamps();

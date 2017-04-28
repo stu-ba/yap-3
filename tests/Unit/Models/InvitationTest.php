@@ -134,7 +134,7 @@ class InvitationTest extends TestCase
         $invitation = factory(Invitation::class, 'empty')->create();
         $invitation->deplete();
 
-        $this->assertTrue($invitation->is_depleted);
+        $this->assertNotNull($invitation->depleted_at);
     }
 
 

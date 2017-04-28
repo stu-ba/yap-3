@@ -48,7 +48,7 @@ class InvitationController extends Controller
 
     protected function flashAlert(Invitation $invitation): void
     {
-        if ($invitation->is_depleted) {
+        if (!is_null($invitation->depleted_at)) {
             alert('info', 'User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.');
         } elseif ($invitation->wasRecentlyCreated) {
             alert('success', 'Invitation for potential user with email \''.$invitation->email.'\' was created.');

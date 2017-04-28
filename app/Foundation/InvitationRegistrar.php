@@ -98,7 +98,6 @@ class InvitationRegistrar
 
             $invitation = $this->invitation->fill([
                 'email'       => $this->email,
-                'is_depleted' => true,
                 'depleted_at' => Carbon::now(),
                 'valid_until' => Carbon::now(),
             ]);

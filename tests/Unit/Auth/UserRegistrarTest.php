@@ -63,8 +63,8 @@ class UserRegistrarTest extends TestCase
         $invitationEmpty  = $invitationEmpty->fresh();
         $invitationEmpty2 = $invitationEmpty2->fresh();
 
-        $this->assertTrue($invitationEmpty->is_depleted);
-        $this->assertTrue($invitationEmpty2->is_depleted);
+        $this->assertNotNull($invitationEmpty->depleted_at);
+        $this->assertNotNull($invitationEmpty2->depleted_at);
         $this->assertEquals($invitation->user_id, $invitationEmpty->user_id);
         $this->assertEquals($invitation->user_id, $invitationEmpty2->user_id);
     }
@@ -142,7 +142,7 @@ class UserRegistrarTest extends TestCase
         $user       = $this->registrar->register($githubUser)->fresh();
         $invitation = $invitation->fresh();
 
-        $this->assertTrue($invitation->is_depleted);
+        $this->assertNotNull($invitation->depleted_at);
         $this->assertTrue($user->is_confirmed);
 
         foreach ($userData as $key => $value) {
@@ -162,7 +162,7 @@ class UserRegistrarTest extends TestCase
 
         $invitation = $invitation->fresh();
 
-        $this->assertTrue($invitation->is_depleted);
+        $this->assertNotNull($invitation->depleted_at);
         $this->assertFalse($user->is_confirmed);
 
         foreach ($userData as $key => $value) {
@@ -187,7 +187,7 @@ class UserRegistrarTest extends TestCase
         $user       = $this->registrar->register($invitation, $githubUser)->fresh();
         $invitation = $invitation->fresh();
 
-        $this->assertTrue($invitation->is_depleted);
+        $this->assertNotNull($invitation->depleted_at);
         $this->assertEquals($user->id, $invitation->user_id);
         $this->assertTrue($user->is_confirmed);
     }
