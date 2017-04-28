@@ -17,6 +17,7 @@ class CreateProjectTypesTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('taiga_id')->unique()->nullable()->default(null);
             $table->string('name');
             $table->text('description');
             $table->json('roles');
