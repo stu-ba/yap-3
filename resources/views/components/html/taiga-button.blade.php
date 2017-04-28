@@ -1,0 +1,1 @@
+<a href="{{ $href ?? '#' }}" class="{{ $class ?? 'btn btn-default' }}" rel="tooltip" data-placement="{{ $position ?? 'top' }}" title="{{ $tooltip ?? '' }}"><i>{!! svg('taiga-icon', 'taiga-icon fa-lg') !!}</i></a>
