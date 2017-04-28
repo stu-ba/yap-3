@@ -25,7 +25,6 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @property string $avatar
  * @property string $remember_token
  * @property bool $is_admin
- * @property bool $is_banned
  * @property bool $is_confirmed
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -34,7 +33,7 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues(\Yap\Models\User $user = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filter($filterName = 'all')
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User isAdmin($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
@@ -45,7 +44,6 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereGithubId($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsAdmin($value)
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsBanned($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereIsConfirmed($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereRememberToken($value)
@@ -74,7 +72,6 @@ class User extends Authenticatable
         'ban_reason',
         'avatar',
         'is_admin',
-        'is_banned',
         'is_confirmed',
     ];
 
@@ -93,7 +90,6 @@ class User extends Authenticatable
         'taiga_id' => 'int',
         'github_id' => 'int',
         'is_admin' => 'boolean',
-        'is_banned' => 'boolean',
         'is_confirmed' => 'boolean',
     ];
 
@@ -159,7 +155,7 @@ class User extends Authenticatable
 
     public function scopeBanned(Builder $query, bool $value = true): Builder
     {
-        return $query->whereIsBanned($value);
+        return $value ? $query->whereNotNull('ban_reason') : $query->whereNull('ban_reason');
     }
 
     public function scopeIsAdmin(Builder $query, bool $value = true): Builder
@@ -185,7 +181,7 @@ class User extends Authenticatable
 
     public function logginable(): bool
     {
-        if ($this->is_banned) {
+        if ($this->isBanned()) {
             throw new UserBannedException();
         }
 
@@ -243,9 +239,13 @@ class User extends Authenticatable
         return $this;
     }
 
+    public function isBanned() :bool
+    {
+        return !is_null($this->ban_reason);
+    }
+
     public function unban(): self
     {
-        $this->is_banned = false;
         $this->ban_reason = null;
         $this->save();
 
@@ -254,7 +254,6 @@ class User extends Authenticatable
 
     public function ban(string $reason): self
     {
-        $this->is_banned = true;
         $this->ban_reason = str_limit($reason, 250, '...');
         $this->save();
 

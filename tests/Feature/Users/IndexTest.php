@@ -47,7 +47,7 @@ class IndexTest extends TestCase
         $this->visitRoute('users.index');
 
         foreach ($invitations as $invitation) {
-            if ($invitation->user->is_banned) {
+            if ($invitation->user->isBanned()) {
                 $this->dontSeeText($invitation->user->username);
             } else {
                 $this->seeText($invitation->user->username);
@@ -72,7 +72,7 @@ class IndexTest extends TestCase
         $this->visitRoute('users.index', ['filter' => 'banned']);
 
         foreach ($invitations as $invitation) {
-            if ($invitation->user->is_banned) {
+            if ($invitation->user->isBanned()) {
                 $this->seeText($invitation->user->username);
             } else {
                 $this->dontSeeText($invitation->user->username);

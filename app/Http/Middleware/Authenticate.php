@@ -36,7 +36,7 @@ class Authenticate extends StockAuthenticate
      */
     protected function banned()
     {
-        if ($this->auth->user()->is_banned) {
+        if ($this->auth->user()->isBanned()) {
             throw new UserBannedException();
         }
     }

@@ -203,7 +203,7 @@ class InvitationRegistrar
      */
     private function handleBannedUser($user)
     {
-        if ( ! is_null($user) && $user->is_banned) {
+        if ( ! is_null($user) && $user->isBanned()) {
             throw new InvitationRegistrarException('User with email \''.$this->email.'\' is banned.', 0);
         }
     }

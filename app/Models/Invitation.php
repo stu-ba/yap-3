@@ -118,7 +118,7 @@ class Invitation extends Model
 
     public function isDepleted(): bool
     {
-        if ($this->inviter->is_banned || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
+        if ($this->inviter->isBanned() || $this->is_depleted || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
             return true;
         }
 

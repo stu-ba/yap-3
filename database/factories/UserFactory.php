@@ -11,7 +11,6 @@ $factory->define(Yap\Models\User::class, function (Faker\Generator $faker) {
         'bio' => \Illuminate\Foundation\Inspiring::quote(),
         'ban_reason' => null,
         'is_admin' => false,
-        'is_banned' => false,
         'is_confirmed' => false,
         'remember_token' => str_random(64),
     ];
@@ -34,7 +33,6 @@ $factory->defineAs(Yap\Models\User::class, 'system', function () {
         'bio' => 'I am not human.',
         'ban_reason' => null,
         'is_admin' => true,
-        'is_banned' => false,
         'is_confirmed' => true,
         'remember_token' => null,
     ];
@@ -52,7 +50,6 @@ $factory->state(Yap\Models\User::class, 'admin', function () {
 
 $factory->state(Yap\Models\User::class, 'banned', function () {
     return [
-        'is_banned' => true,
         'ban_reason' => 'Because factory said so!',
     ];
 });
