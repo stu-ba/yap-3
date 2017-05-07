@@ -17,7 +17,9 @@ class CreateProjectUserTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->unsignedInteger('project_id');
             $table->unsignedInteger('user_id');
-            $table->boolean('is_leader');
+            $table->boolean('has_github_team')->default(false);
+            $table->boolean('has_taiga_membership')->default(false);
+            $table->boolean('is_leader')->default(false);
             $table->primary(['project_id', 'user_id']);
             $table->timestamps();
         });

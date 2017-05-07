@@ -16,11 +16,13 @@ class CreateProjectsTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('github_team_id')->unique()->nullable()->default(null);
+            $table->unsignedInteger('github_repository_id')->unique()->nullable()->default(null);
             $table->unsignedInteger('taiga_id')->unique()->nullable()->default(null);
             $table->unsignedInteger('project_type_id');
             $table->string('name');
             $table->text('description');
-            $table->boolean('is%archived')->default(false);
+            $table->boolean('is_archived')->default(false);
             $table->timestamp('archive_at')->nullable();
             $table->timestamps();
         });
