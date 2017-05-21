@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="card">
-                    <div class="card-header" data-background-color="green">
+                    <div class="card-header" data-background-color="blue">
                         <div class="text-center">
                             <i class="material-icons md-90">fingerprint</i>
                             <h3>Login to Yap 3.0</h3>
@@ -46,5 +46,5 @@
 </div>
 
 </body>
-{{--<script src="{{ mix('/js/app.js') }}"></script>--}}
+<script src="{{ mix('/js/app.js') }}"></script>
 </html>
