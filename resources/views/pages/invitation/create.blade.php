@@ -61,7 +61,7 @@
             <div class="card">
                 <div class="card-header" data-background-color="blue">
                     @include('components.html.card-support', ['page' => 'administration-invitations#recent'])
-                    <h4 class="title">Invitations listing</h4>
+                    <h4 class="title">Pending invitations</h4>
                     <p class="category">Most recent invitations are on top.</p>
                 </div>
                 <div class="card-content table-responsive">

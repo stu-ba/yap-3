@@ -110,7 +110,7 @@ class InvitationsTest extends TestCase
         $this->actingAs($this->administrator);
         $this->visitRoute('invitations.create');
         $this->see('Create invitation');
-        $this->see('Invitations listing');
+        $this->see('Pending invitations');
 
         $this->dontSee($invitationConsumed->email);
 
