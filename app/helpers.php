@@ -161,7 +161,7 @@ if ( ! function_exists('fa')) {
      */
     function fa(string $icon): ?string
     {
-        return config('yap.icons.'.$icon, null);
+        return config('yap.icons.'.$icon, $icon);
     }
 }
 
