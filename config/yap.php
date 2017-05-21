@@ -1,18 +1,21 @@
 <?php
 
 return [
-    'short_name'  => 'Yap',
-    'invitations' => [
+    'short_name'   => 'Yap',
+    'invitations'  => [
         //in days
         'valid_until' => 7,
     ],
-    'github'      => [
+    'github'       => [
         'organisation' => 'stu-ba',
         'source_code'  => 'https://github.com/stu-ba/yap-3',
         // Id of ytrium user (main user of yap application) for github
         'id'           => 26739569,
     ],
-    'icons'       => [
+    'taiga'        => [
+        'api' => env('TAIGA_API', null),
+    ],
+    'icons'        => [
         'home'         => 'fa-home',
         'users'        => 'fa-users',
         'user'         => 'fa-user',
@@ -27,8 +30,9 @@ return [
         'banned'       => 'fa-user-times',
         'all'          => 'fa-asterisk',
         'invite'       => 'fa-envelope',
+        'project'      => 'fa-briefcase',
+        'system'       => 'fa-cogs',
     ],
-
     'placeholders' => [
         'name' => 'Joe Little Carrot',
         'bio'  => 'I simply can not code in ones and zeros.',
