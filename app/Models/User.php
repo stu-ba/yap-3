@@ -152,7 +152,6 @@ class User extends Authenticatable
         }
     }
 
-
     public function scopeBanned(Builder $query, bool $value = true): Builder
     {
         return $value ? $query->whereNotNull('ban_reason') : $query->whereNull('ban_reason');
