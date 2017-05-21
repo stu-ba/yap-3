@@ -12,9 +12,9 @@ If you’re having trouble clicking the "Continue to {{ config('yap.short_name')
 into your web browser: [{{ $continueUrl }}]({{ $continueUrl }})
 <br><br>
 @if($validUntil === null)
-Your confirmation token is valid until you successfully sign in to {{ config('yap.short_name') }}.
+This invitation is valid until you successfully sign in to {{ config('yap.short_name') }}.
 @else
-Your confirmation token is valid until you successfully sign in to {{ config('yap.short_name') }} or until {{ $validUntil }}.
+This invitation is valid until {{ $validUntil }}.
 @endif
 @endcomponent
 
