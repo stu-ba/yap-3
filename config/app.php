@@ -173,6 +173,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         Prologue\Alerts\AlertsServiceProvider::class,
+        TZK\TaigaLaravel\TaigaServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +236,7 @@ return [
 
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Alert' => Prologue\Alerts\Facades\Alert::class,
+        'Taiga' => TZK\TaigaLaravel\Facades\Taiga::class,
     ],
 
 ];
