@@ -101,6 +101,14 @@ class Invitation extends Model
         return $query->whereNull('depleted_at');
     }
 
+    public function scopeValidUntil(Builder $query, Carbon $date = null): Builder {
+        if (is_null($date)) {
+            $date = Carbon::now()->subDays(config('yap.invitations.valid_until', 7));
+        }
+
+        return $query->whereDate('valid_until', '>', $date)->orWhereNull('valid_until');
+    }
+
     public function swapUser(User $user): self
     {
         $originalUser = $this->user;
