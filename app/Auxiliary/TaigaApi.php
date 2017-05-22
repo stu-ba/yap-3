@@ -34,4 +34,10 @@ class TaigaApi
             'bio'       => $user->bio ?? 'I keep my secrets.',
         ]);
     }
+
+
+    public function getTypes()
+    {
+        return $this->taiga->projectTemplates()->getList();
+    }
 }

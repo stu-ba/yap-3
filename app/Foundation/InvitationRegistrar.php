@@ -61,13 +61,13 @@ class InvitationRegistrar
      */
     public function __construct(User $user, Invitation $invitation, Mailer $mailer)
     {
-        $this->user = $user;
+        $this->user       = $user;
         $this->invitation = $invitation;
-        $this->mailer = $mailer;
+        $this->mailer     = $mailer;
     }
 
 
-    public function invite(string $email, array $options = []): Invitation
+    public function invite(string $email, array $options = [], bool $silent = false): Invitation
     {
         /** @var User $user */
         /** @var Invitation $invitation */
@@ -78,7 +78,11 @@ class InvitationRegistrar
 
             return $this->invitation;
         } elseif ( ! is_null($invitation) && ! is_null($user)) {
-            // This always throws exception catch it!
+            // This throws exception if silent = false catch it!
+            if ($silent) {
+                return $invitation;
+            }
+
             $this->invitationAndUserFound($user);
         } elseif ( ! is_null($invitation) && is_null($user)) {
             $invitation = $this->processOptions($invitation);
@@ -140,7 +144,7 @@ class InvitationRegistrar
     {
         array_fill_keys(array_keys($this->options), false);
         $this->invitation = $this->invitation->newInstance();
-        $this->user = $this->user->newInstance();
+        $this->user       = $this->user->newInstance();
     }
 
 
@@ -252,7 +256,7 @@ class InvitationRegistrar
         $this->user->fill(['is_admin' => $this->options['admin']])->save();
         $this->user->invitations()->save($this->invitation);
 
-        $this->invitation = $this->user->invitations->first();
+        $this->invitation                     = $this->user->invitations->first();
         $this->invitation->wasRecentlyCreated = true;
 
         return $this;

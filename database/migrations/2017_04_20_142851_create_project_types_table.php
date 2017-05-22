@@ -20,7 +20,7 @@ class CreateProjectTypesTable extends Migration
             $table->unsignedInteger('taiga_id')->unique()->nullable()->default(null);
             $table->string('name');
             $table->text('description');
-            $table->json('roles');
+            //$table->json('roles');
             $table->timestamps();
         });
     }

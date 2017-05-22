@@ -199,7 +199,6 @@ class User extends Authenticatable
             $this->save();
             event(new UserConfirmed($this));
             //TODO: do something to promote / demote
-            //TODO: add event that is fired when confirmed, set up taiga / set up github etc
         }
 
         return $this;

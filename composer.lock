@@ -3832,12 +3832,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kyslik/TaigaPHP.git",
-                "reference": "d1eed4416f9634a752925218e21ba07945f79db6"
+                "reference": "8ec01e7f2cbefa031e8c5d591a9451a85ba0bc6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kyslik/TaigaPHP/zipball/d1eed4416f9634a752925218e21ba07945f79db6",
-                "reference": "d1eed4416f9634a752925218e21ba07945f79db6",
+                "url": "https://api.github.com/repos/Kyslik/TaigaPHP/zipball/8ec01e7f2cbefa031e8c5d591a9451a85ba0bc6e",
+                "reference": "8ec01e7f2cbefa031e8c5d591a9451a85ba0bc6e",
                 "shasum": ""
             },
             "require": {
@@ -3860,7 +3860,7 @@
             "support": {
                 "source": "https://github.com/Kyslik/TaigaPHP/tree/yap"
             },
-            "time": "2017-05-08T00:27:33+00:00"
+            "time": "2017-05-22T20:39:49+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
