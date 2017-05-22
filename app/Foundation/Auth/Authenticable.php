@@ -11,7 +11,7 @@ trait Authenticable
 
     public function response()
     {
-        return redirect()->route($this->redirectTo ?? 'home')->cookie($this->githubTokenCookie);
+        return redirect()->route($this->redirectTo ?? 'profile')->cookie($this->githubTokenCookie);
     }
 
     /**

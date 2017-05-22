@@ -40,6 +40,26 @@ if ( ! function_exists('svg')) {
     }
 }
 
+if ( ! function_exists('toTaiga')) {
+
+    function toTaiga(?string $intended = null): ?string
+    {
+        if ( ! auth()->check()) {
+            return config('yap.taiga.site').$intended;
+        }
+
+        $taiga_id = auth()->user()->taiga_id;
+        if ( ! is_null($taiga_id) && $taiga_id !== 0) {
+            $signer        = resolve(Kyslik\Django\Signing\Signer::class);
+            $token         = $signer->dumps(['user_authentication_id' => $taiga_id]);
+            $query_strings = http_build_query(['next' => $intended]);
+            return config('yap.taiga.site').'login/'.$token.'?'.$query_strings;
+        }
+
+        return null;
+    }
+}
+
 if ( ! function_exists('systemAccount')) {
     function systemAccount()
     {

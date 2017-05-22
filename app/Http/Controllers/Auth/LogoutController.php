@@ -6,12 +6,14 @@ use Yap\Http\Controllers\Controller;
 
 class LogoutController extends Controller
 {
-    public function logout()
+    public function logout($token = null, \Illuminate\Cookie\CookieJar $cookie)
     {
-        //redirect to taiga /
-        // logout from taiga /
-        // redirect back here if referrer is taiga logout and return to login page
+        $cookie->queue($cookie->forget('github_token'));
         auth()->logout();
+
+        if (is_null($token)) {
+            return redirect()->away(config('yap.taiga.site').'logout');
+        }
 
         return redirect()->route('login');
     }

@@ -16,7 +16,7 @@ class OnlyXmlHttp
     public function handle($request, Closure $next)
     {
         if (!$request->isXmlHttpRequest()) {
-            return redirect()->route('home');
+            return redirect()->route('profile');
         }
 
         return $next($request);

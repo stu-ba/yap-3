@@ -14,6 +14,7 @@ return [
     ],
     'taiga'        => [
         'api' => env('TAIGA_API', null),
+        'site' => env('TAIGA_SITE', null),
     ],
     'icons'        => [
         'home'         => 'fa-home',

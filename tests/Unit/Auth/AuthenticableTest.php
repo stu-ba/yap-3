@@ -73,6 +73,6 @@ class AuthenticableTest extends TestCase
 
         $this->seeCookie('github_token');
         $this->seeStatusCode(302);
-        $this->assertRedirectedTo('home');
+        $this->assertRedirectedTo('profile');
     }
 }

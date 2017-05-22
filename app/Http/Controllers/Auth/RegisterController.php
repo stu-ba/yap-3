@@ -14,8 +14,6 @@ class RegisterController extends Controller
 {
     use Authenticable;
 
-    protected $redirectTo = 'home';
-
     /**
      * @var Invitation
      */
@@ -39,7 +37,7 @@ class RegisterController extends Controller
         if (! $invitation->isDepleted()) {
             $redirect_uri = config('services.github.redirect').'/'.encrypt($token);
 
-            return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email', 'admin:org'])->redirect();
+            return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])->redirect();
         }
 
         //TODO: maybe inform user that token has expired or been used

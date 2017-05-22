@@ -2,6 +2,7 @@
 
 namespace Yap\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Yap\Foundation\Auth\Authenticable;
 use Yap\Foundation\Auth\UserRegistrar;
@@ -11,8 +12,6 @@ use Yap\Models\User;
 class LoginController extends Controller
 {
     use Authenticable;
-
-    protected $redirectTo = 'home';
 
     protected $user;
 
@@ -64,5 +63,15 @@ class LoginController extends Controller
         $this->login($githubUser);
 
         return $this->response();
+    }
+
+    public function taiga(Request $request)
+    {
+        if (auth()->check()) {
+            return redirect()->away(toTaiga($request->get('taiga', 'discover')));
+        } else {
+            $request->session()->put('url.intended', config('yap.taiga.site').$request->get('taiga', 'discover'));
+            return redirect()->route('login.github');
+        }
     }
 }

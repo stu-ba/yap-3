@@ -14,15 +14,15 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="{{ route('home') }}">
-                        <i class="fa {{ fa('home') }}"></i>
-                    </a>
-                </li>
+                {{--<li>--}}
+                    {{--<a href="{{ route('profile') }}">--}}
+                        {{--<i class="fa {{ fa('home') }}"></i>--}}
+                    {{--</a>--}}
+                {{--</li>--}}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa {{ fa('notification') }}"></i>
-                        <span class="notification">5</span>
+                        <span class="notification">2</span>
                         <p class="hidden-lg hidden-md">Notifications</p>
                     </a>
                     <ul class="dropdown-menu">
@@ -39,8 +39,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="fa fa-lg {{ fa('profile') }}"></i> <span>Profile</span></a></li>
-                        <li><a href="#">{!! svg('taiga-icon', 'taiga-icon fa-lg') !!} <span>Switch to Taiga</span></a></li>
-                        <li><a href="#"><i class="fa fa-lg {{ fa('logout') }}"></i> <span>Logout</span></a></li>
+                        <li><a href="{{ route('switch') }}">{!! svg('taiga-icon', 'taiga-icon fa-lg') !!} <span>Switch to Taiga</span></a></li>
+                        <li><a href="{{ route('logout') }}"><i class="fa fa-lg {{ fa('logout') }}"></i> <span>Logout</span></a></li>
                     </ul>
                 </li>
             </ul>

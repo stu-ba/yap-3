@@ -14,7 +14,7 @@ class StoreInvitation extends FormRequest
      */
     public function authorize()
     {
-        //authorization logic will come here // only admins are allowed to store invitation throu this controller
+        //authorization logic will come here // only admins are allowed to store invitation through this controller
         return true;
     }
 
