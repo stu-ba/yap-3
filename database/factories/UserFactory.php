@@ -25,7 +25,7 @@ $factory->defineAs(Yap\Models\User::class, 'system', function () {
     }
 
     return [
-        'taiga_id' => 0,
+        'taiga_id' => config('yap.taiga.id'),
         'github_id' => config('yap.github.id'),
         'email' => config('mail.from.address'),
         'username' => 'ytrium',

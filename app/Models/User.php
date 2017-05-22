@@ -5,6 +5,7 @@ namespace Yap\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Kyslik\ColumnSortable\Sortable;
+use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
@@ -196,6 +197,7 @@ class User extends Authenticatable
         if (! $this->is_confirmed) {
             $this->is_confirmed = true;
             $this->save();
+            event(new UserConfirmed($this));
             //TODO: add event that is fired when confirmed, set up taiga / set up github etc
         }
 

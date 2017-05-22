@@ -4,7 +4,7 @@ namespace Yap\Listeners\Taiga;
 
 use Yap\Events\UserDemoted;
 
-class DemoteUser
+class DemoteUser extends Taiga
 {
     /**
      * Handle the event.
@@ -15,6 +15,6 @@ class DemoteUser
      */
     public function handle(UserDemoted $event)
     {
-        //
+        $this->roleChange($event->user);
     }
 }

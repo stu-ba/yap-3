@@ -30,7 +30,7 @@ class UserController extends Controller
     }
 
     public function edit() {
-
+        return redirect()->away('https://github.com/settings/profile');
     }
 
     public function update() {

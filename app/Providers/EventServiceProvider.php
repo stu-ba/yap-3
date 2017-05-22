@@ -3,17 +3,20 @@
 namespace Yap\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Listeners\Github\DemoteUser as GithubDemote;
 use Yap\Listeners\Github\PromoteUser as GithubPromote;
 use Yap\Listeners\SendDemotedNotification;
 use Yap\Listeners\SendPromotedNotification;
+use Yap\Listeners\Taiga\CreateUser;
 use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
 use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
 
 class EventServiceProvider extends ServiceProvider
 {
+
     /**
      * The event listener mappings for the application.
      *
@@ -25,12 +28,18 @@ class EventServiceProvider extends ServiceProvider
             GithubPromote::class,
             TaigaPromote::class,
         ],
-        UserDemoted::class => [
+
+        UserDemoted::class   => [
             SendDemotedNotification::class,
             GithubDemote::class,
             TaigaDemote::class,
         ],
+
+        UserConfirmed::class => [
+            CreateUser::class,
+        ],
     ];
+
 
     /**
      * Register any events for your application.
@@ -40,7 +49,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
         //
     }
 }

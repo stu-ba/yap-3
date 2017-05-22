@@ -11,17 +11,20 @@ use Yap\Models\User;
 
 class LoginController extends Controller
 {
+
     use Authenticable;
 
     protected $user;
 
     protected $registrar;
 
+
     public function __construct(User $user, UserRegistrar $registrar)
     {
-        $this->user = $user;
+        $this->user      = $user;
         $this->registrar = $registrar;
     }
+
 
     /**
      * Show login page.
@@ -32,6 +35,7 @@ class LoginController extends Controller
     {
         return view('auth.login');
     }
+
 
     /**
      * Redirect to GitHub authorization server.
@@ -44,6 +48,7 @@ class LoginController extends Controller
     {
         return $socialite->driver('github')->redirect();
     }
+
 
     /**
      * Handle GitHub callback redirect.
@@ -65,12 +70,14 @@ class LoginController extends Controller
         return $this->response();
     }
 
+
     public function taiga(Request $request)
     {
         if (auth()->check()) {
             return redirect()->away(toTaiga($request->get('taiga', 'discover')));
         } else {
             $request->session()->put('url.intended', config('yap.taiga.site').$request->get('taiga', 'discover'));
+
             return redirect()->route('login.github');
         }
     }
