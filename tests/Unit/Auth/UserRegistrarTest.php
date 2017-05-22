@@ -28,6 +28,7 @@ class UserRegistrarTest extends TestCase
 
     public function testRegisterByInvitation()
     {
+        $this->withoutEvents();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser();
@@ -72,6 +73,7 @@ class UserRegistrarTest extends TestCase
 
     public function testRegisterByInvitationWithSameEmails()
     {
+        $this->withoutEvents();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['email' => $invitation->email]);
@@ -134,6 +136,7 @@ class UserRegistrarTest extends TestCase
 
     public function testRegisterByGithubUserGivenValidInvitationExistsWithSameEmails()
     {
+        $this->withoutEvents();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser(['email' => $invitation->email]);
@@ -173,6 +176,7 @@ class UserRegistrarTest extends TestCase
 
     public function testRegisterByGithubUserGivenValidInvitationExists()
     {
+        $this->withoutEvents();
         /** @var User $user */
         $user = factory(User::class)->create();
         list($githubUser, $userData) = $this->generateDummyUserDataAndGithubUser([
@@ -258,6 +262,8 @@ class UserRegistrarTest extends TestCase
 
     public function testRegistrarArgumentOrderDoesNotMatter()
     {
+        $this->withoutEvents();
+
         $invitation = factory(Invitation::class, 'empty')->create();
         $githubUser = $this->mockSocialiteUser($this->dummyGithubUserData());
 

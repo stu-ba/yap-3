@@ -227,6 +227,7 @@ class InvitationRegistrarTest extends TestCase
 
     public function testUserIsConfirmedAndEmailIsSent()
     {
+        $this->withoutEvents();
         /** @var User $user */
         $user = factory(User::class)->create();
         $this->registrar->invite($user->email);
@@ -246,6 +247,7 @@ class InvitationRegistrarTest extends TestCase
 
     public function testUserIsConfirmedAndIsAdmin()
     {
+        $this->withoutEvents();
         /** @var User $user */
         $user = factory(User::class)->create();
         $this->registrar->invite($user->email, ['admin' => true]);

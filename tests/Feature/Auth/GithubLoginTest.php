@@ -101,6 +101,7 @@ class GithubLogin extends TestCase
 
     public function testNewGithubUserIsLoggedInIfInvitationIsNotDepletedAndEmailMatches()
     {
+        $this->withoutEvents();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $faker      = Factory::create();

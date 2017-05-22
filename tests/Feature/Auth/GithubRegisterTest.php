@@ -46,6 +46,7 @@ class GithubRegisterTest extends TestCase
 
     public function testUserIsRegisteredAndLoggedIn()
     {
+        $this->withoutEvents();
         /** @var Invitation $invitation */
         $invitation = factory(Invitation::class, 'empty')->create();
         $faker      = Factory::create();
@@ -129,6 +130,7 @@ class GithubRegisterTest extends TestCase
 
     public function testUserIsRegisteredAndLoggedInGivenValidNonDepletedInvitationIsProvided()
     {
+        $this->withoutEvents();
         //swapping happens
         $faker = Factory::create();
         /** @var User $user */
