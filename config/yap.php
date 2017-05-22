@@ -11,11 +11,15 @@ return [
         'source_code'  => 'https://github.com/stu-ba/yap-3',
         // Id of ytrium user (main user of yap application) for github
         'id'           => 26739569,
+        'root_team'    => [
+            'id'   => '2298259',
+            'name' => 'yap-root',
+        ],
     ],
     'taiga'        => [
-        'api' => env('TAIGA_API', null),
+        'api'  => env('TAIGA_API', null),
         'site' => env('TAIGA_SITE', null),
-        'id' => 5,
+        'id'   => 5,
     ],
     'icons'        => [
         'home'         => 'fa-home',

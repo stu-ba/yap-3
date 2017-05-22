@@ -7,6 +7,7 @@ use Yap\Notifications\PromotedNotification;
 
 class SendPromotedNotification
 {
+
     /**
      * Handle the event.
      *

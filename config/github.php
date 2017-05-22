@@ -28,7 +28,6 @@ return [
     */
 
     'connections' => [
-
         'main' => [
             'token'      => env('GITHUB_TOKEN_YAP'),
             'method'     => 'token',

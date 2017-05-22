@@ -7,6 +7,7 @@ use Yap\Notifications\DemotedNotification;
 
 class SendDemotedNotification
 {
+
     /**
      * Handle the event.
      *

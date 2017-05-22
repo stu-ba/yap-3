@@ -4,8 +4,9 @@ namespace Yap\Listeners\Github;
 
 use Yap\Events\UserPromoted;
 
-class PromoteUser
+class PromoteUser extends Github
 {
+
     /**
      * Handle the event.
      *
@@ -15,6 +16,6 @@ class PromoteUser
      */
     public function handle(UserPromoted $event)
     {
-        //
+        $this->github->addToTeam($this->rootTeamId, $event->user->username);
     }
 }

@@ -4,8 +4,9 @@ namespace Yap\Listeners\Github;
 
 use Yap\Events\UserDemoted;
 
-class DemoteUser
+class DemoteUser extends Github
 {
+
     /**
      * Handle the event.
      *
@@ -15,6 +16,6 @@ class DemoteUser
      */
     public function handle(UserDemoted $event)
     {
-        //
+        $this->github->removeFromTeam($this->rootTeamId, $event->user->username);
     }
 }

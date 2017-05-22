@@ -198,19 +198,20 @@ class User extends Authenticatable
             $this->is_confirmed = true;
             $this->save();
             event(new UserConfirmed($this));
+            //TODO: do something to promote / demote
             //TODO: add event that is fired when confirmed, set up taiga / set up github etc
         }
 
         return $this;
     }
 
-    public function promote(): self
+    public function promote($force = false): self
     {
-        if (! $this->is_admin) {
+        if (! $this->is_admin && ! $this->isBanned() || $force) {
             $this->is_admin = true;
             $this->save();
 
-            if (! is_null($this->github_id)) {
+            if (! is_null($this->github_id) && ! is_null($this->taiga_id)) {
                 event(new UserPromoted($this));
             }
         }
@@ -224,7 +225,7 @@ class User extends Authenticatable
             $this->is_admin = false;
             $this->save();
 
-            if (! is_null($this->github_id)) {
+            if (! is_null($this->github_id) && ! is_null($this->taiga_id)) {
                 event(new UserDemoted($this));
             }
         }
@@ -287,7 +288,7 @@ class User extends Authenticatable
         if (is_null($user->email) && ! $user->is_confirmed) {
             //swapping every associated model except invitation
             $user->swapNotifications($this);
-            //swap project
+            //TODO: swap project
             //swap ...
             $user->delete();
         } else {

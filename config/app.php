@@ -237,6 +237,7 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Alert' => Prologue\Alerts\Facades\Alert::class,
         'Taiga' => TZK\TaigaLaravel\Facades\Taiga::class,
+        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
     ],
 
 ];

@@ -6,6 +6,7 @@ use Yap\Events\UserPromoted;
 
 class PromoteUser extends Taiga
 {
+
     /**
      * Handle the event.
      *
@@ -15,6 +16,6 @@ class PromoteUser extends Taiga
      */
     public function handle(UserPromoted $event)
     {
-        $this->roleChange($event->user);
+        $this->taiga->roleChange($event->user);
     }
 }
