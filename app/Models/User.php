@@ -204,7 +204,8 @@ class User extends Authenticatable
 
     public function scopeColleagues(Builder $query): Builder
     {
-        return $query->whereIn('id', $this->colleaguesIds());
+        //TODO: hardcoded only for current user
+        return $query->whereIn('id', auth()->user()->colleaguesIds());
     }
 
 

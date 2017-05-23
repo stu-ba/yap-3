@@ -4,9 +4,13 @@ namespace Yap\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Yap\Events\ProjectCreated;
+use Yap\Events\RepositoryRequested;
+use Yap\Events\TeamRequested;
 use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
+use Yap\Listeners\Github\CreateRepository;
+use Yap\Listeners\Github\CreateTeam;
 use Yap\Listeners\Github\DemoteUser as GithubDemote;
 use Yap\Listeners\Github\PromoteUser as GithubPromote;
 use Yap\Listeners\SendDemotedNotification;
@@ -43,6 +47,14 @@ class EventServiceProvider extends ServiceProvider
 
         ProjectCreated::class => [
             CreateProject::class,
+        ],
+
+        TeamRequested::class => [
+            CreateTeam::class,
+        ],
+
+        RepositoryRequested::class => [
+            CreateRepository::class,
         ],
     ];
 
