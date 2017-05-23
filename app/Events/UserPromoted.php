@@ -10,7 +10,7 @@ class UserPromoted
     use SerializesModels;
 
     /**
-     * @var User
+     * @var \Yap\Models\User
      */
     public $user;
 

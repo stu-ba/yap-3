@@ -3,6 +3,7 @@
 namespace Yap\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Yap\Events\ProjectCreated;
 use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
@@ -10,6 +11,7 @@ use Yap\Listeners\Github\DemoteUser as GithubDemote;
 use Yap\Listeners\Github\PromoteUser as GithubPromote;
 use Yap\Listeners\SendDemotedNotification;
 use Yap\Listeners\SendPromotedNotification;
+use Yap\Listeners\Taiga\CreateProject;
 use Yap\Listeners\Taiga\CreateUser;
 use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
 use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
@@ -37,6 +39,10 @@ class EventServiceProvider extends ServiceProvider
 
         UserConfirmed::class => [
             CreateUser::class,
+        ],
+
+        ProjectCreated::class => [
+            CreateProject::class,
         ],
     ];
 

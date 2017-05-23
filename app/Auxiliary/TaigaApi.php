@@ -3,6 +3,7 @@
 namespace Yap\Auxiliary;
 
 use TZK\Taiga\Taiga;
+use Yap\Models\Project;
 use Yap\Models\User;
 
 class TaigaApi
@@ -32,6 +33,17 @@ class TaigaApi
             'full_name' => $user->name ?? 'Anonymous',
             //'photo'     => $user->avatar, //TODO: is not used while creating user
             'bio'       => $user->bio ?? 'I keep my secrets.',
+        ]);
+    }
+
+
+    public function createProject(Project $project)
+    {
+        return $this->taiga->projects()->create([
+            'name'              => $project->name,
+            'description'       => $project->description,
+            'creation_template' => $project->project_type_id,
+            'is_private'        => false,
         ]);
     }
 

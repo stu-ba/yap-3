@@ -4,7 +4,39 @@ namespace Yap\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
+use Yap\Events\ProjectCreated;
 
+/**
+ * Yap\Models\Project
+ *
+ * @property int $id
+ * @property int $github_team_id
+ * @property int $github_repository_id
+ * @property int $taiga_id
+ * @property int $project_type_id
+ * @property string $name
+ * @property string $description
+ * @property bool $is_archived
+ * @property \Carbon\Carbon $archive_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
+ * @property-read \Yap\Models\ProjectType $type
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereArchiveAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereGithubRepositoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereGithubTeamId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereIsArchived($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereProjectTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereTaigaId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Project extends Model
 {
 
@@ -41,6 +73,10 @@ class Project extends Model
         'taiga_id'             => 'int',
         'project_type_id'      => 'int',
         'is_archived'          => 'boolean',
+    ];
+
+    protected $events = [
+        'created' => ProjectCreated::class,
     ];
 
 
@@ -102,6 +138,7 @@ class Project extends Model
 
     public function removeParticipant(int $userId)
     {
+        //TODO: remove can be only on participant that has false and false on membership to gh and taiga
         return $this->participants()->detach($userId);
     }
 }

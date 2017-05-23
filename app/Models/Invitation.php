@@ -3,25 +3,26 @@
 namespace Yap\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Yap\Models\Invitation
  *
- * @property int $id
- * @property int $user_id
- * @property int $invited_by
- * @property string $email
- * @property string $token
- * @property \Carbon\Carbon $depleted_at
- * @property \Carbon\Carbon $valid_until
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int                   $id
+ * @property int                   $user_id
+ * @property int                   $invited_by
+ * @property string                $email
+ * @property string                $token
+ * @property \Carbon\Carbon        $depleted_at
+ * @property \Carbon\Carbon        $valid_until
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
  * @property-read \Yap\Models\User $inviter
  * @property-read \Yap\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation active()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation recent($num = 10)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation validUntil(\Carbon\Carbon $date = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereDepletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereEmail($value)
@@ -35,6 +36,7 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Invitation extends Model
 {
+
     protected $fillable = [
         'user_id',
         'invited_by',
@@ -52,7 +54,7 @@ class Invitation extends Model
     ];
 
     protected $casts = [
-        'user_id' => 'int',
+        'user_id'    => 'int',
         'invited_by' => 'int',
     ];
 
@@ -67,19 +69,15 @@ class Invitation extends Model
 
         static::creating(function ($model) {
             $model->attributes['valid_until'] = $model->determineValidUntil();
-            $model->attributes['token'] = $model->attributes['token'] ?? base64_encode(str_random(63));
-            $model->attributes['invited_by'] = $model->attributes['invited_by'] ?? $model->determineCreator();
+            $model->attributes['token']       = $model->attributes['token'] ?? base64_encode(str_random(63));
+            $model->attributes['invited_by']  = $model->attributes['invited_by'] ?? $model->determineCreator();
         });
     }
+
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function inviter()
-    {
-        return $this->belongsTo(User::class, 'invited_by');
     }
 
 
@@ -92,8 +90,10 @@ class Invitation extends Model
      */
     public function scopeRecent($query, int $num = 10): Builder
     {
-        return $query->select(['invited_by', 'email', 'valid_until', 'created_at', 'updated_at'])->orderBy('updated_at', 'desc')->limit($num);
+        return $query->select(['invited_by', 'email', 'valid_until', 'created_at', 'updated_at'])
+                     ->orderBy('updated_at', 'desc')->limit($num);
     }
+
 
     public function scopeActive(Builder $query): Builder
     {
@@ -101,13 +101,16 @@ class Invitation extends Model
         return $query->whereNull('depleted_at');
     }
 
-    public function scopeValidUntil(Builder $query, Carbon $date = null): Builder {
+
+    public function scopeValidUntil(Builder $query, Carbon $date = null): Builder
+    {
         if (is_null($date)) {
             $date = Carbon::now()->subDays(config('yap.invitations.valid_until', 7));
         }
 
         return $query->whereDate('valid_until', '>', $date)->orWhereNull('valid_until');
     }
+
 
     public function swapUser(User $user): self
     {
@@ -121,14 +124,18 @@ class Invitation extends Model
         return $this;
     }
 
+
     public function isDepleted(): bool
     {
-        if ($this->inviter->isBanned() || !is_null($this->depleted_at) || ! (is_null($this->valid_until) ?: ! $this->valid_until->lessThan(Carbon::now()))) {
+        if ($this->inviter->isBanned() || ! is_null($this->depleted_at) || ! (is_null($this->valid_until) ?:
+                ! $this->valid_until->lessThan(Carbon::now()))
+        ) {
             return true;
         }
 
         return false;
     }
+
 
     public function deplete(): self
     {
@@ -137,6 +144,7 @@ class Invitation extends Model
 
         return $this;
     }
+
 
     public function prolong(Carbon $date = null): self
     {
@@ -168,6 +176,12 @@ class Invitation extends Model
     }
 
 
+    public function inviter()
+    {
+        return $this->belongsTo(User::class, 'invited_by');
+    }
+
+
     /**
      * Updates valid until to indefinite if not previously set as such.
      *
@@ -183,10 +197,12 @@ class Invitation extends Model
         return $this;
     }
 
+
     private function determineCreator()
     {
         return auth()->id() ?? auth('yap')->id() ?? systemAccount()->id;
     }
+
 
     private function determineValidUntil()
     {

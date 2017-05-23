@@ -15,27 +15,47 @@ use Yap\Foundation\Auth\User as Authenticatable;
 /**
  * Yap\Models\User
  *
- * @property int $id
- * @property int $taiga_id
- * @property int $github_id
- * @property string $email
- * @property string $username
- * @property string $name
- * @property string $bio
- * @property string $ban_reason
- * @property string $avatar
- * @property string $remember_token
- * @property bool $is_admin
- * @property bool $is_confirmed
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[] $invitations
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property int
+ *               $id
+ * @property int
+ *               $taiga_id
+ * @property int
+ *               $github_id
+ * @property string
+ *               $email
+ * @property string
+ *               $username
+ * @property string
+ *               $name
+ * @property string
+ *               $bio
+ * @property string
+ *               $ban_reason
+ * @property string
+ *               $avatar
+ * @property string
+ *               $remember_token
+ * @property bool
+ *               $is_admin
+ * @property bool
+ *               $is_confirmed
+ * @property \Carbon\Carbon
+ *               $created_at
+ * @property \Carbon\Carbon
+ *               $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[]
+ *                    $invitations
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *                $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Project[]
+ *                    $projects
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues(\Yap\Models\User $user = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User isAdmin($value = true)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User leader()
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User participant()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
@@ -53,10 +73,19 @@ use Yap\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereUsername($value)
  * @mixin \Eloquent
  */
-
 class User extends Authenticatable
 {
+
     use Notifiable, Sortable;
+
+    public $sortable = [
+        'id',
+        'name',
+        'email',
+        'username',
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -88,20 +117,12 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'taiga_id' => 'int',
-        'github_id' => 'int',
-        'is_admin' => 'boolean',
+        'taiga_id'     => 'int',
+        'github_id'    => 'int',
+        'is_admin'     => 'boolean',
         'is_confirmed' => 'boolean',
     ];
 
-    public $sortable = [
-        'id',
-        'name',
-        'email',
-        'username',
-        'created_at',
-        'updated_at'
-    ];
 
     /**
      * Boot function for using with User Events.
@@ -113,18 +134,33 @@ class User extends Authenticatable
         parent::boot();
 
         static::updating(function ($model) {
-            $model->attributes['github_id'] = $model->getOriginal('github_id') ?? $model->attributes['github_id'] ?? null;
+            $model->attributes['github_id'] =
+                $model->getOriginal('github_id') ?? $model->attributes['github_id'] ?? null;
         });
     }
+
 
     public function getRouteKeyName()
     {
         return 'username';
     }
 
+
     public function invitations()
     {
         return $this->hasMany(Invitation::class);
+    }
+
+
+    public function scopeLeader($query)
+    {
+        return $query->wherePivot('is_leader', '=', '1');
+    }
+
+
+    public function scopeParticipant($query)
+    {
+        return $query->wherePivot('is_leader', '=', '0');
     }
 
 
@@ -145,7 +181,7 @@ class User extends Authenticatable
             case 'banned':
                 return $query->banned();
             case 'colleagues':
-                return $query->colleagues(auth()->user());
+                return $query->colleagues();
             case 'admins':
                 return $query->isAdmin();
             default:
@@ -153,21 +189,34 @@ class User extends Authenticatable
         }
     }
 
+
     public function scopeBanned(Builder $query, bool $value = true): Builder
     {
         return $value ? $query->whereNotNull('ban_reason') : $query->whereNull('ban_reason');
     }
+
 
     public function scopeIsAdmin(Builder $query, bool $value = true): Builder
     {
         return $query->whereIsAdmin($value);
     }
 
-    public function scopeColleagues(Builder $query, User $user = null): Builder
+
+    public function scopeColleagues(Builder $query): Builder
     {
-        d($user ?? 'unset');
-        return $query;
+        return $query->whereIn('id', $this->colleaguesIds());
     }
+
+
+    public function colleaguesIds(): array
+    {
+        return $this->projects->load([
+            'participants' => function ($query) {
+                return $query->select('id');
+            },
+        ])->pluck('participants')->collapse()->unique('id')->whereNotIn('id', [$this->id])->pluck('id')->all();
+    }
+
 
     /**
      * Get system User instance.
@@ -179,22 +228,30 @@ class User extends Authenticatable
         return $this->whereGithubId(config('yap.github.id'))->whereIsAdmin(true)->first();
     }
 
+
     public function logginable(): bool
     {
         if ($this->isBanned()) {
             throw new UserBannedException();
         }
 
-        if (! $this->is_confirmed) {
+        if ( ! $this->is_confirmed) {
             throw new UserNotConfirmedException();
         }
 
         return true;
     }
 
+
+    public function isBanned(): bool
+    {
+        return ! is_null($this->ban_reason);
+    }
+
+
     public function confirm(): self
     {
-        if (! $this->is_confirmed) {
+        if ( ! $this->is_confirmed) {
             $this->is_confirmed = true;
             $this->save();
             event(new UserConfirmed($this));
@@ -204,13 +261,14 @@ class User extends Authenticatable
         return $this;
     }
 
+
     public function promote($force = false): self
     {
-        if (! $this->is_admin && ! $this->isBanned() || $force) {
+        if ( ! $this->is_admin && ! $this->isBanned() || $force) {
             $this->is_admin = true;
             $this->save();
 
-            if (! is_null($this->github_id) && ! is_null($this->taiga_id)) {
+            if ( ! is_null($this->github_id) && ! is_null($this->taiga_id)) {
                 event(new UserPromoted($this));
             }
         }
@@ -218,19 +276,21 @@ class User extends Authenticatable
         return $this;
     }
 
+
     public function demote(): self
     {
         if ($this->is_admin) {
             $this->is_admin = false;
             $this->save();
 
-            if (! is_null($this->github_id) && ! is_null($this->taiga_id)) {
+            if ( ! is_null($this->github_id) && ! is_null($this->taiga_id)) {
                 event(new UserDemoted($this));
             }
         }
 
         return $this;
     }
+
 
     public function unconfirm(): self
     {
@@ -240,10 +300,6 @@ class User extends Authenticatable
         return $this;
     }
 
-    public function isBanned() :bool
-    {
-        return !is_null($this->ban_reason);
-    }
 
     public function unban(): self
     {
@@ -253,6 +309,7 @@ class User extends Authenticatable
         return $this;
     }
 
+
     public function ban(string $reason): self
     {
         $this->ban_reason = str_limit($reason, 250, '...');
@@ -260,6 +317,7 @@ class User extends Authenticatable
 
         return $this;
     }
+
 
     /**
      * Synchronize User with GitHub data.
@@ -277,17 +335,13 @@ class User extends Authenticatable
         return $this;
     }
 
-    protected function swapNotifications(self $user): void
-    {
-        $this->notifications()->update(['notifiable_id' => $user->id]);
-    }
 
     public function swapWith(self $user): self
     {
         if (is_null($user->email) && ! $user->is_confirmed) {
             //swapping every associated model except invitation
             $user->swapNotifications($this);
-            //TODO: swap project
+            $user->swapProjects($this);
             //swap ...
             $user->delete();
         } else {
@@ -297,5 +351,26 @@ class User extends Authenticatable
         }
 
         return $this;
+    }
+
+
+    protected function swapNotifications(self $user): void
+    {
+        $this->notifications()->update(['notifiable_id' => $user->id]);
+    }
+
+
+    protected function swapProjects(self $user): void
+    {
+        $this->projects->pluck('id')->each(function ($item) use ($user) {
+            $this->projects()->updateExistingPivot($item, ['user_id' => $user->id]);
+        });
+    }
+
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id')
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership')->withTimestamps();
     }
 }

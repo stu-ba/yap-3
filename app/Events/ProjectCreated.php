@@ -4,20 +4,21 @@ namespace Yap\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Yap\Models\User;
+use Yap\Models\Project;
 
-class UserConfirmed
+class ProjectCreated
 {
+
     use Dispatchable, SerializesModels;
 
     /**
-     * @var \Yap\Models\User
+     * @var \Yap\Models\Project
      */
-    public $user;
+    public $project;
 
-    public function __construct(User $user)
+
+    public function __construct(Project $project)
     {
-        $this->user = $user;
+        $this->project = $project;
     }
-
 }
