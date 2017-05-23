@@ -10,6 +10,8 @@ use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
+use Yap\Models\Invitation;
+use Yap\Models\Project;
 use Yap\Models\User;
 
 class UserTest extends TestCase
@@ -93,6 +95,23 @@ class UserTest extends TestCase
     }
 
 
+    public function testColleaguesIds()
+    {
+        factory(Invitation::class, 10)->create();
+
+        Event::fake();
+        /**@var Project $project */
+        $projects = factory(Project::class, 2)->create();
+        $user     = resolve(User::class);
+        $userIds  = $user->all()->whereNotIn('id', [systemAccount()->id])->pluck('id');
+
+        $projects->first()->addParticipants($userIds->nth(2)->all());
+        $projects->last()->addParticipants($userIds->nth(3)->all());
+
+        $this->assertEquals([3, 5, 7, 9, 4, 10], $user->find(1)->colleaguesIds());
+    }
+
+
     public function testUpdatingUserDoesNotChangeGithubId()
     {
         $user             = factory(User::class)->create();
@@ -108,8 +127,15 @@ class UserTest extends TestCase
 
     public function testSwappingConfirmedUser()
     {
+        /** @var User $userConfirmed */
         $userConfirmed = factory(User::class)->states(['confirmed'])->create();
-        $userEmpty     = factory(User::class, 'empty')->create();
+        /** @var User $userEmpty */
+        $userEmpty = factory(User::class, 'empty')->create();
+
+        $this->withoutModelEvents();
+        /** @var \Illuminate\Database\Eloquent\Collection $projects */
+        $projects = factory(Project::class, 3)->create();
+        $projects->each->addParticipant($userEmpty->id);
 
         $userEmpty->notify(new \Yap\Notifications\PromotedNotification);
         $userEmpty->notify(new \Yap\Notifications\DemotedNotification);
@@ -117,9 +143,8 @@ class UserTest extends TestCase
         $userConfirmed->swapWith($userEmpty);
 
         $this->assertEquals(2, $userConfirmed->notifications->count());
+        $this->assertEquals(3, $userConfirmed->projects->count());
         $this->assertNull($userEmpty->fresh());
-
-        $this->markTestIncomplete('Test for swapping every relation!');
     }
 
 

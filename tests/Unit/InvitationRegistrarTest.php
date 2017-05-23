@@ -170,12 +170,12 @@ class InvitationRegistrarTest extends TestCase
         $this->registrar->invite($invitation->email);
     }
 
+
     public function testConfirmedExceptionIsNotThrownWhenSilent()
     {
         $user       = factory(User::class)->states(['confirmed'])->create();
         $invitation = factory(Invitation::class)->create(['email' => $user->email]);
         $this->assertEquals($invitation->user_id, $this->registrar->invite($invitation->email, [], true)->user_id);
-
     }
 
 

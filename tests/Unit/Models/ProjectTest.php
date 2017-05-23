@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use Event;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Yap\Models\Invitation;
@@ -15,8 +16,10 @@ class ProjectTest extends TestCase
 
     public function testLeaderCanBeAssignedToProject()
     {
-        $this->withoutEvents();
         $user_id = factory(Invitation::class)->create()->user_id;
+
+        Event::fake();
+        $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
 
@@ -26,13 +29,13 @@ class ProjectTest extends TestCase
         $this->assertEquals(1, count($project->leaders));
     }
 
+
     public function testLeadersCanBeAssignedToProject()
     {
-        $this->withoutEvents();
-        $invitations = factory(Invitation::class, 2)->create();
-        foreach ($invitations as $invitation) {
-            $user_ids[] = $invitation->user_id;
-        }
+        $user_ids = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
+
+        Event::fake();
+        $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
 
@@ -42,10 +45,13 @@ class ProjectTest extends TestCase
         $this->assertEquals(2, count($project->leaders));
     }
 
+
     public function testParticipantCanBeAssignedToProject()
     {
-        $this->withoutEvents();
         $user_id = factory(Invitation::class)->create()->user_id;
+
+        Event::fake();
+        $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
 
@@ -55,13 +61,13 @@ class ProjectTest extends TestCase
         $this->assertEquals(1, count($project->participants));
     }
 
+
     public function testParticipantsCanBeAssignedToProject()
     {
-        $this->withoutEvents();
-        $invitations = factory(Invitation::class, 2)->create();
-        foreach ($invitations as $invitation) {
-            $user_ids[] = $invitation->user_id;
-        }
+        $user_ids = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
+
+        Event::fake();
+        $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
 
