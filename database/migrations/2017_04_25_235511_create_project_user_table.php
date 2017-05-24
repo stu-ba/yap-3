@@ -20,6 +20,7 @@ class CreateProjectUserTable extends Migration
             $table->boolean('has_github_team')->default(false);
             $table->boolean('has_taiga_membership')->default(false);
             $table->boolean('is_leader')->default(false);
+            $table->boolean('to_be_deleted')->default(false);
             $table->primary(['project_id', 'user_id']);
             $table->timestamps();
         });
