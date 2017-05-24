@@ -105,8 +105,8 @@ class UserTest extends TestCase
         $user     = resolve(User::class);
         $userIds  = $user->all()->whereNotIn('id', [systemAccount()->id])->pluck('id');
 
-        $projects->first()->addParticipants($userIds->nth(2)->all());
-        $projects->last()->addParticipants($userIds->nth(3)->all());
+        $projects->first()->syncMembers([], $userIds->nth(2)->all());
+        $projects->last()->syncMembers([], $userIds->nth(3)->all());
 
         $this->assertEquals([3, 5, 7, 9, 4, 10], $user->find(1)->colleaguesIds());
     }
@@ -135,7 +135,7 @@ class UserTest extends TestCase
         $this->withoutModelEvents();
         /** @var \Illuminate\Database\Eloquent\Collection $projects */
         $projects = factory(Project::class, 3)->create();
-        $projects->each->addParticipant($userEmpty->id);
+        $projects->each->syncMembers([], [$userEmpty->id]);
 
         $userEmpty->notify(new \Yap\Notifications\PromotedNotification);
         $userEmpty->notify(new \Yap\Notifications\DemotedNotification);

@@ -14,66 +14,44 @@ class ProjectTest extends TestCase
     use DatabaseMigrations;
 
 
-    public function testLeaderCanBeAssignedToProject()
+    public function testMembersAreAdded()
     {
-        $user_id = factory(Invitation::class)->create()->user_id;
+        $leaderIds = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
+        $participantIds = factory(Invitation::class, 4)->create()->pluck('user_id')->all();
 
         Event::fake();
         $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
 
-        $project->addLeader($user_id);
-        $project->fresh('leaders');
-
-        $this->assertEquals(1, count($project->leaders));
-    }
-
-
-    public function testLeadersCanBeAssignedToProject()
-    {
-        $user_ids = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
-
-        Event::fake();
-        $this->expectsModelEvents(Project::class, 'created');
-        /** @var Project $project */
-        $project = factory(Project::class)->create();
-
-        $project->addLeaders($user_ids);
-        $project->fresh('leaders');
+        $project->syncMembers($leaderIds, $participantIds);
+        $project->fresh('leaders', 'participants', 'members');
 
         $this->assertEquals(2, count($project->leaders));
+        $this->assertEquals(4, count($project->participants));
+        $this->assertEquals(6, count($project->members));
     }
 
-
-    public function testParticipantCanBeAssignedToProject()
+    public function testMemberSyncSetsToBeDeletedFlag()
     {
-        $user_id = factory(Invitation::class)->create()->user_id;
+        systemAccount();
+        $leaderIds = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
+        $participantIds = factory(Invitation::class, 4)->create()->pluck('user_id')->all();
 
         Event::fake();
         $this->expectsModelEvents(Project::class, 'created');
         /** @var Project $project */
         $project = factory(Project::class)->create();
+        $project->syncMembers($leaderIds, $participantIds);
 
-        $project->addParticipant($user_id);
-        $project->fresh('participants');
+        array_pop($leaderIds);
+        array_pop($participantIds);
 
-        $this->assertEquals(1, count($project->participants));
-    }
+        $project->syncMembers($leaderIds, $participantIds);
+        $project = $project->fresh('leaders', 'participants', 'members');
 
-
-    public function testParticipantsCanBeAssignedToProject()
-    {
-        $user_ids = factory(Invitation::class, 2)->create()->pluck('user_id')->all();
-
-        Event::fake();
-        $this->expectsModelEvents(Project::class, 'created');
-        /** @var Project $project */
-        $project = factory(Project::class)->create();
-
-        $project->addParticipants($user_ids);
-        $project->fresh('participants');
-
-        $this->assertEquals(2, count($project->participants));
+        $this->assertEquals(1, count($project->leaders->where('pivot.to_be_deleted', '=', false)));
+        $this->assertEquals(3, count($project->participants->where('pivot.to_be_deleted', '=', false)));
+        $this->assertEquals(4, count($project->members->where('pivot.to_be_deleted', '=', false)));
     }
 }

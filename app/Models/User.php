@@ -372,6 +372,6 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id')
-                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership')->withTimestamps();
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')->withTimestamps();
     }
 }

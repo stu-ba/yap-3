@@ -68,8 +68,8 @@ class IndexTest extends TestCase
         /**@var User $user */
         $user     = resolve(User::class);
         $userIds  = $user->all()->whereNotIn('id', [systemAccount()->id])->pluck('id');
-        $projects->first()->addParticipants($userIds->nth(2)->all());
-        $projects->last()->addParticipants($userIds->nth(3)->all());
+        $projects->first()->syncMembers([], $userIds->nth(2)->all());
+        $projects->last()->syncMembers([], $userIds->nth(3)->all());
 
         $this->actingAs($user->find(4));
         $this->visitRoute('users.index', ['filter' => 'colleagues']);

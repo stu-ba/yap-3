@@ -9,20 +9,20 @@ use Yap\Events\ProjectCreated;
 /**
  * Yap\Models\Project
  *
- * @property int $id
- * @property int $github_team_id
- * @property int $github_repository_id
- * @property int $taiga_id
- * @property int $project_type_id
- * @property string $name
- * @property string $description
- * @property bool $is_archived
- * @property \Carbon\Carbon $archive_at
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int                                                              $id
+ * @property int                                                              $github_team_id
+ * @property int                                                              $github_repository_id
+ * @property int                                                              $taiga_id
+ * @property int                                                              $project_type_id
+ * @property string                                                           $name
+ * @property string                                                           $description
+ * @property bool                                                             $is_archived
+ * @property \Carbon\Carbon                                                   $archive_at
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
- * @property-read \Yap\Models\ProjectType $type
+ * @property-read \Yap\Models\ProjectType                                     $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereArchiveAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereCreatedAt($value)
@@ -86,45 +86,53 @@ class Project extends Model
     }
 
 
-    public function addLeaders(array $userIds)
-    {
-        foreach ($userIds as $userId) {
-            $this->addLeader($userId);
-        }
-    }
-
-
-    public function addLeader(int $userId)
-    {
-        return $this->leaders()->attach($userId, ['is_leader' => true]);
-    }
-
-
     public function leaders()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
                     ->wherePivot('is_leader', '=', '1')
-                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership')->withTimestamps();
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
+                    ->withTimestamps();
     }
 
 
-    public function removeLeader(int $userId)
+    public function syncMembers(array $leaderIds, array $participantIds)
     {
-        return $this->leaders()->detach($userId);
+        $leaderIds      = array_fill_keys($leaderIds, ['is_leader' => true, 'to_be_deleted' => false]);
+        $participantIds = array_fill_keys($participantIds, ['is_leader' => false, 'to_be_deleted' => false]);
+        $memberIds      = $participantIds + $leaderIds;
+        $changed        = $this->members()->syncWithoutDetaching($memberIds);
+        $this->removeMembers($this->toDetach($memberIds)); //this can be improved with $changed['to_detach']
+        //TODO: fire events if updated (to make leader or make participant)
     }
 
 
-    public function addParticipants(array $userIds)
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
+                    ->withTimestamps();
+    }
+
+
+    public function removeMembers(array $userIds)
     {
         foreach ($userIds as $userId) {
-            $this->addParticipant($userId);
+            $this->removeMember($userId);
         }
     }
 
 
-    public function addParticipant(int $userId)
+    public function removeMember(int $userId)
     {
-        return $this->participants()->attach($userId);
+        return $this->members()->updateExistingPivot($userId, ['to_be_deleted' => true]);
+    }
+
+
+    private function toDetach(array $ids): array
+    {
+        $current = $this->members->pluck('id')->all();
+
+        return array_diff($current, array_keys($ids));
     }
 
 
@@ -132,13 +140,8 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
                     ->wherePivot('is_leader', '=', '0')
-                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership')->withTimestamps();
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
+                    ->withTimestamps();
     }
 
-
-    public function removeParticipant(int $userId)
-    {
-        //TODO: remove can be only on participant that has false and false on membership to gh and taiga
-        return $this->participants()->detach($userId);
-    }
 }

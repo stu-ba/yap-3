@@ -33,23 +33,24 @@ class Registrar
         $processedLeaders      = $this->processEmails($leaders);
         $processedParticipants = $this->processEmails($participants);
 
-        $project->addLeaders($processedLeaders);
-        $project->addParticipants($processedParticipants);
+        $project->syncMembers($processedLeaders, $processedParticipants);
     }
 
 
     private function processEmails(array $emails): array
     {
         foreach ($emails as $email) {
-            $user_ids[] = $this->invitationRegistrar->invite($email, [], true)->user_id;
+            $userIds[] = $this->invitationRegistrar->invite($email, [], true)->user_id;
         }
 
-        return $user_ids;
+        return $userIds;
     }
 
 
     public function update(Project $project, array $leaders, array $participants = [])
     {
+        //description, archive at
+        //leaders, participants
         //TODO: me
     }
 }
