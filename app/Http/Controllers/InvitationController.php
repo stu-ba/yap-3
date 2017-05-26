@@ -16,7 +16,7 @@ class InvitationController extends Controller
             $email = null;
         }
 
-        $invitations = $invitation->with('inviter')->recent(8)->validUntil()->active()->get();
+        $invitations = $invitation->with('inviter')->validUntil()->active()->sortable()->paginate(10);
 
         return view('pages.invitation.create')->withTitle('Create Invitation')->withEmail($email)->withInvitations($invitations);
     }

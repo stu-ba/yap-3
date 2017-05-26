@@ -19,7 +19,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        //Todo: logic if user is current userw
+        //Todo: logic if user is current user
         return view('pages.user.show')->withUser($user);
     }
 

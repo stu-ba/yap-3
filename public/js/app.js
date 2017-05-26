@@ -35071,7 +35071,7 @@ module.exports = Array.isArray || function (arr) {
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * sweetalert2 v6.6.0
+ * sweetalert2 v6.6.4
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -35126,7 +35126,8 @@ var defaultParams = {
   currentProgressStep: null,
   progressStepsDistance: '40px',
   onOpen: null,
-  onClose: null
+  onClose: null,
+  useRejections: true
 };
 
 var swalPrefix = 'swal2-';
@@ -35547,7 +35548,7 @@ var setParameters = function setParameters(params) {
     }
   }
 
-  // set modal width and margin-left
+  // Set modal width
   modal.style.width = typeof params.width === 'number' ? params.width + 'px' : params.width;
 
   modal.style.padding = params.padding + 'px';
@@ -35900,7 +35901,11 @@ var sweetAlert = function sweetAlert() {
     if (params.timer) {
       modal.timeout = setTimeout(function () {
         sweetAlert.closeModal(params.onClose);
-        reject('timer');
+        if (params.useRejections) {
+          reject('timer');
+        } else {
+          resolve({ dismiss: 'timer' });
+        }
       }, params.timer);
     }
 
@@ -35971,7 +35976,11 @@ var sweetAlert = function sweetAlert() {
         });
       } else {
         sweetAlert.closeModal(params.onClose);
-        resolve(value);
+        if (params.useRejections) {
+          resolve(value);
+        } else {
+          resolve({ value: value });
+        }
       }
     };
 
@@ -36044,7 +36053,11 @@ var sweetAlert = function sweetAlert() {
           } else if (targetedCancel && sweetAlert.isVisible()) {
             sweetAlert.disableButtons();
             sweetAlert.closeModal(params.onClose);
-            reject('cancel');
+            if (params.useRejections) {
+              reject('cancel');
+            } else {
+              resolve({ dismiss: 'cancel' });
+            }
           }
           break;
         default:
@@ -36062,7 +36075,11 @@ var sweetAlert = function sweetAlert() {
     // Closing modal by close button
     getCloseButton().onclick = function () {
       sweetAlert.closeModal(params.onClose);
-      reject('close');
+      if (params.useRejections) {
+        reject('close');
+      } else {
+        resolve({ dismiss: 'close' });
+      }
     };
 
     // Closing modal by overlay click
@@ -36072,7 +36089,11 @@ var sweetAlert = function sweetAlert() {
       }
       if (params.allowOutsideClick) {
         sweetAlert.closeModal(params.onClose);
-        reject('overlay');
+        if (params.useRejections) {
+          reject('overlay');
+        } else {
+          resolve({ dismiss: 'overlay' });
+        }
       }
     };
 
@@ -36115,7 +36136,7 @@ var sweetAlert = function sweetAlert() {
       var e = event || window.event;
       var keyCode = e.keyCode || e.which;
 
-      if ([9, 13, 32, 27].indexOf(keyCode) === -1) {
+      if ([9, 13, 32, 27, 37, 38, 39, 40].indexOf(keyCode) === -1) {
         // Don't do work on keys we don't care about.
         return;
       }
@@ -36143,6 +36164,16 @@ var sweetAlert = function sweetAlert() {
         e.stopPropagation();
         e.preventDefault();
 
+        // ARROWS - switch focus between buttons
+      } else if (keyCode === 37 || keyCode === 38 || keyCode === 39 || keyCode === 40) {
+        // focus Cancel button if Confirm button is currently focused
+        if (document.activeElement === confirmButton && isVisible(cancelButton)) {
+          cancelButton.focus();
+          // and vice versa
+        } else if (document.activeElement === cancelButton && isVisible(confirmButton)) {
+          confirmButton.focus();
+        }
+
         // ENTER/SPACE
       } else if (keyCode === 13 || keyCode === 32) {
         if (btnIndex === -1 && params.allowEnterKey) {
@@ -36155,33 +36186,28 @@ var sweetAlert = function sweetAlert() {
           e.stopPropagation();
           e.preventDefault();
         }
+
         // ESC
       } else if (keyCode === 27 && params.allowEscapeKey === true) {
         sweetAlert.closeModal(params.onClose);
-        reject('esc');
+        if (params.useRejections) {
+          reject('esc');
+        } else {
+          resolve({ dismiss: 'esc' });
+        }
       }
     };
 
-    states.previousWindowKeyDown = window.onkeydown;
-    window.onkeydown = handleKeyDown;
+    if (!window.onkeydown || window.onkeydown.toString() !== handleKeyDown.toString()) {
+      states.previousWindowKeyDown = window.onkeydown;
+      window.onkeydown = handleKeyDown;
+    }
 
     // Loading state
     if (params.buttonsStyling) {
       confirmButton.style.borderLeftColor = params.confirmButtonColor;
       confirmButton.style.borderRightColor = params.confirmButtonColor;
     }
-
-    /**
-     * Show spinner instead of Confirm button and disable Cancel button
-     */
-    sweetAlert.showLoading = sweetAlert.enableLoading = function () {
-      show(buttonsWrapper);
-      show(confirmButton, 'inline-block');
-      addClass(buttonsWrapper, swalClasses.loading);
-      addClass(modal, swalClasses.loading);
-      confirmButton.disabled = true;
-      cancelButton.disabled = true;
-    };
 
     /**
      * Show spinner instead of Confirm button and disable Cancel button
@@ -36587,7 +36613,9 @@ sweetAlert.close = sweetAlert.closeModal = function (onComplete) {
   resetPrevState();
 
   var removeModalAndResetState = function removeModalAndResetState() {
-    container.parentNode.removeChild(container);
+    if (container.parentNode) {
+      container.parentNode.removeChild(container);
+    }
     removeClass(document.documentElement, swalClasses.shown);
     removeClass(document.body, swalClasses.shown);
     undoScrollbar();
@@ -36628,6 +36656,26 @@ sweetAlert.clickCancel = function () {
 };
 
 /**
+ * Show spinner instead of Confirm button and disable Cancel button
+ */
+sweetAlert.showLoading = sweetAlert.enableLoading = function () {
+  var modal = getModal();
+  if (!modal) {
+    sweetAlert('');
+  }
+  var buttonsWrapper = getButtonsWrapper();
+  var confirmButton = getConfirmButton();
+  var cancelButton = getCancelButton();
+
+  show(buttonsWrapper);
+  show(confirmButton, 'inline-block');
+  addClass(buttonsWrapper, swalClasses.loading);
+  addClass(modal, swalClasses.loading);
+  confirmButton.disabled = true;
+  cancelButton.disabled = true;
+};
+
+/**
  * Set default params for each popup
  * @param {Object} userParams
  */
@@ -36655,7 +36703,7 @@ sweetAlert.resetDefaults = function () {
 
 sweetAlert.noop = function () {};
 
-sweetAlert.version = '6.6.0';
+sweetAlert.version = '6.6.4';
 
 sweetAlert.default = sweetAlert;
 

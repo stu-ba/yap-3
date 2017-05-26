@@ -26,7 +26,7 @@ class Registrar
     }
 
 
-    public function create(array $data, array $leaders, array $participants = [])
+    public function create(array $data, array $leaders, array $participants = []): Project
     {
         /**@var \Yap\Models\Project $project */
         $project               = $this->project->create($data);
@@ -34,6 +34,8 @@ class Registrar
         $processedParticipants = $this->processEmails($participants);
 
         $project->syncMembers($processedLeaders, $processedParticipants);
+
+        return $project;
     }
 
 
@@ -47,10 +49,14 @@ class Registrar
     }
 
 
-    public function update(Project $project, array $leaders, array $participants = [])
+    public function update(array $data, Project $project, array $leaders, array $participants): bool
     {
-        //description, archive at
-        //leaders, participants
-        //TODO: me
+        $updated               = $project->update($data);
+        $processedLeaders      = $this->processEmails($leaders);
+        $processedParticipants = $this->processEmails($participants);
+
+        $project->syncMembers($processedLeaders, $processedParticipants);
+
+        return $updated;
     }
 }

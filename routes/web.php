@@ -69,6 +69,9 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
 
     Route::group(['middleware' => ['auth']], function() {
         Route::get('switch', 'SwitchController@toTaiga')->name('switch');
+        Route::get('switch/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
+        Route::get('switch/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
+        Route::get('switch/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.repository');
         Route::get('logout/{token?}', 'LogoutController@logout')->name('logout');
     });
 });

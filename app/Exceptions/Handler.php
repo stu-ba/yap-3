@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Kyslik\ColumnSortable\Exceptions\ColumnSortableException;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -65,6 +66,9 @@ class Handler extends ExceptionHandler
             return abort(400);
         } elseif ($exception instanceof InvalidStateException) {
             return redirect()->guest(route('login'));
+        } elseif ($exception instanceof ColumnSortableException) {
+            alert('warning', 'Your actions were logged. Try not to play with URL in future.');
+            return redirect()->route('profile');
         }
 
         return parent::render($request, $exception);

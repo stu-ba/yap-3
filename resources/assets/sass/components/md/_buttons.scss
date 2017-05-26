@@ -39,6 +39,11 @@
   &.btn-danger {
     @include btn-styles($brand-danger);
   }
+
+  &.btn-grey {
+    @include btn-styles($body-bg);
+  }
+
   &.btn-white {
     &,
     &:focus,

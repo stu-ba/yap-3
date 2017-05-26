@@ -220,6 +220,16 @@ if ( ! function_exists('route_exists')) {
     }
 }
 
+if ( ! function_exists('text_with_hovertip')) {
+    function text_with_hovertip(string $text, string $hovertip_text = '', $position = 'top')
+    {
+        if (empty($hovertip_text)) {
+            return $text;
+        }
+        return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$hovertip_text.'">'.$text.'<sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
+    }
+}
+
 if ( ! function_exists('date_with_hovertip')) {
     function date_with_hovertip(
         ?\Carbon\Carbon $date, $position = 'top', ?\Carbon\Carbon $hourglass_from = null

@@ -53,4 +53,11 @@ class GithubApi
                                 false, $teamId, false);
     }
 
+
+    public function getRepositoryById(int $id)
+    {
+        //TODO: catch for id does not exist
+        return $this->github->repository()->showById($id);
+    }
+
 }

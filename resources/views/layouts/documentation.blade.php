@@ -22,7 +22,6 @@
     <ul class="main-nav">
         @include('partials.docs-nav')
     </ul>
-
     <div class="responsive-sidebar-nav">
         <a href="#" class="toggle-slide menu-link btn">&#9776;</a>
     </div>

@@ -2,6 +2,7 @@
 
 namespace Yap\Auxiliary;
 
+use TZK\Taiga\Exceptions\TaigaException;
 use TZK\Taiga\Taiga;
 use Yap\Models\Project;
 use Yap\Models\User;
@@ -45,6 +46,16 @@ class TaigaApi
             'creation_template' => $project->project_type_id,
             'is_private'        => false,
         ]);
+    }
+
+
+    public function getProjectById(int $id): ?\stdClass
+    {
+        try {
+            return $this->taiga->projects()->getById($id);
+        } catch (TaigaException $e) {
+            return null;
+        }
     }
 
 

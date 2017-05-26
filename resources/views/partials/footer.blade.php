@@ -13,7 +13,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('switch') }}">
                         Switch to Taiga
                     </a>
                 </li>

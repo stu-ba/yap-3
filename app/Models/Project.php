@@ -21,6 +21,7 @@ use Yap\Events\ProjectCreated;
  * @property \Carbon\Carbon                                                   $created_at
  * @property \Carbon\Carbon                                                   $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
  * @property-read \Yap\Models\ProjectType                                     $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
@@ -114,7 +115,7 @@ class Project extends Model
     }
 
 
-    public function removeMembers(array $userIds)
+    public function removeMembers(array $userIds): void
     {
         foreach ($userIds as $userId) {
             $this->removeMember($userId);
@@ -122,9 +123,9 @@ class Project extends Model
     }
 
 
-    public function removeMember(int $userId)
+    public function removeMember(int $userId): void
     {
-        return $this->members()->updateExistingPivot($userId, ['to_be_deleted' => true]);
+        $this->members()->updateExistingPivot($userId, ['to_be_deleted' => true]);
     }
 
 

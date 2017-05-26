@@ -5,6 +5,7 @@ namespace Yap\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 /**
  * Yap\Models\Invitation
@@ -37,6 +38,18 @@ use Illuminate\Database\Eloquent\Model;
 class Invitation extends Model
 {
 
+    use Sortable;
+
+    public $sortable = [
+        'email',
+        'invited_at',
+        'created_at',
+        'updated_at',
+        'valid_until',
+        'depleted_at',
+        'invited'
+    ];
+
     protected $fillable = [
         'user_id',
         'invited_by',
@@ -57,6 +70,7 @@ class Invitation extends Model
         'user_id'    => 'int',
         'invited_by' => 'int',
     ];
+
 
     /**
      * Boot function for using with User Events.

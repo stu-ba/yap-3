@@ -68,17 +68,17 @@
                     @if ($invitations->isNotEmpty())
                         <table class="table table-hover">
                             <thead class="text-gray">
-                            <th>Email</th>
-                            <th>Invited by</th>
-                            <th>Invited at</th>
-                            <th>Updated at</th>
-                            <th>Valid until</th>
+                            <th>@sortablelink('email')</th>
+                            <th>@sortablelink('inviter.username', 'Invited by')</th>
+                            <th>@sortablelink('created_at', 'Invited at')</th>
+                            <th>@sortablelink('updated_at', 'Updated at')</th>
+                            <th>@sortablelink('valid_until', 'Valid until')</th>
                             </thead>
                             <tbody>
                             @foreach ($invitations as $invitation)
                                 <tr>
                                     <td>{{ $invitation->email }}</td>
-                                    <td>{{ $invitation->inviter->name ?? $invitation->inviter->username }}</td>
+                                    <td>{{ $invitation->inviter->username }}</td>
                                     <td>{!! date_with_hovertip($invitation->created_at) !!}</td>
                                     <td>{!! date_with_hovertip($invitation->updated_at) !!}</td>
                                     <td>{!! date_with_hovertip($invitation->valid_until, 'top', $invitation->updated_at) !!}</td>
@@ -86,6 +86,9 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="pagination-centered">
+                            {!! $invitations->appends(\Request::except('page'))->render() !!}
+                        </div>
                     @else
                         @include('partials.no-records')
                     @endif
