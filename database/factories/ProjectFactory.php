@@ -6,7 +6,7 @@ $factory->define(Yap\Models\Project::class, function (Faker\Generator $faker) {
         'github_team_id' => null,
         'github_repository_id' => null,
         'taiga_id' => null,
-        'project_type_id' => rand(1,4),
+        'project_type_id' => factory(Yap\Models\ProjectType::class)->create()->id,
         'name' => $faker->domainName,
         'description' => $faker->paragraph(1),
         'is_archived' => false,
