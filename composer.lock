@@ -2635,16 +2635,16 @@
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.6.1",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
-                "reference": "3495a15545643a4fc19e914cd5e55d35f2734a88"
+                "reference": "cbfb3679d0a91ec56caa63ed8de3052c6792376a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/3495a15545643a4fc19e914cd5e55d35f2734a88",
-                "reference": "3495a15545643a4fc19e914cd5e55d35f2734a88",
+                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/cbfb3679d0a91ec56caa63ed8de3052c6792376a",
+                "reference": "cbfb3679d0a91ec56caa63ed8de3052c6792376a",
                 "shasum": ""
             },
             "require": {
@@ -2681,20 +2681,20 @@
                 "mysqldump",
                 "spatie"
             ],
-            "time": "2017-05-15T14:52:41+00:00"
+            "time": "2017-05-25T20:43:25+00:00"
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "4.15.0",
+            "version": "4.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "d9b70073d32eb7ec96b885e0c25563e78f9bdb19"
+                "reference": "86bec11dbe1fd3a577385df699aacf3695ff0915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/d9b70073d32eb7ec96b885e0c25563e78f9bdb19",
-                "reference": "d9b70073d32eb7ec96b885e0c25563e78f9bdb19",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/86bec11dbe1fd3a577385df699aacf3695ff0915",
+                "reference": "86bec11dbe1fd3a577385df699aacf3695ff0915",
                 "shasum": ""
             },
             "require": {
@@ -2747,7 +2747,7 @@
                 "laravel-backup",
                 "spatie"
             ],
-            "time": "2017-05-20T08:03:14+00:00"
+            "time": "2017-05-24T17:11:32+00:00"
         },
         {
             "name": "spatie/temporary-directory",
