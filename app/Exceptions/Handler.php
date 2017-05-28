@@ -9,6 +9,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Kyslik\ColumnSortable\Exceptions\ColumnSortableException;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -21,6 +22,7 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
+        \Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
@@ -68,7 +70,14 @@ class Handler extends ExceptionHandler
             return redirect()->guest(route('login'));
         } elseif ($exception instanceof ColumnSortableException) {
             alert('warning', 'Your actions were logged. Try not to play with URL in future.');
+
             return redirect()->route('profile');
+        } elseif ($exception instanceof TooManyRequestsHttpException) {
+            return abort($exception->getStatusCode(), '', $exception->getHeaders());
+        } elseif ($exception instanceof TaigaOfflineException) {
+            alert('warning', 'Our Taiga instance seems to be offline, please try later.');
+
+            return redirect()->back();
         }
 
         return parent::render($request, $exception);

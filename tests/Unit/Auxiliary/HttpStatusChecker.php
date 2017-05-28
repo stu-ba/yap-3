@@ -36,13 +36,13 @@ class HttpStatusChecker extends TestCase
 
     public function testChecker()
     {
-        $this->assertTrue($this->service->check(), 'Check that response is 200');
-        $this->assertFalse($this->service->check(),
+        $this->assertTrue($this->service->live(), 'Check that response is 200');
+        $this->assertFalse($this->service->live(),
             'Check that response throws RequestException, resulting in unreachable (false)');
     }
 }
 
-class Service extends \Yap\Auxiliary\HttpStatusChecker
+class Service extends \Yap\Auxiliary\HttpCheckers\Checker
 {
 
     /**

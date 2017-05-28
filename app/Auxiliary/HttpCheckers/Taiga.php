@@ -1,8 +1,8 @@
 <?php
 
-namespace Yap\Auxiliary;
+namespace Yap\Auxiliary\HttpCheckers;
 
-class TaigaChecker extends HttpStatusChecker
+class Taiga extends Checker
 {
     public function __construct()
     {
