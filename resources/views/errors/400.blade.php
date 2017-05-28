@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="content_err">
-            <div class="title_err"><strong># 500</strong><br>Oops, Ytrium is trying too hard!</div>
+            <div class="title_err"><strong># 400</strong><br>Bad request!</div>
             @include('errors.link-back')
         </div>
     </div>
