@@ -15,23 +15,40 @@ use Yap\Foundation\Auth\User as Authenticatable;
 /**
  * Yap\Models\User
  *
- * @property int $id
- * @property int $taiga_id
- * @property int $github_id
- * @property string $email
- * @property string $username
- * @property string $name
- * @property string $bio
- * @property string $ban_reason
- * @property string $avatar
- * @property string $remember_token
- * @property bool $is_admin
- * @property bool $is_confirmed
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[] $invitations
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Project[] $projects
+ * @property int
+ *               $id
+ * @property int
+ *               $taiga_id
+ * @property int
+ *               $github_id
+ * @property string
+ *               $email
+ * @property string
+ *               $username
+ * @property string
+ *               $name
+ * @property string
+ *               $bio
+ * @property string
+ *               $ban_reason
+ * @property string
+ *               $avatar
+ * @property string
+ *               $remember_token
+ * @property bool
+ *               $is_admin
+ * @property bool
+ *               $is_confirmed
+ * @property \Carbon\Carbon
+ *               $created_at
+ * @property \Carbon\Carbon
+ *               $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[]
+ *                    $invitations
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *                $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Project[]
+ *                    $projects
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
@@ -355,6 +372,7 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id')
-                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')->withTimestamps();
+                    ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
+                    ->withTimestamps();
     }
 }

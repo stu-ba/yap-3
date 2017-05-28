@@ -22,7 +22,7 @@ class Types
     public function __construct(ProjectType $type, Taiga $taigaAdaptor)
     {
 
-        $this->type = $type;
+        $this->type  = $type;
         $this->taiga = $taiga;
     }
 

@@ -45,9 +45,9 @@ class YapGuard implements Guard
      */
     public function __construct(UserProvider $provider, Request $request, Signer $signer)
     {
-        $this->request = $request;
-        $this->provider = $provider;
-        $this->signer = $signer->setMaxAge(config('auth.guards.yap.expire', 30));
+        $this->request       = $request;
+        $this->provider      = $provider;
+        $this->signer        = $signer->setMaxAge(config('auth.guards.yap.expire', 30));
         $this->storageFields = ['id', 'username'];
     }
 

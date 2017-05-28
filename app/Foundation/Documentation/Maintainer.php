@@ -112,10 +112,10 @@ class Maintainer
      */
     protected function gitignore(): void
     {
-        $dirname = $this->files->dirname($this->path);
+        $dirname  = $this->files->dirname($this->path);
         $basename = $this->files->basename($this->path);
 
-        $gitignore = $dirname.'/.gitignore';
+        $gitignore      = $dirname.'/.gitignore';
         $gitignoreEntry = '/'.$basename."/\n";
 
         if ($this->files->exists($gitignore)) {
@@ -130,7 +130,7 @@ class Maintainer
 
     protected function clone(): void
     {
-        @exec('cd '.$this->path.' && '.$this->cloneCommand().($this->quiet ?' 2>&1':''));
+        @exec('cd '.$this->path.' && '.$this->cloneCommand().($this->quiet ? ' 2>&1' : ''));
     }
 
 
@@ -151,7 +151,7 @@ class Maintainer
 
     protected function pull(): void
     {
-        @exec('cd '.$this->path.' && '.$this->pullCommand().($this->quiet ?' 2>&1':''));
+        @exec('cd '.$this->path.' && '.$this->pullCommand().($this->quiet ? ' 2>&1' : ''));
     }
 
 

@@ -6,6 +6,7 @@ use Yap\Http\Controllers\Controller;
 
 class LogoutController extends Controller
 {
+
     public function logout($token = null, \Illuminate\Cookie\CookieJar $cookie)
     {
         $cookie->queue($cookie->forget('github_token'));

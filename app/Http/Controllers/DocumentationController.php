@@ -7,6 +7,7 @@ use Yap\Foundation\Documentation\Compiler;
 
 class DocumentationController extends Controller
 {
+
     /**
      * The documentation repository.
      *
@@ -30,8 +31,10 @@ class DocumentationController extends Controller
     public function __construct(Compiler $compiler, Crawler $crawler)
     {
         $this->compiler = $compiler;
-        $this->crawler = $crawler;
+        $this->crawler  = $crawler;
     }
+
+
     /**
      * Show the root documentation page (/docs).
      *
@@ -41,16 +44,19 @@ class DocumentationController extends Controller
     {
         return redirect()->route('docs');
     }
+
+
     /**
      * Show a documentation page.
      *
      * @param  string|null $page
+     *
      * @return Response
      */
     public function show($page = null)
     {
         $sectionPage = $page ?: config('documentation.main');
-        $content = $this->compiler->get($sectionPage);
+        $content     = $this->compiler->get($sectionPage);
 
         if (is_null($content)) {
             abort(404);
@@ -62,14 +68,14 @@ class DocumentationController extends Controller
         $section = '';
         if ($this->compiler->sectionExists($page)) {
             $section .= '/'.$page;
-        } elseif (! is_null($page)) {
+        } elseif ( ! is_null($page)) {
             return redirect()->route('docs');
         }
 
         return view('docs', [
-            'title' => count($title) ? $title->text() : null,
-            'index' => $this->compiler->getIndex(),
-            'content' => $content,
+            'title'          => count($title) ? $title->text() : null,
+            'index'          => $this->compiler->getIndex(),
+            'content'        => $content,
             'currentSection' => $section,
         ]);
     }

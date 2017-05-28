@@ -92,7 +92,7 @@ class Invitation extends Command
 
     private function displayOutput(\Yap\Models\Invitation $invitation): void
     {
-        if (!is_null($invitation->depleted_at)) {
+        if ( ! is_null($invitation->depleted_at)) {
             $this->info('User \''.($invitation->user->name ?? $invitation->user->username).'\' was granted access and can freely login to '.config('yap.short_name').'.');
 
             return;

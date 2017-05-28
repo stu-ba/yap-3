@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notification;
 
 class DemotedNotification extends Notification
 {
+
     /**
      * Get the notification's delivery channels.
      *
@@ -18,6 +19,7 @@ class DemotedNotification extends Notification
         return ['database'];
     }
 
+
     /**
      * Get the array representation of the notification.
      *
@@ -28,7 +30,7 @@ class DemotedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'You have been demoted to basic user.',
+            'message'  => 'You have been demoted to basic user.',
             'help_uri' => 'help_uri',
         ];
     }

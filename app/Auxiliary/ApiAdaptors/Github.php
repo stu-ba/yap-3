@@ -49,8 +49,8 @@ class Github
     {
         //TODO: catch for name already exists...
         return $this->github->repository()
-                            ->create($name, $description, '', true, $this->organization, true, false,
-                                false, $teamId, false);
+                            ->create($name, $description, '', true, $this->organization, true, false, false, $teamId,
+                                false);
     }
 
 

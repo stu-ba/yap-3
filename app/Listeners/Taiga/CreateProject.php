@@ -6,6 +6,7 @@ use Yap\Events\ProjectCreated;
 
 class CreateProject extends Taiga
 {
+
     /**
      * Handle the event.
      *
@@ -15,7 +16,7 @@ class CreateProject extends Taiga
      */
     public function handle(ProjectCreated $event)
     {
-        $project = $event->project;
+        $project      = $event->project;
         $taigaProject = $this->taiga->createProject($project);
 
         $project->update(['taiga_id' => $taigaProject->id]);

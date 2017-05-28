@@ -26,7 +26,7 @@ class UserRegistrar
     public function __construct(Invitation $invitation, User $user)
     {
         $this->invitation = $invitation;
-        $this->user = $user;
+        $this->user       = $user;
     }
 
 
@@ -49,7 +49,12 @@ class UserRegistrar
             }
 
             $this->userByGithub = $this->user->whereGithubId($this->githubUser->getId())->first();
-            $this->invitation->load(['user' => function($q) {$q->select(['id', 'email']);}]);
+            $this->invitation->load([
+                'user' => function ($q) {
+                    $q->select(['id', 'email']);
+                },
+            ]);
+
             return $this->registerByInvitation();
         }
 
@@ -59,7 +64,11 @@ class UserRegistrar
 
     private function registerByGithubUser(): User
     {
-        $this->invitation = $this->invitation->with(['user' => function($q) {$q->select(['id', 'email']);}])->whereEmail($this->githubUser->getEmail())->first();
+        $this->invitation = $this->invitation->with([
+            'user' => function ($q) {
+                $q->select(['id', 'email']);
+            },
+        ])->whereEmail($this->githubUser->getEmail())->first();
 
         if (is_null($this->invitation) && is_null($this->userByGithub)) {
             return $this->user->create($this->githubUserData());

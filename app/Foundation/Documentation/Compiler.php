@@ -45,10 +45,10 @@ class Compiler
      */
     public function __construct(Filesystem $files, Cache $cache)
     {
-        $this->files = $files;
-        $this->cache = $cache;
+        $this->files     = $files;
+        $this->cache     = $cache;
         $this->cache_for = config('documentation.cache_for', 10);
-        $this->path = config('documentation.path');
+        $this->path      = config('documentation.path');
     }
 
 

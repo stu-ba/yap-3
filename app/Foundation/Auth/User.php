@@ -10,5 +10,6 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 
 abstract class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
+
     use Authenticatable, Authorizable;
 }

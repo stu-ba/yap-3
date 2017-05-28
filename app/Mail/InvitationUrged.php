@@ -9,6 +9,7 @@ use Yap\Models\Invitation;
 
 class InvitationUrged extends Mailable implements ShouldQueue
 {
+
     use SerializesModels;
 
     /**
@@ -21,6 +22,7 @@ class InvitationUrged extends Mailable implements ShouldQueue
      */
     public $invitation;
 
+
     /**
      * Create a new message instance.
      *
@@ -30,6 +32,7 @@ class InvitationUrged extends Mailable implements ShouldQueue
     {
         $this->invitation = $invitation;
     }
+
 
     /**
      * Build the message.

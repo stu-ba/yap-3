@@ -8,6 +8,7 @@ use Yap\Exceptions\UserBannedException;
 
 class Authenticate extends StockAuthenticate
 {
+
     /**
      * Handle an incoming request.
      *
@@ -26,6 +27,7 @@ class Authenticate extends StockAuthenticate
 
         return $next($request);
     }
+
 
     /**
      * Determine if the user is banned.

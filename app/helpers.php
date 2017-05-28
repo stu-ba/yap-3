@@ -226,6 +226,7 @@ if ( ! function_exists('text_with_hovertip')) {
         if (empty($hovertip_text)) {
             return $text;
         }
+
         return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$hovertip_text.'">'.$text.'<sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
     }
 }

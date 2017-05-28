@@ -6,6 +6,7 @@ use Yap\Events\RepositoryRequested;
 
 class CreateRepository extends Github
 {
+
     /**
      * Handle the event.
      *

@@ -12,6 +12,7 @@ use Yap\Models\Invitation;
 
 class RegisterController extends Controller
 {
+
     use Authenticable;
 
     /**
@@ -24,25 +25,29 @@ class RegisterController extends Controller
      */
     protected $registrar;
 
+
     public function __construct(Invitation $invitation, UserRegistrar $registrar)
     {
         $this->invitation = $invitation;
-        $this->registrar = $registrar;
+        $this->registrar  = $registrar;
     }
+
 
     public function redirect(string $token, Socialite $socialite)
     {
         $invitation = $this->invitation->whereToken($token)->firstOrFail();
 
-        if (! $invitation->isDepleted()) {
+        if ( ! $invitation->isDepleted()) {
             $redirect_uri = config('services.github.redirect').'/'.encrypt($token);
 
-            return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])->redirect();
+            return $socialite->driver('github')->with(['redirect_uri' => $redirect_uri])->scopes(['user:email'])
+                             ->redirect();
         }
 
         //TODO: maybe inform user that token has expired or been used
         return redirect()->route('login');
     }
+
 
     public function handle(string $encryptedToken, Socialite $socialite)
     {

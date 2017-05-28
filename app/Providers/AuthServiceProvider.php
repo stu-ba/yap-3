@@ -9,14 +9,15 @@ use Yap\Foundation\Auth\YapGuard;
 
 class AuthServiceProvider extends ServiceProvider
 {
+
     /**
      * The policy mappings for the application.
      *
      * @var array
      */
-    protected $policies = [
-        //'Yap\Model' => 'Yap\Policies\ModelPolicy',
+    protected $policies = [//'Yap\Model' => 'Yap\Policies\ModelPolicy',
     ];
+
 
     /**
      * Register any authentication / authorization services.
@@ -28,11 +29,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::extend('yap', function ($app, $name, array $config) {
-            $guard = new YapGuard(
-                $app['auth']->createUserProvider($config['provider']),
-                $app['request'],
-                $app->make(Signer::class)
-            );
+            $guard = new YapGuard($app['auth']->createUserProvider($config['provider']), $app['request'],
+                $app->make(Signer::class));
 
             $this->app->refresh('request', $guard, 'setRequest');
 

@@ -35,7 +35,7 @@ class EventServiceProvider extends ServiceProvider
             TaigaPromote::class,
         ],
 
-        UserDemoted::class   => [
+        UserDemoted::class => [
             SendDemotedNotification::class,
             GithubDemote::class,
             TaigaDemote::class,

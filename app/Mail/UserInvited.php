@@ -9,6 +9,7 @@ use Yap\Models\Invitation;
 
 class UserInvited extends Mailable implements ShouldQueue
 {
+
     use SerializesModels;
 
     /**
@@ -20,6 +21,7 @@ class UserInvited extends Mailable implements ShouldQueue
      * @var Invitation
      */
     public $invitation;
+
 
     /**
      * Create a new message instance.
@@ -33,6 +35,7 @@ class UserInvited extends Mailable implements ShouldQueue
         $this->invitation = $invitation;
     }
 
+
     /**
      * Build the message.
      *
@@ -44,10 +47,11 @@ class UserInvited extends Mailable implements ShouldQueue
 
         return $this->markdown('emails.users.invited')->with([
             'emailHandle' => emailHandle($this->invitation->email),
-            'validUntil' => $this->validUntil(),
+            'validUntil'  => $this->validUntil(),
             'continueUrl' => route('register', ['token' => $this->invitation->token]),
         ]);
     }
+
 
     /**
      * @return null|string

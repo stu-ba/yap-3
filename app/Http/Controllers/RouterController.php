@@ -4,7 +4,9 @@ namespace Yap\Http\Controllers;
 
 class RouterController extends Controller
 {
-    public function index($route, $parameters = null) {
+
+    public function index($route, $parameters = null)
+    {
         if ( ! is_null($parameters)) {
             $parameters = json_decode($parameters, true, 2);
         }

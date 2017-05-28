@@ -2,8 +2,8 @@
 
 namespace Yap\Http\Controllers\Auth;
 
-use Yap\Auxiliary\ApiAdaptors\Github;
-use Yap\Auxiliary\ApiAdaptors\Taiga;
+use Yap\Auxiliary\ApiAdaptors\Github as GithubAdaptor;
+use Yap\Auxiliary\ApiAdaptors\Taiga as TaigaAdaptor;
 use Yap\Http\Controllers\Controller;
 use Yap\Models\Project;
 use Yap\Models\User;
@@ -17,7 +17,7 @@ class SwitchController extends Controller
     }
 
 
-    public function toTaigaProject(Project $project, Taiga $taigaAdaptor)
+    public function toTaigaProject(Project $project, TaigaAdaptor $taiga)
     {
         if (is_null($project->taiga_id)) {
             alert('warning', 'Project \''.$project->name.'\' does not have double in Taiga yet, try in few minutes.');
@@ -25,7 +25,7 @@ class SwitchController extends Controller
             return redirect()->back();
         }
 
-        $taigaProject = $taigaAdaptor->getProjectById($project->taiga_id);
+        $taigaProject = $taiga->getProjectById($project->taiga_id);
         if (is_null($taigaProject)) {
             alert('error', 'Data corruption! Contact administrator and explain what you did.');
 
@@ -49,7 +49,7 @@ class SwitchController extends Controller
     }
 
 
-    public function toGithubRepository(Project $project, Github $githubAdaptor)
+    public function toGithubRepository(Project $project, GithubAdaptor $github)
     {
         if (is_null($project->github_repository_id)) {
             alert('warning', 'Project \''.$project->name.'\' does not have GitHub repository.');
@@ -57,7 +57,7 @@ class SwitchController extends Controller
             return redirect()->back();
         }
 
-        $repository = $githubAdaptor->getRepositoryById($project->github_repository_id);
+        $repository = $github->getRepositoryById($project->github_repository_id);
 
         return redirect()->away($repository['html_url']);
     }

@@ -8,12 +8,14 @@ use Yap\Models\User;
 
 class UserConfirmed
 {
+
     use Dispatchable, SerializesModels;
 
     /**
      * @var \Yap\Models\User
      */
     public $user;
+
 
     public function __construct(User $user)
     {

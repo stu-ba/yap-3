@@ -9,6 +9,7 @@ use Yap\Console\Commands\Invitation;
 
 class Kernel extends ConsoleKernel
 {
+
     /**
      * The Artisan commands provided by your application.
      *
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
         Invitation::class,
         Documentation::class,
     ];
+
 
     /**
      * Define the application's command schedule.

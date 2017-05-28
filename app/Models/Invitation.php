@@ -47,7 +47,7 @@ class Invitation extends Model
         'updated_at',
         'valid_until',
         'depleted_at',
-        'invited'
+        'invited',
     ];
 
     protected $fillable = [

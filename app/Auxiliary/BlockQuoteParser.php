@@ -6,6 +6,7 @@ use ParsedownExtra;
 
 class BlockQuoteParser extends ParsedownExtra
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -40,7 +41,7 @@ class BlockQuoteParser extends ParsedownExtra
         if (preg_match('/\{([^}]+)\}/', $string, $iconMatch)) {
             $string = substr($string, strlen($iconMatch[0]));
             if (array_key_exists($iconMatch[1], $this->icons)) {
-                $string = $this->wrap($iconMatch[1], $string);
+                $string     = $this->wrap($iconMatch[1], $string);
                 $attributes = ['class' => 'has-icon '.$iconMatch[1]];
             }
         }

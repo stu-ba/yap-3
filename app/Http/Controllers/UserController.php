@@ -17,6 +17,13 @@ class UserController extends Controller
         ]);
     }
 
+
+    public function profile()
+    {
+        return $this->show(auth()->user());
+    }
+
+
     public function show(User $user)
     {
         //Todo: logic if user is current user
@@ -24,16 +31,13 @@ class UserController extends Controller
     }
 
 
-    public function profile()
+    public function edit()
     {
-        return $this->show(auth()->user());
-    }
-
-    public function edit() {
         return redirect()->away('https://github.com/settings/profile');
     }
 
-    public function update() {
 
+    public function update()
+    {
     }
 }

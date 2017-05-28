@@ -6,4 +6,5 @@ use Exception;
 
 class TaigaOfflineException extends Exception
 {
+
 }
