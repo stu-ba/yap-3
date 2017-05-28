@@ -3,7 +3,7 @@
 namespace Yap\Listeners\Github;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Yap\Auxiliary\GithubApi;
+use Yap\Auxiliary\ApiAdaptors\Github as GithubAdaptor;
 
 abstract class Github implements ShouldQueue
 {
@@ -19,9 +19,9 @@ abstract class Github implements ShouldQueue
     /**
      * Github constructor.
      *
-     * @param \Yap\Auxiliary\GithubApi $github
+     * @param \Yap\Auxiliary\ApiAdaptors\Github $github
      */
-    public function __construct(GithubApi $github)
+    public function __construct(GithubAdaptor $github)
     {
         $this->github     = $github;
         $this->rootTeamId = config('yap.github.root_team.id');

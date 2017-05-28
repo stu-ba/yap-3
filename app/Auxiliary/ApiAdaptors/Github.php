@@ -1,10 +1,10 @@
 <?php
 
-namespace Yap\Auxiliary;
+namespace Yap\Auxiliary\ApiAdaptors;
 
 use GrahamCampbell\GitHub\GitHubManager;
 
-class GithubApi
+class Github
 {
 
     protected $github;

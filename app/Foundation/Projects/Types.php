@@ -2,7 +2,7 @@
 
 namespace Yap\Foundation\Projects;
 
-use Yap\Auxiliary\TaigaApi;
+use Yap\Auxiliary\ApiAdaptors\Taiga;
 use Yap\Models\ProjectType;
 
 class Types
@@ -14,12 +14,12 @@ class Types
     private $type;
 
     /**
-     * @var \Yap\Auxiliary\TaigaApi
+     * @var \Yap\Auxiliary\ApiAdaptors\Taiga
      */
     private $taiga;
 
 
-    public function __construct(ProjectType $type, TaigaApi $taiga)
+    public function __construct(ProjectType $type, Taiga $taigaAdaptor)
     {
 
         $this->type = $type;

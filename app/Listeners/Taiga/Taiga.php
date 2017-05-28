@@ -3,7 +3,7 @@
 namespace Yap\Listeners\Taiga;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Yap\Auxiliary\TaigaApi;
+use Yap\Auxiliary\ApiAdaptors\Taiga as TaigaAdaptor;
 
 abstract class Taiga implements ShouldQueue
 {
@@ -14,7 +14,7 @@ abstract class Taiga implements ShouldQueue
     protected $taiga;
 
 
-    public function __construct(TaigaApi $taiga)
+    public function __construct(TaigaAdaptor $taiga)
     {
         //TODO: catch exceptions
         //TODO: go only if taiga is online!

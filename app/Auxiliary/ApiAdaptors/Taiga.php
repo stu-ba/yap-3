@@ -1,19 +1,19 @@
 <?php
 
-namespace Yap\Auxiliary;
+namespace Yap\Auxiliary\ApiAdaptors;
 
 use TZK\Taiga\Exceptions\TaigaException;
-use TZK\Taiga\Taiga;
+use TZK\Taiga\Taiga as TaigaManager;
 use Yap\Models\Project;
 use Yap\Models\User;
 
-class TaigaApi
+class Taiga
 {
 
     protected $taiga;
 
 
-    public function __construct(Taiga $taiga)
+    public function __construct(TaigaManager $taiga)
     {
         $this->taiga = $taiga;
         $this->taiga->setAuthToken(taiga_token(systemAccount()->taiga_id));
