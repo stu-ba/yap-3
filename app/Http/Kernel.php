@@ -3,10 +3,10 @@
 namespace Yap\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Yap\Http\Middleware\OnlyXmlHttp;
 
 class Kernel extends HttpKernel
 {
+
     /**
      * The application's global HTTP middleware stack.
      *
@@ -38,7 +38,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            OnlyXmlHttp::class,
+            \Yap\Http\Middleware\OnlyXmlHttp::class,
             'throttle:60,1',
             'bindings',
         ],
@@ -53,10 +53,11 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-        'auth' => Middleware\Authenticate::class,
+        'auth'     => \Yap\Http\Middleware\Authenticate::class,
+        'taiga'    => \Yap\Http\Middleware\CheckTaigaIsOnline::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'can'      => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest'    => \Yap\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle' => \Yap\Http\Middleware\ThrottleRequests::class,
     ];
 }
