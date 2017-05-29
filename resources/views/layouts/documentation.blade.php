@@ -7,7 +7,7 @@
     <meta name="keywords" content="yap, yap-3, user guide">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ isset($title) ? $title . ' - ' : null }} Yap User Guide</title>
+    <title>{{ config('yap.short_name').(isset($title) ? ' User Guide | '.$title : null) }}</title>
 
     <!--[if lte IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>

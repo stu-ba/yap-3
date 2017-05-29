@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Error page for Yap 3.0 application.">
+    <meta name="author" content="Yap 3.0 team">
 
     <!-- Title -->
-    <title>{{ $title ?? 'Error' }}</title>
+    <title>{{ config('yap.short_name') }} | Error {{ $exception->getStatusCode() ?? '' }}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300|700" rel="stylesheet" type="text/css">
     <style>
