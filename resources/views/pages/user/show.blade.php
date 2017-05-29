@@ -14,8 +14,13 @@
                     <p class="card-content">
                         {{ $user->bio ?? config('yap.placeholders.bio') }}
                     </p>
-                    @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-sm external', 'icon' => fa('github')])
-                    @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-sm btn-grey'])
+                    @if($user->isBanned())
+                        @include('components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-sm', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.''])
+                    @else
+                        @include('components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-sm', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.''])
+                        @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-sm external', 'icon' => fa('github')])
+                        @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-sm btn-grey'])
+                    @endif
                 </div>
             </div>
         </div>

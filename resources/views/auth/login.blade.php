@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="yap-token" content="{{ yap_token() }}">
 
-    <title>{{ config('yap.short_name') }} - login</title>
+    <title>{{ config('yap.short_name') }} | Login</title>
 
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet"/>
 </head>

@@ -23,7 +23,10 @@ class Authenticate extends StockAuthenticate
     public function handle($request, Closure $next, ...$guards)
     {
         $this->authenticate($guards);
-        $this->banned();
+
+        if ( ! $request->is('auth/*')) {
+            $this->banned();
+        }
 
         return $next($request);
     }
@@ -39,7 +42,7 @@ class Authenticate extends StockAuthenticate
     protected function banned()
     {
         if ($this->auth->user()->isBanned()) {
-            throw new UserBannedException();
+            throw new UserBannedException($this->auth->user()->ban_reason);
         }
     }
 }

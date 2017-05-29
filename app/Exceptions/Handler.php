@@ -86,7 +86,11 @@ class Handler extends ExceptionHandler
 
     protected function banned($request, UserBannedException $exception)
     {
-        return abort(403);
+        if (auth()->check()) {
+            return redirect()->route('logout');
+        }
+
+        return abort(403, $exception->getMessage());
     }
 
 

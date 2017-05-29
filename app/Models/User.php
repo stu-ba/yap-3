@@ -304,6 +304,10 @@ class User extends Authenticatable
 
     public function unban(): self
     {
+        if ($this->isBanned()) {
+            //TODO: user got unbanned event - add to teams etc.
+        }
+
         $this->ban_reason = null;
         $this->save();
 
@@ -313,7 +317,11 @@ class User extends Authenticatable
 
     public function ban(string $reason): self
     {
-        $this->ban_reason = str_limit($reason, 250, '...');
+        if (!$this->isBanned()) {
+            //TODO: user got banned event - remove from teams etc.
+        }
+
+        $this->ban_reason = str_limit($reason, 254, '...');
         $this->save();
 
         return $this;

@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('/a', function () {
-    return abort(500);
+    return abort(503);
 });
 
 Route::get('/logme/{id?}', function ($id = null) {
@@ -21,6 +21,11 @@ Route::get('/logme/{id?}', function ($id = null) {
 
     return redirect()->route('profile');
 });
+
+Route::get('/throttle2', function() {
+    //return redirect('/');
+    return 'got_here';
+})->middleware(['throttle:2,2']);
 
 Route::get('/taiga/{id?}', function($id = null) {
     /**@var Signer $signer */
@@ -68,9 +73,12 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
     });
 
     Route::group(['middleware' => ['auth']], function() {
-        Route::get('switch', 'SwitchController@toTaiga')->name('switch');
-        Route::get('switch/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
-        Route::get('switch/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
+        Route::group(['middleware' => ['taiga:throw']], function() {
+            Route::get('switch/taiga', 'SwitchController@toTaiga')->name('switch');
+            Route::get('switch/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
+            Route::get('switch/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
+        });
+
         Route::get('switch/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.repository');
         Route::get('logout/{token?}', 'LogoutController@logout')->name('logout');
     });

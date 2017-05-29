@@ -36,5 +36,4 @@ return [
     */
 
     'session_key' => 'alert_messages',
-
 ];
