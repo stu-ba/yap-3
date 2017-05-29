@@ -31,13 +31,23 @@ class CheckTaigaIsOnline
      * @param          $request
      * @param \Closure $next
      *
+     * @param string   $action
+     *
      * @return mixed
      * @throws \Yap\Exceptions\TaigaOfflineException
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $action = 'throw')
     {
         if ( ! $this->checker->check()) {
-            throw new TaigaOfflineException();
+            switch ($action) {
+                case 'alert': {
+                    alert('warning', 'Taiga seems to be offline, you will not be able to save your progress.');
+                    break;
+                }
+                default: {
+                    throw new TaigaOfflineException();
+                }
+            }
         }
 
         return $next($request);

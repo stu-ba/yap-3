@@ -20,13 +20,16 @@ class UserController extends Controller
 
     public function profile()
     {
-        return $this->show(auth()->user());
+        return view('pages.user.show')->withUser(auth()->user());
     }
 
 
     public function show(User $user)
     {
-        //Todo: logic if user is current user
+        if ($user == auth()->user()) {
+            return redirect()->route('profile');
+        }
+
         return view('pages.user.show')->withUser($user);
     }
 
@@ -34,6 +37,14 @@ class UserController extends Controller
     public function edit()
     {
         return redirect()->away('https://github.com/settings/profile');
+    }
+
+    public function ban(User $user) {
+
+    }
+
+    public function unban(User $user) {
+
     }
 
 
