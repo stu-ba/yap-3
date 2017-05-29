@@ -34,6 +34,7 @@ return [
         'admin'        => 'fa-tty',
         'edit'         => 'fa-pencil',
         'colleagues'   => 'fa-users',
+        'ban'          => 'fa-ban',
         'banned'       => 'fa-user-times',
         'all'          => 'fa-asterisk',
         'invite'       => 'fa-envelope',
