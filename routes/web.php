@@ -38,13 +38,13 @@ Route::get('/taiga/{id?}', function($id = null) {
 
 Route::group(['middleware' => ['auth']], function () { //auth, for live developing disable middleware since different domain
         Route::get('/profile', 'UserController@profile')->name('profile');
-        Route::get('profile/edit', 'UserController@edit')->name('profile.edit');
-        Route::group(['prefix' => 'users'], function () {
+        Route::group(['prefix' => 'users/{user}'], function () {
             // ban // unban // promote // demote // invite
+            Route::get('ava', 'UserController@availableProjects');
         });
 
         Route::resource('users', 'UserController', [
-            'only' => ['index', 'show', 'edit', 'update', 'store'],
+            'only' => ['index', 'show', 'edit', 'store'],
         ]);
 
         //Route::get('/taiga/{id?}', function($id = null) {

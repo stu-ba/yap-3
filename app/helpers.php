@@ -221,13 +221,14 @@ if ( ! function_exists('route_exists')) {
 }
 
 if ( ! function_exists('text_with_hovertip')) {
-    function text_with_hovertip(string $text, string $hovertip_text = '', $position = 'top')
+    function text_with_hovertip(string $text, string $hovertip_text = '', string $position = 'top', int $limit = 15)
     {
         if (empty($hovertip_text)) {
             return $text;
         }
 
-        return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$hovertip_text.'">'.$text.'<sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
+        return '<span rel="tooltip" data-html="true" class="hover-tip" data-placement="'.$position.'" title="<b>'.$text.'</b><br> '.$hovertip_text.'">'.str_limit($text,
+                $limit).'<sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
     }
 }
 

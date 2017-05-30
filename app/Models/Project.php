@@ -2,6 +2,7 @@
 
 namespace Yap\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 use Yap\Events\ProjectCreated;
@@ -25,6 +26,7 @@ use Yap\Events\ProjectCreated;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
  * @property-read \Yap\Models\ProjectType                                     $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project unrelated()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereArchiveAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereDescription($value)
@@ -102,8 +104,8 @@ class Project extends Model
         $participantIds = array_fill_keys($participantIds, ['is_leader' => false, 'to_be_deleted' => false]);
         $memberIds      = $participantIds + $leaderIds;
         $changed        = $this->members()->syncWithoutDetaching($memberIds);
-        $this->removeMembers($this->toDetach($memberIds)); //this can be improved with $changed['to_detach']
-        //TODO: fire events if updated (to make leader or make participant)
+        $this->removeMembers($this->toDetach($memberIds));
+        //TODO: fire events if updated (to make leader or to make participant)
     }
 
 
@@ -134,6 +136,13 @@ class Project extends Model
         $current = $this->members->pluck('id')->all();
 
         return array_diff($current, array_keys($ids));
+    }
+
+
+    public function addMember(int $userId, bool $leader = false): void
+    {
+        //TODO: possible error if already attached + marked for deletion
+        $this->members()->attach($userId, ['is_leader' => $leader]);
     }
 
 

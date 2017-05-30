@@ -58,8 +58,7 @@
                                     <td>{!! date_with_hovertip($user->created_at) !!}</td>
                                     <td>{!! date_with_hovertip($user->updated_at) !!}</td>
                                     <td>
-                                        @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('profile')])
-                                        @include('components.html.fa-button', ['href' => route('users.edit', ['user' => $user->username]), 'tooltip' => 'Edit user', 'class' => 'btn btn-primary btn-xs', 'icon' => fa('edit')])
+                                        @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('detail')])
                                         @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => fa('github')])
                                         @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
                                     </td>

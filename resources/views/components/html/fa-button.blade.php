@@ -1,1 +1,1 @@
-<a href="{{ $href ?? '#' }}" class="{{ $class ?? 'btn btn-default btn-xs' }}" rel="tooltip" data-placement="{{ $position ?? 'top' }}" title="{{ $tooltip ?? '' }}" {{ $customAttributes ?? ''}}><i class="fa {{ $icon }}"></i></a>
+<a href="{{ $href ?? '#' }}" class="{{ $class ?? 'btn btn-default btn-xs' }}" rel="tooltip" data-placement="{{ $position ?? 'top' }}" title="{{ $tooltip ?? '' }}" {!! $customAttributes ?? '' !!}><i class="fa {{ $icon }}"></i></a>

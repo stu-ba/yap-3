@@ -14,6 +14,7 @@ class UserController extends Controller
         $users = $user->filled()->filter($request->get('filter', null))->sortable(['username'])->paginate(10);
 
         return view('pages.user.index')->with([
+            'title' => 'User listing',
             'users' => $users,
         ]);
     }
@@ -21,7 +22,7 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view('pages.user.show')->withUser(auth()->user());
+        return view('pages.user.show')->withTitle('Your profile')->withUser(auth()->user());
     }
 
 
@@ -31,7 +32,7 @@ class UserController extends Controller
             return redirect()->route('profile');
         }
 
-        return view('pages.user.show')->withUser($user);
+        return view('pages.user.show')->withTitle($user->username.'\'s profile')->withUser($user);
     }
 
 
@@ -99,7 +100,16 @@ class UserController extends Controller
     }
 
 
-    public function update()
+    public function availableProjects(Request $request, User $user)
     {
+        //TODO: add policy
+
+        if ($request->isXmlHttpRequest()) {
+            return response()->json($user->unassociatedProjects()->pluck('name', 'id'), 200);
+        }
+
+        alert('info', 'Sorry, previous request is available only for XmlRequests.');
+
+        return redirect()->route('users.show', ['user' => $user]);
     }
 }

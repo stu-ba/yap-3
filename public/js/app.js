@@ -11239,6 +11239,14 @@ process.umask = function() { return 0; };
 __webpack_require__(32);
 
 $(function () {
+    swal.setDefaults({
+        showCancelButton: true,
+        animation: true,
+        showLoaderOnConfirm: true,
+        allowOutsideClick: false,
+        showCloseButton: true
+    });
+
     $('a.external').click(function (e) {
         e.preventDefault(); // Prevent the href from redirecting directly
         var linkURL = $(this).attr("href");
@@ -11253,25 +11261,47 @@ $(function () {
     $('a.ban-user').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
-        banUser(username);
+        var helpLink = $(this).attr("data-help");
+        banUser(username, helpLink);
     });
 
     $('a.unban-user').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
-        unbanUser(username);
+        var helpLink = $(this).attr("data-help");
+        unbanUser(username, helpLink);
     });
 
     $('a.promote-user').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
-        promoteUser(username);
+        var helpLink = $(this).attr("data-help");
+        promoteUser(username, helpLink);
     });
 
     $('a.demote-user').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
-        demoteUser(username);
+        var helpLink = $(this).attr("data-help");
+        demoteUser(username, helpLink);
+    });
+
+    $('a.remove-user').click(function (e) {
+        e.preventDefault();
+        var username = $(this).attr("data-username");
+        var projectId = $(this).attr("data-project-id");
+        var projectName = $(this).attr("data-project-name");
+        var helpLink = $(this).attr("data-help");
+
+        removeUser(username, projectId, projectName, helpLink);
+    });
+
+    $('a.add-user').click(function (e) {
+        e.preventDefault();
+        var username = $(this).attr("data-username");
+        var helpLink = $(this).attr("data-help");
+
+        addUser(username, helpLink);
     });
 });
 
@@ -11297,10 +11327,8 @@ function inviteUser() {
             autocapitalize: 'off',
             spellcheck: false
         },
-        showCancelButton: true,
         confirmButtonText: 'Invite',
         cancelButtonText: 'More options',
-        showLoaderOnConfirm: true,
         preConfirm: function preConfirm(email) {
             return new Promise(function (resolve, reject) {
                 axios.post('/api/invitations', { 'email': email }).then(function (response) {
@@ -11310,14 +11338,13 @@ function inviteUser() {
                     reject(error);
                 });
             });
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
+        }
     }).then(function () {
         swal({
             type: 'success',
             title: 'Invitation sent!',
-            timer: 1500
+            timer: 2000,
+            showCancelButton: false
         }).then(function () {}, function (dismiss) {});
     }).catch(function (reason) {
         if (reason == 'cancel') {
@@ -11326,9 +11353,10 @@ function inviteUser() {
     });
 }
 
-function banUser(username) {
+function banUser(username, helpLink) {
     swal({
         title: 'Ban user \'' + username + '\'.',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
         input: 'text',
         type: 'error',
         inputValue: 'User terribly misbehaved! End of story.',
@@ -11338,27 +11366,24 @@ function banUser(username) {
             autocapitalize: 'off',
             spellcheck: true
         },
-        showCancelButton: true,
         confirmButtonText: 'Ban',
         cancelButtonText: 'Cancel',
-        showLoaderOnConfirm: true,
         preConfirm: function preConfirm(text) {
             return new Promise(function (resolve, reject) {
-                axios.post('/api/users/' + username + '/ban', { 'reason': text }).then(function (response) {
+                axios.patch('/api/users/' + username + '/ban', { 'reason': text }).then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
                     if (error.response.data.reason != null && typeof error.response.data.reason[0] != 'undefined') reject(error.response.data.reason[0]);
                     reject(error);
                 });
             });
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
+        }
     }).then(function () {
         swal({
             type: 'success',
-            title: 'User banned!',
-            timer: 2000
+            title: 'User \'' + username + '\' was banned!',
+            timer: 5000,
+            showCancelButton: false
         }).then(function () {
             window.location.reload(false);
         }, function (dismiss) {
@@ -11367,30 +11392,28 @@ function banUser(username) {
     }).catch(function (reason) {});
 }
 
-function unbanUser(username) {
+function unbanUser(username, helpLink) {
     swal({
         title: 'Unban user \'' + username + '\'?',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
         type: 'question',
-        showCancelButton: true,
         confirmButtonText: 'Remove ban',
         cancelButtonText: 'Cancel',
-        showLoaderOnConfirm: true,
         preConfirm: function preConfirm() {
             return new Promise(function (resolve, reject) {
-                axios.post('/api/users/' + username + '/unban').then(function (response) {
+                axios.patch('/api/users/' + username + '/unban').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
                     reject(error);
                 });
             });
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
+        }
     }).then(function () {
         swal({
             type: 'success',
-            title: 'User unbanned!',
-            timer: 2000
+            title: 'User \'' + username + '\' was unbanned!',
+            timer: 5000,
+            showCancelButton: false
         }).then(function () {
             window.location.reload(false);
         }, function (dismiss) {
@@ -11399,30 +11422,28 @@ function unbanUser(username) {
     }).catch(function (reason) {});
 }
 
-function promoteUser(username) {
+function promoteUser(username, helpLink) {
     swal({
         title: 'Promote user \'' + username + '\'?',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
         type: 'question',
-        showCancelButton: true,
         confirmButtonText: 'Promote',
         cancelButtonText: 'Cancel',
-        showLoaderOnConfirm: true,
         preConfirm: function preConfirm() {
             return new Promise(function (resolve, reject) {
-                axios.post('/api/users/' + username + '/promote').then(function (response) {
+                axios.patch('/api/users/' + username + '/promote').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
                     reject(error);
                 });
             });
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
+        }
     }).then(function () {
         swal({
             type: 'success',
-            title: 'User promoted!',
-            timer: 2000
+            title: 'User \'' + username + '\' was promoted!',
+            timer: 5000,
+            showCancelButton: false
         }).then(function () {
             window.location.reload(false);
         }, function (dismiss) {
@@ -11431,36 +11452,149 @@ function promoteUser(username) {
     }).catch(function (reason) {});
 }
 
-function demoteUser(username) {
+function demoteUser(username, helpLink) {
     swal({
         title: 'Demote user \'' + username + '\'?',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
         type: 'question',
-        showCancelButton: true,
         confirmButtonText: 'Demote',
         cancelButtonText: 'Cancel',
-        showLoaderOnConfirm: true,
         preConfirm: function preConfirm() {
             return new Promise(function (resolve, reject) {
-                axios.post('/api/users/' + username + '/demote').then(function (response) {
+                axios.patch('/api/users/' + username + '/demote').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
                     reject(error);
                 });
             });
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
+        }
     }).then(function () {
         swal({
             type: 'success',
-            title: 'User demoted!',
-            timer: 2000
+            title: 'User \'' + username + '\' was demoted!',
+            timer: 5000,
+            showCancelButton: false
         }).then(function () {
             window.location.reload(false);
         }, function (dismiss) {
             window.location.reload(false);
         });
     }).catch(function (reason) {});
+}
+
+function removeUser(username, projectId, projectName, helpLink) {
+    swal({
+        title: 'Remove user \'' + username + '\' from project \'' + projectName + '\'?',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
+        type: 'question',
+        confirmButtonText: 'Remove',
+        cancelButtonText: 'Cancel',
+        preConfirm: function preConfirm() {
+            return new Promise(function (resolve, reject) {
+                axios.delete('/api/projects/' + projectId + '/users/' + username).then(function (response) {
+                    resolve(response);
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        }
+    }).then(function () {
+        swal({
+            type: 'success',
+            title: 'User \'' + username + '\' is scheduled to be removed from project \'' + projectName + '\'!',
+            timer: 5000,
+            showCancelButton: false
+        }).then(function () {
+            window.location.reload(false);
+        }, function (dismiss) {
+            window.location.reload(false);
+        });
+    }).catch(function (reason) {});
+}
+
+function addUser(username, helpLink) {
+    var loadedProjects = new Promise(function (resolve, reject) {
+        axios.get('/api/users/' + username + '/available-projects').then(function (response) {
+            if (response.data.length == 0) reject('There are no available projects for user \'' + username + '\'.');
+            resolve(response);
+        }).catch(function (error) {
+            console.log(error);
+            reject('Sorry, this feature is now disabled.');
+        });
+    });
+
+    loadedProjects.then(function (response) {
+
+        var steps = [{
+            progressSteps: ['1', '2'],
+            animation: false,
+            confirmButtonText: 'Continue <i class="fa fa-hand-o-right"></i>',
+            html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
+            title: 'Participant or Team leader?',
+            type: 'question',
+            input: 'radio',
+            inputValue: '0',
+            inputOptions: {
+                0: 'Participant',
+                1: 'Team Leader'
+            },
+            inputValidator: function inputValidator(role) {
+                return new Promise(function (resolve, reject) {
+                    if (role == 0 || role == 1) {
+                        resolve();
+                    } else {
+                        reject('You need to pick one!');
+                    }
+                });
+            },
+            preConfirm: function preConfirm(role) {
+                return new Promise(function (resolve) {
+                    swal.insertQueueStep({
+                        animation: false,
+                        progressSteps: ['1', '2'],
+                        title: 'What project?',
+                        type: 'question',
+                        input: 'select',
+                        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
+                        confirmButtonText: 'Add <i class="fa fa-thumbs-o-up"></i>',
+                        inputOptions: response.data,
+                        preConfirm: function preConfirm(project) {
+                            return new Promise(function (resolve, reject) {
+                                axios.post('/api/projects/' + project + '/users/' + username, { role: role }).then(function (response) {
+                                    resolve(response);
+                                }).catch(function (error) {
+                                    reject(error);
+                                });
+                            });
+                        }
+                    });
+                    resolve();
+                });
+            }
+        }];
+
+        swal.queue(steps).then(function (result) {
+            swal({
+                title: result[1].data.message,
+                type: 'success',
+                confirmButtonText: 'OK',
+                showCancelButton: false,
+                timer: 3000
+            }).then(function () {
+                window.location.reload(false);
+            }, function (dismiss) {
+                window.location.reload(false);
+            });
+        }, function () {});
+    }).catch(function (error) {
+        swal({
+            title: error,
+            text: 'For more information open up JavaScript console.',
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Alright :('
+        });
+    });
 }
 
 function route(route) {

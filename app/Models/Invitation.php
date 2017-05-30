@@ -10,19 +10,20 @@ use Kyslik\ColumnSortable\Sortable;
 /**
  * Yap\Models\Invitation
  *
- * @property int                   $id
- * @property int                   $user_id
- * @property int                   $invited_by
- * @property string                $email
- * @property string                $token
- * @property \Carbon\Carbon        $depleted_at
- * @property \Carbon\Carbon        $valid_until
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
+ * @property int $id
+ * @property int $user_id
+ * @property int $invited_by
+ * @property string $email
+ * @property string $token
+ * @property \Carbon\Carbon $depleted_at
+ * @property \Carbon\Carbon $valid_until
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $inviter
  * @property-read \Yap\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation active()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation recent($num = 10)
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation validUntil(\Carbon\Carbon $date = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation whereDepletedAt($value)

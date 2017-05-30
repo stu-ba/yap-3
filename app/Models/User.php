@@ -265,7 +265,7 @@ class User extends Authenticatable
 
     public function promote($force = false): self
     {
-        if ( ! $this->is_admin && ! $this->isBanned() || $force) {
+        if (( ! $this->is_admin && ! $this->isBanned()) || $force) {
             $this->is_admin = true;
             $this->save();
 
@@ -317,7 +317,7 @@ class User extends Authenticatable
 
     public function ban(string $reason): self
     {
-        if (!$this->isBanned()) {
+        if ( ! $this->isBanned()) {
             //TODO: user got banned event - remove from teams etc.
         }
 
@@ -383,4 +383,10 @@ class User extends Authenticatable
                     ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
                     ->withTimestamps();
     }
+
+    public function unassociatedProjects() {
+        $associatedIds = $this->projects->pluck('id');
+        return resolve(Project::class)->select('name', 'id')->orderBy('name')->whereNotIn('id', $associatedIds)->get();
+    }
+
 }
