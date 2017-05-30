@@ -38,7 +38,14 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view('pages.user.show')->withTitle('Your profile')->withUser(auth()->user());
+        return view('pages.user.show')->with([
+            'title' => 'Your profile',
+            'user'  => auth()->user()->load([
+                'projects' => function ($query) {
+                    $query->orderBy('pivot_to_be_deleted')->orderBy('archive_at', 'desc');
+                },
+            ]),
+        ]);
     }
 
 
@@ -48,7 +55,14 @@ class UserController extends Controller
             return redirect()->route('profile');
         }
 
-        return view('pages.user.show')->withTitle($user->username.'\'s profile')->withUser($user);
+        return view('pages.user.show')->with([
+            'title' => $user->username.'\'s profile',
+            'user'  => $user->load([
+                'projects' => function ($query) {
+                    $query->orderBy('pivot_to_be_deleted')->orderBy('archive_at', 'desc');
+                },
+            ]),
+        ]);
     }
 
 
@@ -134,7 +148,8 @@ class UserController extends Controller
     {
 
         if ($request->isXmlHttpRequest()) {
-            return response()->json($user->projects()->wherePivot('to_be_deleted', '=', false)->pluck('name', 'id'), 200);
+            return response()->json($user->projects()->wherePivot('to_be_deleted', '=', false)->pluck('name', 'id'),
+                200);
         }
 
         alert('info', 'Sorry, previous request is available only for XmlRequests.');
