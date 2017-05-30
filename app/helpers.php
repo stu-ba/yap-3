@@ -125,6 +125,8 @@ if ( ! function_exists('set_active_routes')) {
                 return $output;
             }
         }
+
+        return null;
     }
 }
 
@@ -255,7 +257,7 @@ if ( ! function_exists('date_with_hovertip')) {
 
             return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'"><i class="fa fa-hourglass-'.$hourglass.'"></i></span>';
         } elseif (is_null($date)) {
-            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Date not supplied!"><i class="fa fa-meh-o"></i></span>';
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Never!"><i class="fa fa-meh-o"></i></span>';
         } else {
             return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="'.$date->toFormattedDateString().'">'.$date->diffForHumans().' <sup class="fa font-size-half text-muted fa-asterisk"></sup></span>';
         }

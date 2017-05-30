@@ -184,6 +184,7 @@ return [
         Yap\Providers\EventServiceProvider::class,
         Yap\Providers\RouteServiceProvider::class,
         Yap\Providers\EnvironmentServiceProvider::class,
+        Yap\Providers\ComposerServiceProvider::class,
 
     ],
 

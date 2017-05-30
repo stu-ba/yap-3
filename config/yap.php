@@ -35,6 +35,8 @@ return [
         'remove'       => 'fa-times-rectangle',
         'add'          => 'fa-plus-square',
         'detail'       => 'fa-eye',
+        'unread'       => 'fa-eye-slash',
+        'read'         => 'fa-eye',
         'promote'      => 'fa-hand-o-up',
         'demote'       => 'fa-hand-o-down',
         'edit'         => 'fa-pencil',

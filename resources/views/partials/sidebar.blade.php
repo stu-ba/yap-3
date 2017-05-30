@@ -25,9 +25,11 @@
                     <p>Projects</p>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <span class="notification">2</span>
+            <li class="{{ set_active_routes('users.notifications') }}">
+                <a href="{{ route('users.notifications') }}">
+                    @if($unreadNotificationsCount > 0)
+                        <span class="notification">{{ $unreadNotificationsCount }}</span>
+                    @endif
                     <i class="fa fa-lg {{ fa('notification') }}"></i>
                     <p>Notifications</p>
                 </a>

@@ -20,6 +20,21 @@ class UserController extends Controller
     }
 
 
+    public function notifications(Request $request)
+    {
+        $notifications = $request->user()->notifications()->filter($request->get('filter', null))->paginate(20);
+
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+
+        return view('pages.user.notifications')->with([
+            'title'         => 'Notifications',
+            'notifications' => $notifications,
+        ]);
+    }
+
+
     public function profile()
     {
         return view('pages.user.show')->withTitle('Your profile')->withUser(auth()->user());

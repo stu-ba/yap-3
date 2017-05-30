@@ -3,7 +3,6 @@
 namespace Yap\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Notifications\Notifiable;
 use Kyslik\ColumnSortable\Sortable;
 use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
@@ -11,6 +10,7 @@ use Yap\Events\UserPromoted;
 use Yap\Exceptions\UserBannedException;
 use Yap\Exceptions\UserNotConfirmedException;
 use Yap\Foundation\Auth\User as Authenticatable;
+use Yap\Foundation\Notifications\Notifiable;
 
 /**
  * Yap\Models\User
@@ -384,8 +384,11 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
-    public function unassociatedProjects() {
+
+    public function unassociatedProjects()
+    {
         $associatedIds = $this->projects->pluck('id');
+
         return resolve(Project::class)->select('name', 'id')->orderBy('name')->whereNotIn('id', $associatedIds)->get();
     }
 

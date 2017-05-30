@@ -22,21 +22,23 @@ Route::get('/logme/{id?}', function ($id = null) {
     return redirect()->route('profile');
 });
 
-Route::get('/throttle2', function() {
+Route::get('/throttle2', function () {
     //return redirect('/');
     return 'got_here';
 })->middleware(['throttle:2,2']);
 
-Route::get('/taiga/{id?}', function($id = null) {
+Route::get('/taiga/{id?}', function ($id = null) {
     /**@var Signer $signer */
     $signer = resolve(Signer::class);
-    $data = ['user_authentication_id' => $id ?? auth()->user()->taiga_id];
-    $token = $signer->dumps($data);
+    $data   = ['user_authentication_id' => $id ?? auth()->user()->taiga_id];
+    $token  = $signer->dumps($data);
+
     //d($signer->loads($token));
     return ' 192... - <a href="'.url('http://192.168.6.199:8080/login/'.$token.'?next=discover').'">'.url('http://192.168.6.199:8080/login/'.$token).'</a><br><br> localhost - <a href="'.url('http://localhost:9001/login/'.$token.'?next=discover').'">'.url('http://localhost:9001/login/'.$token).'</a>';
 });
 
-Route::group(['middleware' => ['auth']], function () { //auth, for live developing disable middleware since different domain
+Route::group(['middleware' => ['auth']],
+    function () { //auth, for live developing disable middleware since different domain
         Route::get('/profile', 'UserController@profile')->name('profile');
         Route::group(['prefix' => 'users/{user}'], function () {
             // ban // unban // promote // demote // invite
@@ -46,6 +48,7 @@ Route::group(['middleware' => ['auth']], function () { //auth, for live developi
         Route::resource('users', 'UserController', [
             'only' => ['index', 'show', 'edit', 'store'],
         ]);
+        Route::get('/notifications', 'UserController@notifications')->name('users.notifications');
 
         //Route::get('/taiga/{id?}', function($id = null) {
         //    /**@var Signer $signer */
@@ -72,8 +75,8 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
         Route::get('github/callback', 'LoginController@handle')->name('login.callback');
     });
 
-    Route::group(['middleware' => ['auth']], function() {
-        Route::group(['middleware' => ['taiga:throw']], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::group(['middleware' => ['taiga:throw']], function () {
             Route::get('switch/taiga', 'SwitchController@toTaiga')->name('switch');
             Route::get('switch/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
             Route::get('switch/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
