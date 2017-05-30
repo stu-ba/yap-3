@@ -3,10 +3,11 @@
 namespace Yap\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
+use Illuminate\View\Factory as ViewFactory;
 
 class ComposerServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the application services.
      *
@@ -14,18 +15,8 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['layouts.yap'], function ($view) {
+        resolve(ViewFactory::class)->composer(['layouts.yap'], function ($view) {
             $view->with('unreadNotificationsCount', auth()->user()->unreadNotifications()->count());
         });
-    }
-
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 }

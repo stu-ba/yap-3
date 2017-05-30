@@ -181,7 +181,7 @@ class User extends Authenticatable
             case 'banned':
                 return $query->banned();
             case 'colleagues':
-                return $query->colleagues();
+                return $query->banned(false)->colleagues();
             case 'admins':
                 return $query->isAdmin();
             default:
@@ -389,7 +389,7 @@ class User extends Authenticatable
     {
         $associatedIds = $this->projects->pluck('id');
 
-        return resolve(Project::class)->select('name', 'id')->orderBy('name')->whereNotIn('id', $associatedIds)->get();
+        return resolve(Project::class)->select('name', 'id')->whereNotIn('id', $associatedIds);
     }
 
 }

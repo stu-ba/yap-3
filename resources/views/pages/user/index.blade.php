@@ -24,18 +24,20 @@
                                 <div class="ripple-container"></div>
                             </a>
                         </li>
-                        <li class="{{ set_active_filter('banned') }}">
-                            <a href="{{ route('users.index', ['filter' => 'banned']) }}">
-                                <i class="fa fa-lg {{ fa('banned') }}"></i><span class="hidden-xs">banned</span>
-                                <div class="ripple-container"></div>
-                            </a>
-                        </li>
-                        <li class="{{ set_active_filter('admins') }}">
-                            <a href="{{ route('users.index', ['filter' => 'admins']) }}">
-                                <i class="fa fa-lg {{ fa('admin') }}"></i><span class="hidden-xs">admins</span>
-                                <div class="ripple-container"></div>
-                            </a>
-                        </li>
+                        @if(auth()->user()->is_admin)
+                            <li class="{{ set_active_filter('banned') }}">
+                                <a href="{{ route('users.index', ['filter' => 'banned']) }}">
+                                    <i class="fa fa-lg {{ fa('banned') }}"></i><span class="hidden-xs">banned</span>
+                                    <div class="ripple-container"></div>
+                                </a>
+                            </li>
+                            <li class="{{ set_active_filter('admins') }}">
+                                <a href="{{ route('users.index', ['filter' => 'admins']) }}">
+                                    <i class="fa fa-lg {{ fa('admin') }}"></i><span class="hidden-xs">admins</span>
+                                    <div class="ripple-container"></div>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-content table-responsive">
@@ -45,9 +47,12 @@
                         {{--<th>@sortablelink('id', 'ID')</th>--}}
                         <th>@sortablelink('name', 'name')</th>
                         <th>@sortablelink('username', 'username')</th>
+                        @if(auth()->user()->is_admin)
+                            <th>@sortablelink('email', 'email')</th>
+                        @endif
                         <th>@sortablelink('created_at', 'registered at')</th>
                         <th>@sortablelink('updated_at', 'last active at')</th>
-                        <th>Actions</th>
+                        <th class="col-xs-5">Actions</th>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
@@ -55,9 +60,22 @@
                                     {{--<td>{{ $user->id }}</td>--}}
                                     <td>{{ $user->name ?? config('yap.placeholders.name') }}</td>
                                     <td>{{ $user->username }}</td>
+                                    @if(auth()->user()->is_admin)
+                                        <td>{{ $user->email }}</td>
+                                    @endif
                                     <td>{!! date_with_hovertip($user->created_at) !!}</td>
                                     <td>{!! date_with_hovertip($user->updated_at) !!}</td>
                                     <td>
+                                        @if($user->isBanned())
+                                            @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])
+                                        @else
+                                            @includeWhen(true && !$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])
+                                            @includeWhen(true && $user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])
+                                            @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])
+                                        @endif
+                                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Add user to project', 'class' => 'add-user btn btn-info btn-xs', 'icon' => fa('add'), 'customAttributes' => 'data-reload="false" data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#add'])])
+                                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from project', 'class' => 'remove-user btn btn-danger btn-xs', 'icon' => fa('remove'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove'])])
+
                                         @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('detail')])
                                         @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => fa('github')])
                                         @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])

@@ -10,6 +10,7 @@ Route::group(['middleware' => 'auth:yap'], function () {
         Route::patch('/promote', 'UserController@promote')->name('api.users.promote');
         Route::patch('/demote', 'UserController@demote')->name('api.users.demote');
         Route::get('/available-projects', 'UserController@availableProjects')->name('api.users.available.projects');
+        Route::get('/projects', 'UserController@projectList')->name('api.users.projects');
     });
 
     Route::group(['prefix' => '/projects/{project}'], function () {

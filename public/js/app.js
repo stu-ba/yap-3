@@ -11286,22 +11286,31 @@ $(function () {
         demoteUser(username, helpLink);
     });
 
-    $('a.remove-user').click(function (e) {
+    $('a.remove-user-from-project').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
         var projectId = $(this).attr("data-project-id");
         var projectName = $(this).attr("data-project-name");
         var helpLink = $(this).attr("data-help");
 
-        removeUser(username, projectId, projectName, helpLink);
+        removeUserFromProject(username, projectId, projectName, helpLink);
     });
 
     $('a.add-user').click(function (e) {
         e.preventDefault();
         var username = $(this).attr("data-username");
         var helpLink = $(this).attr("data-help");
+        var reload = true;
+        if (typeof $(this).data('reload') !== 'undefined') reload = $(this).data('reload');
+        addUser(username, helpLink, reload);
+    });
 
-        addUser(username, helpLink);
+    $('a.remove-user').click(function (e) {
+        e.preventDefault();
+        var username = $(this).attr("data-username");
+        var helpLink = $(this).attr("data-help");
+
+        removeUser(username, helpLink);
     });
 });
 
@@ -11345,7 +11354,7 @@ function inviteUser() {
             title: 'Invitation sent!',
             timer: 2000,
             showCancelButton: false
-        }).then(function () {}, function (dismiss) {});
+        });
     }).catch(function (reason) {
         if (reason == 'cancel') {
             new route('invitations.create', { 'email': swal.getInput().value }).run();
@@ -11482,37 +11491,7 @@ function demoteUser(username, helpLink) {
     }).catch(function (reason) {});
 }
 
-function removeUser(username, projectId, projectName, helpLink) {
-    swal({
-        title: 'Remove user \'' + username + '\' from project \'' + projectName + '\'?',
-        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
-        type: 'question',
-        confirmButtonText: 'Remove',
-        cancelButtonText: 'Cancel',
-        preConfirm: function preConfirm() {
-            return new Promise(function (resolve, reject) {
-                axios.delete('/api/projects/' + projectId + '/users/' + username).then(function (response) {
-                    resolve(response);
-                }).catch(function (error) {
-                    reject(error);
-                });
-            });
-        }
-    }).then(function () {
-        swal({
-            type: 'success',
-            title: 'User \'' + username + '\' is scheduled to be removed from project \'' + projectName + '\'!',
-            timer: 5000,
-            showCancelButton: false
-        }).then(function () {
-            window.location.reload(false);
-        }, function (dismiss) {
-            window.location.reload(false);
-        });
-    }).catch(function (reason) {});
-}
-
-function addUser(username, helpLink) {
+function addUser(username, helpLink, reload) {
     var loadedProjects = new Promise(function (resolve, reject) {
         axios.get('/api/users/' + username + '/available-projects').then(function (response) {
             if (response.data.length == 0) reject('There are no available projects for user \'' + username + '\'.');
@@ -11524,7 +11503,6 @@ function addUser(username, helpLink) {
     });
 
     loadedProjects.then(function (response) {
-
         var steps = [{
             progressSteps: ['1', '2'],
             animation: false,
@@ -11579,11 +11557,11 @@ function addUser(username, helpLink) {
                 type: 'success',
                 confirmButtonText: 'OK',
                 showCancelButton: false,
-                timer: 3000
+                timer: 5000
             }).then(function () {
-                window.location.reload(false);
-            }, function (dismiss) {
-                window.location.reload(false);
+                if (reload) window.location.reload(false);
+            }, function () {
+                if (reload) window.location.reload(false);
             });
         }, function () {});
     }).catch(function (error) {
@@ -11592,7 +11570,86 @@ function addUser(username, helpLink) {
             text: 'For more information open up JavaScript console.',
             type: 'error',
             showCancelButton: false,
+            timer: 5000,
             confirmButtonText: 'Alright :('
+        }).catch(function () {});
+    });
+}
+
+function removeUser(username, helpLink) {
+    var userProjects = new Promise(function (resolve, reject) {
+        axios.get('/api/users/' + username + '/projects').then(function (response) {
+            if (response.data.length == 0) reject('User \'' + username + '\' has no (zero, nada, none, null) projects.');
+            resolve(response);
+        }).catch(function (error) {
+            console.log(error);
+            reject('Sorry, this feature is now disabled.');
+        });
+    });
+
+    userProjects.then(function (response) {
+        swal({
+            title: 'Remove user \'' + username + '\' from...',
+            html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
+            input: 'select',
+            type: 'error',
+            confirmButtonText: 'Remove',
+            cancelButtonText: 'Cancel',
+            inputOptions: response.data,
+            preConfirm: function preConfirm(projectId) {
+                return new Promise(function (resolve, reject) {
+                    axios.delete('/api/projects/' + projectId + '/users/' + username).then(function (response) {
+                        resolve(response);
+                    }).catch(function (error) {
+                        reject(error);
+                    });
+                });
+            }
+        }).then(function (response) {
+            swal({
+                type: 'success',
+                title: response.data.message,
+                timer: 5000,
+                showCancelButton: false
+            }).catch(function () {});
+        }).catch(function () {});
+    }).catch(function (error) {
+        swal({
+            title: error,
+            text: 'For more information open up JavaScript console.',
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Alright :('
+        });
+    });
+}
+
+function removeUserFromProject(username, projectId, projectName, helpLink) {
+    swal({
+        title: 'Remove user \'' + username + '\' from project \'' + projectName + '\'?',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.',
+        type: 'question',
+        confirmButtonText: 'Remove',
+        cancelButtonText: 'Cancel',
+        preConfirm: function preConfirm() {
+            return new Promise(function (resolve, reject) {
+                axios.delete('/api/projects/' + projectId + '/users/' + username).then(function (response) {
+                    resolve(response);
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        }
+    }).then(function (response) {
+        swal({
+            type: 'success',
+            title: response.data.message,
+            timer: 5000,
+            showCancelButton: false
+        }).then(function () {
+            window.location.reload(false);
+        }, function () {
+            window.location.reload(false);
         });
     });
 }

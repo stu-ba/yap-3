@@ -13,12 +13,12 @@ class ProjectController extends Controller
     {
         //TODO: add policy
         $project->removeMember($user->id);
-
+        $message = 'User \''.$user->username.'\' is scheduled to be removed from project \''.$project->name.'\'.';
         if ($request->isXmlHttpRequest()) {
-            return response()->json([], 202);
+            return response()->json(['message' => $message], 202);
         }
 
-        alert('warning', 'User \''.$user->username.'\' was removed from project \''.$project->name.'\'.');
+        alert('warning', $message);
 
         return redirect()->back();
     }

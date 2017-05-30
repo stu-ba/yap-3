@@ -11,6 +11,7 @@ class UserController extends Controller
 
     public function index(User $user, Request $request)
     {
+        //TODO: add policy for filter
         $users = $user->filled()->filter($request->get('filter', null))->sortable(['username'])->paginate(10);
 
         return view('pages.user.index')->with([
@@ -121,6 +122,19 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return response()->json($user->unassociatedProjects()->pluck('name', 'id'), 200);
+        }
+
+        alert('info', 'Sorry, previous request is available only for XmlRequests.');
+
+        return redirect()->route('users.show', ['user' => $user]);
+    }
+
+
+    public function projectList(Request $request, User $user)
+    {
+
+        if ($request->isXmlHttpRequest()) {
+            return response()->json($user->projects()->wherePivot('to_be_deleted', '=', false)->pluck('name', 'id'), 200);
         }
 
         alert('info', 'Sorry, previous request is available only for XmlRequests.');
