@@ -2,7 +2,6 @@
 
 namespace Yap\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 use Yap\Events\ProjectCreated;
@@ -26,7 +25,6 @@ use Yap\Events\ProjectCreated;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
  * @property-read \Yap\Models\ProjectType                                     $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project unrelated()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereArchiveAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereDescription($value)

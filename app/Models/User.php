@@ -16,39 +16,41 @@ use Yap\Foundation\Notifications\Notifiable;
  * Yap\Models\User
  *
  * @property int
- *               $id
+ *                   $id
  * @property int
- *               $taiga_id
+ *                   $taiga_id
  * @property int
- *               $github_id
+ *                   $github_id
  * @property string
- *               $email
+ *                   $email
  * @property string
- *               $username
+ *                   $username
  * @property string
- *               $name
+ *                   $name
  * @property string
- *               $bio
+ *                   $bio
  * @property string
- *               $ban_reason
+ *                   $ban_reason
  * @property string
- *               $avatar
+ *                   $avatar
  * @property string
- *               $remember_token
+ *                   $remember_token
  * @property bool
- *               $is_admin
+ *                   $is_admin
  * @property bool
- *               $is_confirmed
+ *                   $is_confirmed
  * @property \Carbon\Carbon
- *               $created_at
+ *                   $created_at
  * @property \Carbon\Carbon
- *               $updated_at
+ *                   $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Invitation[]
- *                    $invitations
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *                        $invitations
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Yap\Foundation\Notifications\DatabaseNotification[]
  *                $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *                    $parentnotifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Project[]
- *                    $projects
+ *                        $projects
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
