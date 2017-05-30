@@ -23,12 +23,21 @@ class Authenticate extends StockAuthenticate
     public function handle($request, Closure $next, ...$guards)
     {
         $this->authenticate($guards);
+        $this->lastActive();
 
         if ( ! $request->is('auth/*')) {
             $this->banned();
         }
 
         return $next($request);
+    }
+
+
+    protected function lastActive()
+    {
+        resolve(\Illuminate\Cache\Repository::class)->remember('user-active-'.$this->auth->user()->id, 10, function () {
+            return $this->auth->user()->touch();
+        });
     }
 
 
