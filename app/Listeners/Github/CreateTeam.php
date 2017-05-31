@@ -15,7 +15,7 @@ class CreateTeam extends Github
      *
      * @return void
      */
-    public function handle(TeamRequested $event)
+    protected function handle(TeamRequested $event)
     {
         $project = $event->project;
         $team    = $this->github->createTeam(str_slug($project->name),

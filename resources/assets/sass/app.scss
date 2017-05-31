@@ -11,6 +11,8 @@
 $fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 @import "../../../node_modules/sweetalert2/dist/sweetalert2.css";
+@import "../../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+//@import "../../../node_modules/jquery/";
 
 .material-icons.md-18 {
   font-size: 18px;
@@ -81,6 +83,12 @@ i.fa + span, svg.taiga-icon + span {
   font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial !important;
   content: '\221E';
   speak: none;
+}
+
+.btn.btn-xs {
+  padding: 4px 10px;
+  font-size: 10px;
+  margin:0px;
 }
 
 //.checkbox > label > noscript > input[type=checkbox] {

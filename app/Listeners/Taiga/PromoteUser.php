@@ -14,7 +14,7 @@ class PromoteUser extends Taiga
      *
      * @return void
      */
-    public function handle(UserPromoted $event)
+    protected function handle(UserPromoted $event)
     {
         $this->taiga->roleChange($event->user);
     }

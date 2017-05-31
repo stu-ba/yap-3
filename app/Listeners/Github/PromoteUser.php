@@ -14,7 +14,7 @@ class PromoteUser extends Github
      *
      * @return void
      */
-    public function handle(UserPromoted $event)
+    protected function handle(UserPromoted $event)
     {
         $this->github->addToTeam($this->rootTeamId, $event->user->username);
     }

@@ -52,7 +52,7 @@
                         @endif
                         <th>@sortablelink('created_at', 'registered at')</th>
                         <th>@sortablelink('updated_at', 'last active at')</th>
-                        <th class="col-xs-5">Actions</th>
+                        <th class="col-xs-4">Actions</th>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)

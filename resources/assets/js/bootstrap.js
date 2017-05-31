@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 
 /**
@@ -8,13 +7,14 @@ window._ = require('lodash');
  */
 
 window.$ = window.jQuery = require('jquery');
-
+moment = require('moment')
+//require("imports?moment=momentjs!eonasdan-bootstrap-datetimepicker");
+require('eonasdan-bootstrap-datetimepicker');
 require('bootstrap-sass');
 require('bootstrap-material-design');
 require('bootstrap-notify');
 require('./material-dashboard');
 swal = require('sweetalert2');
-
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

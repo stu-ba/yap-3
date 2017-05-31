@@ -240,7 +240,7 @@ if ( ! function_exists('date_with_hovertip')) {
     ): string {
 
         if (is_null($date) && ! is_null($hourglass_from)) {
-            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Forever."><i>'.svg('infinity-icon',
+            return '<span rel="tooltip" class="hover-tip" data-placement="'.$position.'" title="Not set."><i>'.svg('infinity-icon',
                     'infinity-icon fa-lg').'</i></span>';
         } elseif ( ! is_null($hourglass_from) && $date->greaterThan($hourglass_from) && \Carbon\Carbon::now()
                                                                                                       ->lessThan($date)

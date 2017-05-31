@@ -20,7 +20,7 @@
                 </a>
             </li>
             <li class="{{ set_active_paths(['projects*']) }}">
-                <a href="#">
+                <a href="{{ route('projects.index') }}">
                     <i class="fa fa-lg {{ fa('project') }}"></i>
                     <p>Projects</p>
                 </a>

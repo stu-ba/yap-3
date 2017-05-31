@@ -14,7 +14,7 @@ class DemoteUser extends Taiga
      *
      * @return void
      */
-    public function handle(UserDemoted $event)
+    protected function handle(UserDemoted $event)
     {
         $this->taiga->roleChange($event->user);
     }

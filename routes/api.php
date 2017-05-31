@@ -14,6 +14,7 @@ Route::group(['middleware' => 'auth:yap'], function () {
     });
 
     Route::group(['prefix' => '/projects/{project}'], function () {
+        Route::patch('/archive', 'ProjectController@archive')->name('api.projects.archive');
         Route::delete('/users/{user}', 'ProjectController@removeUser')->name('api.projects.remove.user');
         Route::post('/users/{user}', 'ProjectController@addUser')->name('api.projects.add.user');
         Route::patch('/users/{user}', 'ProjectController@makeLeader')->name('api.projects.make.user.leader');

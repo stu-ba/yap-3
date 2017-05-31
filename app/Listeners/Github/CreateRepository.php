@@ -14,7 +14,7 @@ class CreateRepository extends Github
      *
      * @return void
      */
-    public function handle(RepositoryRequested $event)
+    protected function handle(RepositoryRequested $event)
     {
         $project    = $event->project;
         $repository = $this->github->createRepository(str_slug($project->name), str_limit($project->description),

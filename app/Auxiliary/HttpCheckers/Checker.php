@@ -5,7 +5,7 @@ namespace Yap\Auxiliary\HttpCheckers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-abstract class Checker
+abstract class Checker implements Contract
 {
 
     protected $httpClient;
@@ -13,6 +13,8 @@ abstract class Checker
     protected $cache;
 
     protected $url;
+
+    protected $timeout = 2;
 
 
     /**
@@ -65,7 +67,7 @@ abstract class Checker
      *
      * @return mixed
      */
-    protected function getCache()
+    public function getCache()
     {
         if (is_null($this->cache)) {
             $this->cache = cache();
@@ -82,7 +84,7 @@ abstract class Checker
      *
      * @return string
      */
-    private function cacheKey(int $statusCode): string
+    public function cacheKey(int $statusCode): string
     {
         return hash('sha256', get_class($this).$statusCode.$this->url);
     }
@@ -108,7 +110,7 @@ abstract class Checker
     {
         try {
             return $this->getHttpClient()->get($this->url, [
-                'timeout' => '2',
+                'timeout' => $this->timeout,
                 'headers' => [
                     'User-Agent' => 'yap/1.0',
                 ],
@@ -124,7 +126,7 @@ abstract class Checker
      *
      * @return \GuzzleHttp\Client
      */
-    protected function getHttpClient(): \GuzzleHttp\Client
+    public function getHttpClient(): \GuzzleHttp\Client
     {
         if (is_null($this->httpClient)) {
             $this->httpClient = new Client();

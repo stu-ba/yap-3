@@ -15,7 +15,7 @@ class UserController extends Controller
         $users = $user->filled()->filter($request->get('filter', null))->sortable(['username'])->paginate(10);
 
         return view('pages.user.index')->with([
-            'title' => 'User listing',
+            'title' => 'Users listing',
             'users' => $users,
         ]);
     }

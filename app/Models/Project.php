@@ -2,6 +2,8 @@
 
 namespace Yap\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 use Yap\Events\ProjectCreated;
@@ -45,7 +47,6 @@ class Project extends Model
 
     public $sortable = [
         'name',
-        'description',
         'archive_at',
         'created_at',
         'updated_at',
@@ -93,6 +94,32 @@ class Project extends Model
                     ->wherePivot('is_leader', '=', '1')
                     ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
                     ->withTimestamps();
+    }
+
+
+    public function scopeFilter(Builder $query, string $filterName = null): Builder
+    {
+        $query->with([
+            'leaders'      => function ($query) {
+                $query->select('name', 'username')->orderBy('username');
+            },
+            'participants' => function ($query) {
+                $query->select('name', 'username')->orderBy('username');
+            },
+        ]);
+
+        //TODO: above can be simplified to use only members relationship + collection magic to divide leaders and non leaders
+
+        switch ($filterName) {
+            case 'mine':
+                $mineProjectIds = auth()->user()->projects()->select('id')->pluck('id');
+
+                return $query->whereIn('id', $mineProjectIds);//where('pivot_user_id', '=', auth()->user()->id);
+            case 'archived':
+                return $query->whereTime('archive_at', '<', Carbon::now());
+            default:
+                return $query;
+        }
     }
 
 

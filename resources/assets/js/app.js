@@ -82,6 +82,14 @@ $(function () {
 
         removeUser(username, helpLink)
     })
+
+    $('a.archive-project').click(function (e) {
+        e.preventDefault()
+        var projectId = $(this).attr("data-project");
+        var helpLink = $(this).attr("data-help");
+
+        archiveProject(projectId, helpLink)
+    })
 });
 
 function warnBeforeRedirect(linkURL) {
@@ -460,6 +468,65 @@ function removeUserFromProject(username, projectId, projectName, helpLink) {
             }
         )
     })
+}
+
+function archiveProject(projectId, helpLink) {
+    swal({
+        title: 'Archive at?',
+        type: 'question',
+        confirmButtonText: 'Archive',
+        cancelButtonText: 'Cancel',
+        html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.<br><br>' +
+        '<div id="datepicker"></div>',
+        onOpen: function () {
+            $('#datepicker').datetimepicker({
+                inline: true,
+                format: 'DD/MM/YYYY',
+                calendarWeeks: true,
+                locale: moment.locale('en', { //TODO: should use updateLocale
+                    week: {
+                        dow: 1
+                    }
+                }),
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down",
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                },
+                minDate: moment(),
+            });
+        },
+        preConfirm: function () {
+            return new Promise(function (resolve, reject) {
+                var date = $('#datepicker').data("DateTimePicker").date()
+                if (date.isAfter(moment()) || date.isSame(moment(), 'day')) {
+                    return axios.patch('/api/projects/' + projectId + '/archive', {'archive_at': date.format('X')}).then(function (response) {
+                        resolve(response)
+                    }).catch(function (error) {
+                        reject(error.response.data.archive_at[0])
+                    });
+                }
+                reject('Pick a date that is in future (or today).')
+            })
+        }
+    }).then(function (result) {
+        swal({
+            type: 'success',
+            title: result.data.message,
+            timer: 5000,
+            showCancelButton: false,
+        }).then(
+            function () {
+                window.location.reload(false);
+            },
+            function () {
+                window.location.reload(false);
+            }
+        )
+    }).catch()
 }
 
 function route(route, parameters = {}) {
