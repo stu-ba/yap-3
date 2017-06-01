@@ -16,13 +16,20 @@ class SwitchController extends Controller
         if ( ! auth()->check()) {
             return redirect()->route('login');
         }
+
         return redirect()->route('profile');
     }
 
 
     public function toTaiga()
     {
-        return redirect()->away(toTaiga('discover'));
+        $toTaiga = toTaiga('discover');
+        if (is_null($toTaiga)) {
+            alert('warning', 'Sorry, you do not have Taiga account yet, wait a few minutes.');
+
+            return redirect()->back();
+        }
+        return redirect()->away($toTaiga);
     }
 
 
