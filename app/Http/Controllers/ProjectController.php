@@ -5,7 +5,9 @@ namespace Yap\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yap\Http\Requests\ArchiveProject;
+use Yap\Http\Requests\CreateProject;
 use Yap\Models\Project;
+use Yap\Models\ProjectType;
 use Yap\Models\User;
 
 class ProjectController extends Controller
@@ -29,13 +31,18 @@ class ProjectController extends Controller
     }
 
 
-    public function create()
+    public function create(ProjectType $projectType)
     {
+        return view('pages.projects.create')->with([
+            'title' => 'Create project',
+            'projectTypes' => $projectType->all(['name', 'id'])->pluck('name', 'id'),
+        ]);
     }
 
 
-    public function store()
+    public function store(CreateProject $request)
     {
+        //TODO: take care of parsing options
     }
 
 

@@ -52,7 +52,7 @@ Route::group(['middleware' => ['auth']],
         ]);
 
         Route::resource('projects', 'ProjectController', [
-            'only' => ['index', 'show', 'edit', 'store'],
+            'only' => ['index', 'show', 'edit', 'store', 'create'],
         ]);
 
 

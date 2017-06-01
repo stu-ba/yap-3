@@ -8,7 +8,6 @@ window._ = require('lodash');
 
 window.$ = window.jQuery = require('jquery');
 moment = require('moment')
-//require("imports?moment=momentjs!eonasdan-bootstrap-datetimepicker");
 require('eonasdan-bootstrap-datetimepicker');
 require('bootstrap-sass');
 require('bootstrap-material-design');

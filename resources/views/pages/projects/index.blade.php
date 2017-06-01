@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header" data-background-color="blue">
                     @include('components.html.card-support', ['page' => 'projects#listing'])
-                    {{--<a href="{{ route('invitations.create') }}" class="btn btn-xs btn-white pull-right invite-user"><i class="fa {{ fa('invite') }}"></i> <span class="hidden-xs">Invite</span></a>--}}
+                    <a href="{{ route('projects.create') }}" class="btn btn-xs btn-white pull-right"><i class="fa {{ fa('new') }}"></i> <span class="hidden-xs">Create</span></a>
                     <h4 class="title">Project listing</h4>
                     <p class="category">Projects may be filtered and sorted.</p>
                 </div>

@@ -17,7 +17,7 @@ return [
         ],
         'api_limit'    => 'https://api.github.com/rate_limit',
         // in minutes
-        'queue_delay' => 10,
+        'queue_delay'  => 10,
     ],
     'taiga'        => [
         'api'         => env('TAIGA_API', null),
@@ -54,6 +54,7 @@ return [
         'system'       => 'fa-cogs',
         'archive'      => 'fa-archive',
         'mine'         => 'fa-circle',
+        'new'          => 'fa-plus',
     ],
     'placeholders' => [
         'name'   => 'Joe Little Carrot',
