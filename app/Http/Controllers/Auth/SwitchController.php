@@ -11,6 +11,15 @@ use Yap\Models\User;
 class SwitchController extends Controller
 {
 
+    public function toLogin()
+    {
+        if ( ! auth()->check()) {
+            return redirect()->route('login');
+        }
+        return redirect()->route('profile');
+    }
+
+
     public function toTaiga()
     {
         return redirect()->away(toTaiga('discover'));

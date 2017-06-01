@@ -31,6 +31,22 @@ abstract class Checker implements Contract
 
 
     /**
+     * @param int $statusCode
+     *
+     * @return bool
+     */
+    public function checkAndThrow(int $statusCode = 200)
+    {
+        if ( ! $this->check($statusCode)) {
+            $e = $this->getException();
+            throw new $e();
+        }
+
+        return true;
+    }
+
+
+    /**
      * Check if url returns given status code.
      *
      * @param int $statusCode
@@ -133,6 +149,12 @@ abstract class Checker implements Contract
         }
 
         return $this->httpClient;
+    }
+
+
+    public function getException() : string
+    {
+        return '\\Yap\\Exceptions\\'.(new \ReflectionClass($this))->getShortName().'OfflineException';
     }
 
 

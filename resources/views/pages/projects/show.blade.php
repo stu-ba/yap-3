@@ -10,16 +10,8 @@
                         {{ $project->description }}
                     </p>
                     <p>
-                        {{--@if($user->isBanned())--}}
-                            {{--@includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])--}}
-                        {{--@else--}}
-                            {{--@includeWhen(true && !$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])--}}
-                            {{--@includeWhen(true && $user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])--}}
-                            {{--@includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])--}}
-                            {{--@include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-xs external', 'icon' => fa('github')])--}}
-                            {{--@include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])--}}
-                        {{--@endif--}}
-                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Archive', 'class' => 'archive-project btn btn-xs '.((is_null($project->archive_at) || $project->archive_at->gt(\Carbon\Carbon::now())) ?: 'disabled'), 'icon' => fa('archive'), 'customAttributes' => 'data-project='.$project->id.' data-help='.route('docs', ['page' => 'project#archive'])])
+                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Archive', 'class' => 'archive-project btn btn-xs '.((is_null($project->archive_at) || $project->archive_at->gt(\Carbon\Carbon::now())) ?: 'disabled'), 'icon' => fa('archive'), 'customAttributes' => 'data-reload="false" data-project='.$project->id.' data-help='.route('docs', ['page' => 'project#archive'])])
+                        @includeWhen(true, 'components.html.fa-button', ['href' => route('projects.edit', ['project' => $project]), 'tooltip' => 'Edit project', 'class' => 'btn btn-xs ', 'icon' => fa('edit')])
                         @include('components.html.fa-button', ['href' => route('switch.repository', ['project' => $project]), 'tooltip' => 'Repository on GitHub', 'class' => 'btn bg-black btn-xs '.(!is_null($project->github_repository_id) ?: 'disabled'), 'icon' => fa('github')])
                         @include('components.html.taiga-button', ['href' => route('switch.project', ['project' => $project]), 'tooltip' => 'Project on Taiga', 'class' => 'btn btn-grey btn-xs '.(!is_null($project->taiga_id) ?: 'disabled')])
                     </p>

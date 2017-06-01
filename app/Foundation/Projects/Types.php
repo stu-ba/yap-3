@@ -3,6 +3,7 @@
 namespace Yap\Foundation\Projects;
 
 use Yap\Auxiliary\ApiAdaptors\Taiga;
+use Yap\Exceptions\TaigaOfflineException;
 use Yap\Models\ProjectType;
 
 class Types
@@ -18,17 +19,25 @@ class Types
      */
     private $taiga;
 
+    /**
+     * @var \Yap\Auxiliary\HttpCheckers\Taiga
+     */
+    protected $checker;
 
-    public function __construct(ProjectType $type, Taiga $taigaAdaptor)
+
+    public function __construct(ProjectType $type, Taiga $taigaAdaptor, \Yap\Auxiliary\HttpCheckers\Taiga $checker)
     {
 
         $this->type  = $type;
-        $this->taiga = $taiga;
+        $this->taiga = $taigaAdaptor;
+        $this->checker = $checker;
     }
 
 
     public function installOrUpdate()
     {
+        $this->checker->checkAndThrow();
+
         $types = $this->taiga->getTypes();
 
         foreach ($types as $type) {

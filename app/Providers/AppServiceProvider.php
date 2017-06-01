@@ -14,6 +14,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        \Validator::extend('repository_unique', function ($attribute, $value, $parameters, $validator) {
+            $githubApi = resolve(\Yap\Auxiliary\ApiAdaptors\Github::class);
+
+            return ! $githubApi->checkRepositoryExists(str_slug($value));
+        });
+
         \Validator::extend('array_unique', function ($attribute, $value, $parameters, $validator) {
             if (count($parameters) !== 1) {
                 throw new \InvalidArgumentException('Validation rule needs parameter.');

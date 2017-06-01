@@ -4,8 +4,11 @@ namespace Yap\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Yap\Events\TeamRequested;
+use Yap\Foundation\Projects\Registrar;
 use Yap\Http\Requests\ArchiveProject;
 use Yap\Http\Requests\CreateProject;
+use Yap\Http\Requests\UpdateProject;
 use Yap\Models\Project;
 use Yap\Models\ProjectType;
 use Yap\Models\User;
@@ -34,15 +37,27 @@ class ProjectController extends Controller
     public function create(ProjectType $projectType)
     {
         return view('pages.projects.create')->with([
-            'title' => 'Create project',
+            'title'        => 'Create project',
             'projectTypes' => $projectType->all(['name', 'id'])->pluck('name', 'id'),
         ]);
     }
 
 
-    public function store(CreateProject $request)
+    public function store(CreateProject $request, Registrar $projectRegistrar)
     {
-        //TODO: take care of parsing options
+        $members = $request->only(['team_leaders', 'participants']);
+
+        $project = $projectRegistrar->create($request->only(['name', 'description', 'project_type_id', 'archive_at']),
+            array_get($members, 'team_leaders'), array_get($members, 'participants', []));
+
+        if ($request->get('create_repository', false)) {
+            event(new TeamRequested($project));
+            alert('info', 'Creation of repository for project \''.$project->name.'\' was pushed to queue.');
+        }
+
+        alert('success', 'Project was created!');
+
+        return redirect()->route('projects.show', ['project' => $project]);
     }
 
 
@@ -52,10 +67,48 @@ class ProjectController extends Controller
             'title'   => $project->name.'\'s detail',
             'project' => $project->load([
                 'members' => function ($query) {
-                    $query->orderBy('pivot_is_leader', 'desc')->orderBy('username');
+                    $query->orderBy('pivot_is_leader', 'desc')->filled()->orderBy('username');
                 },
             ]),
         ]);
+    }
+
+
+    public function edit(Project $project)
+    {
+        $members = $project->load('members.invitations')->members;
+
+        foreach ($members as $member) {
+            if ($member->pivot->is_leader) {
+                $leaderEmails[] = $member->email ?? $member->invitations->first()->email;
+            } else {
+                $participantEmails[] = $member->email ?? $member->invitations->first()->email;
+            }
+        }
+
+        return view('pages.projects.edit')->with([
+            'title'             => 'Edit project '.$project->name,
+            'project'           => $project,
+            'leaderEmails'      => $leaderEmails ?? [],
+            'participantEmails' => $participantEmails ?? [],
+        ]);
+    }
+
+
+    public function update(UpdateProject $request, Project $project, Registrar $projectRegistrar)
+    {
+        $members = $request->only(['team_leaders', 'participants']);
+        $projectRegistrar->update($request->only(['description', 'archive_at']), $project, array_get($members, 'team_leaders'),
+            array_get($members, 'participants'));
+
+        if ($request->get('create_repository', false)) {
+            event(new TeamRequested($project));
+            alert('info', 'Creation of repository for project \''.$project->name.'\' was pushed to queue.');
+        }
+
+        alert('success', 'Project was updated!');
+
+        return redirect()->route('projects.show', ['project' => $project]);
     }
 
 
@@ -63,12 +116,12 @@ class ProjectController extends Controller
     {
         //TODO: add policy
 
-        $dateInstance = Carbon::createFromTimestamp($request->get('archive_at', time()))->endOfDay();
+        //$dateInstance = ->endOfDay();
 
-        $project->update(['archive_at' => $dateInstance]);
+        $project->update(['archive_at' => Carbon::createFromTimestamp($request->get('archive_at', time()))]);
 
         $message =
-            'Project \''.$project->name.'\' is scheduled to be archived at \''.$dateInstance->diffForHumans().'\'.';
+            'Project \''.$project->name.'\' is scheduled to be archived at \''.$project->archive_at->diffForHumans().'\'.';
         if ($request->isXmlHttpRequest()) {
             return response()->json(['message' => $message], 202);
         }

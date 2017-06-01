@@ -59,6 +59,19 @@ interface Contract
 
 
     /**
+     * @return string
+     */
+    function getException() : string;
+
+
+    /**
+     * @param int $statusCode
+     *
+     * @return mixed
+     */
+    public function checkAndThrow(int $statusCode = 200);
+
+    /**
      * Get a instance of the Guzzle HTTP client.
      *
      * @return \GuzzleHttp\Client

@@ -75,7 +75,18 @@ class Handler extends ExceptionHandler
         } elseif ($exception instanceof TooManyRequestsHttpException) {
             return abort($exception->getStatusCode(), '', $exception->getHeaders());
         } elseif ($exception instanceof TaigaOfflineException) {
+            if (\App::runningInConsole()) {
+                throw $exception;
+            }
             alert('warning', 'Taiga instance seems to be offline, please try later.');
+
+            return redirect()->back();
+        } elseif ($exception instanceof GithubOfflineException) {
+            if (\App::runningInConsole()) {
+                throw $exception;
+            }
+
+            alert('warning', 'GitHub seems to be offline, please try later.');
 
             return redirect()->back();
         }

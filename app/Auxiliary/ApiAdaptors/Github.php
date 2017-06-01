@@ -60,4 +60,16 @@ class Github
         return $this->github->repository()->showById($id);
     }
 
+
+    public function checkRepositoryExists(string $name, string $username = null): bool
+    {
+        try {
+            $this->github->repository()->show($username ?? $this->organization, $name);
+        } catch (\Github\Exception\RuntimeException $exception) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

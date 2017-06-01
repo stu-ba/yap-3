@@ -87,8 +87,10 @@ $(function () {
         e.preventDefault()
         var projectId = $(this).attr("data-project");
         var helpLink = $(this).attr("data-help");
-
-        archiveProject(projectId, helpLink)
+        var reload = true
+        if (typeof $(this).data('reload') !== 'undefined')
+            reload = $(this).data('reload')
+        archiveProject(projectId, helpLink, reload)
     })
 });
 
@@ -470,16 +472,27 @@ function removeUserFromProject(username, projectId, projectName, helpLink) {
     })
 }
 
-function archiveProject(projectId, helpLink) {
+function archiveProject(projectId, helpLink, reload) {
+    //TODO finish this
+    // var currentArchive = new Promise(function (resolve, reject) {
+    //     return axios.get('/api/projects/' + projectId + '/archive').then(function (response) {
+    //         //if (response.data.length == 0)
+    //         reject(moment())
+    //         resolve(response)
+    //     }).catch(function () {
+    //         reject(moment())
+    //     });
+    // })
     swal({
         title: 'Archive at?',
         type: 'question',
         confirmButtonText: 'Archive',
         cancelButtonText: 'Cancel',
+        showLoading: true,
         html: 'Feel free to read <a href="' + helpLink + '">documentation</a>, before you proceed.<br><br>' +
         '<div id="datepicker"></div>',
         onOpen: function () {
-            $('#datepicker').datetimepicker({
+           $('#datepicker').datetimepicker({
                 inline: true,
                 format: 'DD/MM/YYYY',
                 calendarWeeks: true,
@@ -520,10 +533,12 @@ function archiveProject(projectId, helpLink) {
             showCancelButton: false,
         }).then(
             function () {
-                window.location.reload(false);
+                if (reload)
+                    window.location.reload(false);
             },
             function () {
-                window.location.reload(false);
+                if (reload)
+                    window.location.reload(false);
             }
         )
     }).catch()

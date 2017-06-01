@@ -82,6 +82,19 @@ class Project extends Model
     ];
 
 
+    public function setArchiveAtAttribute($value)
+    {
+        //TODO: finish this
+        if (is_null($value)) {
+            $this->attributes['archive_at'] = null;
+        } elseif ( is_string($value)) {
+            $this->attributes['archive_at'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
+        } elseif ( $value instanceof Carbon) {
+            $this->attributes['archive_at'] = $value->endOfDay();
+        }
+    }
+
+
     public function type()
     {
         return $this->hasOne(ProjectType::class, 'id', 'project_type_id');
@@ -97,14 +110,21 @@ class Project extends Model
     }
 
 
+    public function scopeConfirmed($query)
+    {
+        //TODO:add policy to list also banned users
+        return $query->where('users.is_confirmed', '=', true);
+    }
+
+
     public function scopeFilter(Builder $query, string $filterName = null): Builder
     {
         $query->with([
             'leaders'      => function ($query) {
-                $query->select('name', 'username')->orderBy('username');
+                $query->select('name', 'username', 'is_confirmed')->filled()->orderBy('username');
             },
             'participants' => function ($query) {
-                $query->select('name', 'username')->orderBy('username');
+                $query->select('name', 'username')->filled()->orderBy('username');
             },
         ]);
 

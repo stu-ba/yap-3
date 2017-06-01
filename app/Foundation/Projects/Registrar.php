@@ -41,6 +41,10 @@ class Registrar
 
     private function processEmails(array $emails): array
     {
+        if (empty($emails)) {
+            return [];
+        }
+
         foreach ($emails as $email) {
             $userIds[] = $this->invitationRegistrar->invite($email, [], true)->user_id;
         }
