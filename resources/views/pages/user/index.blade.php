@@ -5,7 +5,9 @@
             <div class="card">
                 <div class="card-header" data-background-color="blue">
                     @include('components.html.card-support', ['page' => 'users#listing'])
+                    @if(Auth::user()->is_admin)
                     <a href="{{ route('invitations.create') }}" class="btn btn-xs btn-white pull-right invite-user"><i class="fa {{ fa('invite') }}"></i> <span class="hidden-xs">Invite</span></a>
+                    @endif
                     <h4 class="title">User listing</h4>
                     <p class="category">Users may be filtered and sorted.</p>
                 </div>
@@ -67,14 +69,15 @@
                                     <td>{!! date_with_hovertip($user->updated_at) !!}</td>
                                     <td>
                                         @if($user->isBanned())
-                                            @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])
+                                            @includeWhen(Auth::user()->can('unban', $user), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])
                                         @else
-                                            @includeWhen(true && !$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])
-                                            @includeWhen(true && $user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])
-                                            @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])
+                                            @includeWhen(Auth::user()->can('promote', $user) && !$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])
+                                            @includeWhen(Auth::user()->can('demote', $user) && $user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])
+                                            @includeWhen(Auth::user()->can('ban', $user), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])
                                         @endif
-                                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Add user to project', 'class' => 'add-user btn btn-info btn-xs', 'icon' => fa('add'), 'customAttributes' => 'data-reload="false" data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#add'])])
-                                        @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from project', 'class' => 'remove-user btn btn-danger btn-xs', 'icon' => fa('remove'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove'])])
+                                        {{--TODO: below is not correct I need to authorize per project--}}
+                                        @includeWhen(Auth::user()->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Add user to project', 'class' => 'add-user btn btn-info btn-xs', 'icon' => fa('add'), 'customAttributes' => 'data-reload="false" data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#add'])])
+                                        @includeWhen(Auth::user()->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from project', 'class' => 'remove-user btn btn-danger btn-xs', 'icon' => fa('remove'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove'])])
 
                                         @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('detail')])
                                         @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => fa('github')])

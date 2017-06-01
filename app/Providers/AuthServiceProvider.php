@@ -6,6 +6,10 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Auth;
 use Kyslik\Django\Signing\Signer;
 use Yap\Foundation\Auth\YapGuard;
+use Yap\Models\Project;
+use Yap\Models\User;
+use Yap\Policies\ProjectPolicy;
+use Yap\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $policies = [//'Yap\Model' => 'Yap\Policies\ModelPolicy',
+    protected $policies = [
+        User::class    => UserPolicy::class,
+        Project::class => ProjectPolicy::class,
     ];
 
 
