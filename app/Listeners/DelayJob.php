@@ -20,7 +20,7 @@ trait DelayJob
     {
         if ($method == 'handle') {
             $args = [
-                call_user_func([$this->checker, 'check']),
+                call_user_func([$this, 'check']),
                 function () use ($parameters) {
                     call_user_func_array([$this, 'handle'], $parameters);
                 },
@@ -46,6 +46,12 @@ trait DelayJob
         $db         = resolve(\Illuminate\Database\DatabaseManager::class);
         $releasedId = $this->parentRelease($this->delay * 60 + 10); //+10 in case of $delay = 0
         $db->table(config('queue.connections.database.table'))->where('id', $releasedId)->decrement('attempts');
+    }
+
+
+    public function check(): bool
+    {
+        return $this->checker->check();
     }
 
 }
