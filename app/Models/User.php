@@ -35,11 +35,10 @@ use Yap\Foundation\Notifications\Notifiable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\Project[] $projects
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User banned($value = true)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleagues()
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User colleaguesOf(\Yap\Models\User $user)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filled()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User isAdmin($value = true)
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User leader()
- * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User participant()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\User whereBanReason($value)
@@ -136,18 +135,6 @@ class User extends Authenticatable
     }
 
 
-    public function scopeLeader($query)
-    {
-        return $query->wherePivot('is_leader', '=', '1');
-    }
-
-
-    public function scopeParticipant($query)
-    {
-        return $query->wherePivot('is_leader', '=', '0');
-    }
-
-
     /**
      * @param Builder $query
      *
@@ -188,12 +175,17 @@ class User extends Authenticatable
 
     public function scopeColleagues(Builder $query): Builder
     {
-        //TODO: hardcoded only for current user
-        return $query->whereIn('id', auth()->user()->colleaguesIds());
+        return $query->colleaguesOf(auth()->user());
     }
 
 
-    public function colleaguesIds(): array
+    public function scopeColleaguesOf(Builder $query, User $user): Builder
+    {
+        return $query->whereIn('id', $user->colleaguesIds());
+    }
+
+
+    protected function colleaguesIds(): array
     {
         return $this->projects->load([
             'participants' => function ($query) {
@@ -231,6 +223,32 @@ class User extends Authenticatable
     public function isBanned(): bool
     {
         return ! is_null($this->ban_reason);
+    }
+
+
+    public function isLeaderTo(Project $project): bool
+    {
+        if ($this->relationLoaded('members')) {
+            return $project->members->where('pivot.is_leader', '=', true)->contains('username', $this->username);
+        }
+
+        return $project->leaders->contains('username', $this->username);
+    }
+
+
+    public function isLeader()
+    {
+        return self::select('id')->where('id', '=', $this->id)->withCount([
+                'projects' => function ($q) {
+                    $q->where('project_user.is_leader', '=', true);
+                },
+            ])->first()->projects_count > 0;
+        //$this->withCount(['projects' => function ($q) {$q->wherePivot('is_leader', '=', true);}]);
+        //$projects =
+        //    $this->relationLoaded('projects') ? $this->projects->where('pivot.is_leader', '=', true)->count() > 0 :
+        //        $this->projects()->select('id')->wherePivot('is_leader', '=', true)->count() > 0;
+        //
+        //return $projects->count() > 0;
     }
 
 
@@ -369,11 +387,19 @@ class User extends Authenticatable
     }
 
 
+    //public function sameAs(User $user): bool
+    //{
+    //    return $this->id === $user->id;
+    //}
+
     public function unassociatedProjects()
     {
-        $associatedIds = $this->projects->pluck('id');
+        $projects = ($this->relationLoaded('projects')) ? $this->projects : $this->load([
+            'projects' => function ($query) {
+                $query->select('id');
+            },
+        ]);
 
-        return resolve(Project::class)->select('name', 'id')->whereNotIn('id', $associatedIds);
+        return resolve(Project::class)->select('name', 'id')->whereNotIn('id', $projects->pluck('id'));
     }
-
 }

@@ -89,9 +89,9 @@ class Project extends Model
         //TODO: finish this
         if (is_null($value)) {
             $this->attributes['archive_at'] = null;
-        } elseif ( is_string($value)) {
+        } elseif (is_string($value)) {
             $this->attributes['archive_at'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
-        } elseif ( $value instanceof Carbon) {
+        } elseif ($value instanceof Carbon) {
             $this->attributes['archive_at'] = $value->endOfDay();
         }
     }
@@ -106,7 +106,7 @@ class Project extends Model
     public function leaders()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
-                    ->wherePivot('is_leader', '=', '1')
+                    ->wherePivot('is_leader', '=', true)
                     ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
                     ->withTimestamps();
     }
@@ -196,9 +196,8 @@ class Project extends Model
     public function participants()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
-                    ->wherePivot('is_leader', '=', '0')
+                    ->wherePivot('is_leader', '=', false)
                     ->withPivot('is_leader', 'has_github_team', 'has_taiga_membership', 'to_be_deleted')
                     ->withTimestamps();
     }
-
 }

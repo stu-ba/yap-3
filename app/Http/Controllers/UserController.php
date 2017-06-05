@@ -38,9 +38,23 @@ class UserController extends Controller
 
     public function profile()
     {
+        return $this->renderDetail('Your profile', auth()->user());
+    }
+
+
+    /**
+     * Render detail page.
+     *
+     * @param string           $title
+     * @param \Yap\Models\User $user
+     *
+     * @return $this
+     */
+    protected function renderDetail(string $title, User $user)
+    {
         return view('pages.user.show')->with([
-            'title' => 'Your profile',
-            'user'  => auth()->user()->load([
+            'title' => $title,
+            'user'  => $user->load([
                 'projects' => function ($query) {
                     $query->orderBy('pivot_to_be_deleted')->orderBy('archive_at', 'desc');
                 },
@@ -51,23 +65,18 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        if ($user == auth()->user()) {
+        if ($user->is(auth()->user())) {
             return redirect()->route('profile');
         }
 
-        return view('pages.user.show')->with([
-            'title' => $user->username.'\'s profile',
-            'user'  => $user->load([
-                'projects' => function ($query) {
-                    $query->orderBy('pivot_to_be_deleted')->orderBy('archive_at', 'desc');
-                },
-            ]),
-        ]);
+        return $this->renderDetail($user->username.'\'s profile', $user);
     }
 
 
     public function edit()
     {
+        $this->middleware('github:throw');
+
         return redirect()->away('https://github.com/settings/profile');
     }
 

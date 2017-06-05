@@ -112,7 +112,6 @@ class Invitation extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-
         return $query->whereNull('depleted_at');
     }
 

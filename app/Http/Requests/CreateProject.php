@@ -20,10 +20,11 @@ class CreateProject extends FormRequest
 
     public function all()
     {
-        $attributes                 = parent::all();
-        $attributes['team_leaders'] = array_unique(extractEmails($attributes['team_leaders']) ?? []);
-        $attributes['participants'] = array_unique(extractEmails($attributes['participants']) ?? []);
+        $attributes                      = parent::all();
+        $attributes['team_leaders']      = array_unique(extractEmails($attributes['team_leaders']) ?? []);
+        $attributes['participants']      = array_unique(extractEmails($attributes['participants']) ?? []);
         $attributes['create_repository'] = $attributes['create_repository'] ?? false;
+
         return $attributes;
     }
 
@@ -36,12 +37,12 @@ class CreateProject extends FormRequest
     public function rules()
     {
         return [
-            'name'              => 'required|max:32|repository_unique',
-            'description'       => 'required',
-            'project_type_id'   => 'required|exists:project_types,id',
-            'archive_at'        => 'nullable|date_format:d/m/Y|after_or_equal:yesterday',
-            'team_leaders'      => 'required',
-            'participants'      => 'array_unique:team_leaders',
+            'name'            => 'required|max:32|repository_unique',
+            'description'     => 'required',
+            'project_type_id' => 'required|exists:project_types,id',
+            'archive_at'      => 'nullable|date_format:d/m/Y|after_or_equal:yesterday',
+            'team_leaders'    => 'required',
+            'participants'    => 'array_unique:team_leaders',
         ];
     }
 

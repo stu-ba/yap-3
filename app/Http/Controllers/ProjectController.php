@@ -98,8 +98,8 @@ class ProjectController extends Controller
     public function update(UpdateProject $request, Project $project, Registrar $projectRegistrar)
     {
         $members = $request->only(['team_leaders', 'participants']);
-        $projectRegistrar->update($request->only(['description', 'archive_at']), $project, array_get($members, 'team_leaders'),
-            array_get($members, 'participants'));
+        $projectRegistrar->update($request->only(['description', 'archive_at']), $project,
+            array_get($members, 'team_leaders'), array_get($members, 'participants'));
 
         if ($request->get('create_repository', false)) {
             event(new TeamRequested($project));
