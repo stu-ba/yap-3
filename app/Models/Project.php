@@ -11,21 +11,23 @@ use Yap\Events\ProjectCreated;
 /**
  * Yap\Models\Project
  *
- * @property int                                                              $id
- * @property int                                                              $github_team_id
- * @property int                                                              $github_repository_id
- * @property int                                                              $taiga_id
- * @property int                                                              $project_type_id
- * @property string                                                           $name
- * @property string                                                           $description
- * @property bool                                                             $is_archived
- * @property \Carbon\Carbon                                                   $archive_at
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
+ * @property int $id
+ * @property int $github_team_id
+ * @property int $github_repository_id
+ * @property int $taiga_id
+ * @property int $project_type_id
+ * @property string $name
+ * @property string $description
+ * @property bool $is_archived
+ * @property \Carbon\Carbon $archive_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
- * @property-read \Yap\Models\ProjectType                                     $type
+ * @property-read \Yap\Models\ProjectType $type
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project confirmed()
+ * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereArchiveAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project whereCreatedAt($value)

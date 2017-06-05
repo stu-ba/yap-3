@@ -10,15 +10,15 @@ use Kyslik\ColumnSortable\Sortable;
 /**
  * Yap\Models\Invitation
  *
- * @property int                   $id
- * @property int                   $user_id
- * @property int                   $invited_by
- * @property string                $email
- * @property string                $token
- * @property \Carbon\Carbon        $depleted_at
- * @property \Carbon\Carbon        $valid_until
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
+ * @property int $id
+ * @property int $user_id
+ * @property int $invited_by
+ * @property string $email
+ * @property string $token
+ * @property \Carbon\Carbon $depleted_at
+ * @property \Carbon\Carbon $valid_until
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Yap\Models\User $inviter
  * @property-read \Yap\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Invitation active()

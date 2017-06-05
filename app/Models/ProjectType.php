@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Yap\Models\ProjectType
  *
- * @property int            $id
- * @property int            $taiga_id
- * @property string         $name
- * @property string         $description
+ * @property int $id
+ * @property int $taiga_id
+ * @property string $name
+ * @property string $description
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\ProjectType whereCreatedAt($value)
