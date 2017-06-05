@@ -53,19 +53,24 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
         Route::get('github/callback/{token}', 'RegisterController@handle')->name('register.callback');
 
         Route::get('login', 'LoginController@showPage')->name('login');
-        Route::get('login/taiga', 'LoginController@taiga')->name('login.taiga');
-        Route::get('login/github', 'LoginController@redirect')->name('login.github')->middleware(['throttle:2,2']);
-        Route::get('github/callback', 'LoginController@handle')->name('login.callback');
+        Route::get('login/taiga', 'LoginController@taiga')->name('login.taiga')->middleware([
+            'taiga:throw',
+            'throttle:3,2',
+        ]);
+        Route::get('login/github', 'LoginController@redirect')->name('login.github')->middleware(['github:throw', 'throttle:2,2']);
+        Route::get('github/callback', 'LoginController@handle')->name('login.callback')->middleware(['throttle:2,2']);
     });
 
     Route::group(['middleware' => ['auth']], function () {
         Route::group(['middleware' => ['taiga:throw']], function () {
             Route::get('switch/taiga', 'SwitchController@toTaiga')->name('switch');
-            Route::get('switch/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
-            Route::get('switch/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
+            Route::get('switch/taiga/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
+            Route::get('switch/taiga/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
         });
-
-        Route::get('switch/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.repository');
+        Route::group(['middleware' => ['github:throw']], function() {
+            Route::get('switch/github/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.repository');
+            Route::get('switch/github/user/{user}', 'SwitchController@toGithubUser')->name('switch.github.user');
+        });
         Route::get('logout/{token?}', 'LogoutController@logout')->name('logout');
     });
 });

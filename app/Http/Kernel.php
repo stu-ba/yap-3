@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
         //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth'     => \Yap\Http\Middleware\Authenticate::class,
         'taiga'    => \Yap\Http\Middleware\CheckTaigaIsOnline::class,
+        'github'   => \Yap\Http\Middleware\CheckGithubIsOnline::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can'      => \Illuminate\Auth\Middleware\Authorize::class,
         'guest'    => \Yap\Http\Middleware\RedirectIfAuthenticated::class,
