@@ -29,6 +29,7 @@ class SwitchController extends Controller
 
             return redirect()->back();
         }
+
         return redirect()->away($toTaiga);
     }
 
@@ -76,5 +77,17 @@ class SwitchController extends Controller
         $repository = $github->getRepositoryById($project->github_repository_id);
 
         return redirect()->away($repository['html_url']);
+    }
+
+
+    public function toGithubUser(User $user)
+    {
+        if (is_null($user->username)) {
+            alert('warning', 'User does not have username, please do not play with URL.');
+
+            return redirect()->back();
+        }
+
+        return redirect()->away('https://github.com/'.$user->username);
     }
 }
