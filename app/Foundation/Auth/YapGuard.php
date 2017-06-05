@@ -78,10 +78,6 @@ class YapGuard implements Guard
         } catch (BadSignatureException $exception) {
             return [];
         }
-        finally {
-            //signer is singleton so set max age to default value
-            $this->signer->setMaxAge(config('django-signer.default_max_age', 60 * 60));
-        }
 
         foreach ($this->storageFields as $field) {
             if ( ! array_key_exists($field, $credentials)) {
