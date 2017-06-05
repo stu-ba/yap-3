@@ -19,5 +19,9 @@ class ComposerServiceProvider extends ServiceProvider
             //TODO: maybe add check if user logged in
             $view->with('unreadNotificationsCount', auth()->user()->unreadNotifications()->count());
         });
+
+        resolve(ViewFactory::class)->composer('*', function ($view) {
+            $view->with('current', auth()->user());
+        });
     }
 }
