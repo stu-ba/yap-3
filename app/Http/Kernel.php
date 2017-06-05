@@ -52,7 +52,6 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth'     => \Yap\Http\Middleware\Authenticate::class,
         'taiga'    => \Yap\Http\Middleware\CheckTaigaIsOnline::class,
         'github'   => \Yap\Http\Middleware\CheckGithubIsOnline::class,

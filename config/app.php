@@ -180,7 +180,6 @@ return [
          */
         Yap\Providers\AppServiceProvider::class,
         Yap\Providers\AuthServiceProvider::class,
-        // Yap\Providers\BroadcastServiceProvider::class,
         Yap\Providers\EventServiceProvider::class,
         Yap\Providers\RouteServiceProvider::class,
         Yap\Providers\EnvironmentServiceProvider::class,

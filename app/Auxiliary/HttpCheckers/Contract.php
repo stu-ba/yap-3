@@ -61,7 +61,7 @@ interface Contract
     /**
      * @return string
      */
-    function getException() : string;
+    function getException(): string;
 
 
     /**
@@ -70,6 +70,7 @@ interface Contract
      * @return mixed
      */
     public function checkAndThrow(int $statusCode = 200);
+
 
     /**
      * Get a instance of the Guzzle HTTP client.

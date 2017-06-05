@@ -152,7 +152,7 @@ abstract class Checker implements Contract
     }
 
 
-    public function getException() : string
+    public function getException(): string
     {
         return '\\Yap\\Exceptions\\'.(new \ReflectionClass($this))->getShortName().'OfflineException';
     }
