@@ -73,7 +73,7 @@ class LoginController extends Controller
 
     public function taiga(Request $request)
     {
-        if (auth()->check()) {
+        if (auth()->check() && ! is_null(auth()->user()->taiga_id)) {
             return redirect()->away(toTaiga($request->get('taiga', 'discover')));
         } else {
             $request->session()->put('url.intended', config('yap.taiga.site').$request->get('taiga', 'discover'));
