@@ -59,8 +59,8 @@
                                         @includeWhen(Auth::user()->can('archive', $project), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Archive', 'class' => 'archive-project btn btn-xs '.((is_null($project->archive_at) || $project->archive_at->gt(\Carbon\Carbon::now())) ?: 'disabled'), 'icon' => fa('archive'), 'customAttributes' => 'data-project='.$project->id.' data-help='.route('docs', ['page' => 'project#archive'])])
                                         @includeWhen(Auth::user()->can('update', $project), 'components.html.fa-button', ['href' => route('projects.edit', ['project' => $project]), 'tooltip' => 'Edit project', 'class' => 'btn btn-xs ', 'icon' => fa('edit')])
                                         @include('components.html.fa-button', ['href' => route('projects.show', ['project' => $project]), 'tooltip' => 'Project detail', 'class' => 'btn btn-xs', 'icon' => fa('detail')])
-                                        @include('components.html.fa-button', ['href' => route('switch.repository', ['project' => $project]), 'tooltip' => 'Repository on GitHub', 'class' => 'btn bg-black btn-xs '.(!is_null($project->github_repository_id) ?: 'disabled'), 'icon' => fa('github')])
-                                        @include('components.html.taiga-button', ['href' => route('switch.project', ['project' => $project]), 'tooltip' => 'Project on Taiga', 'class' => 'btn btn-grey btn-xs '.(!is_null($project->taiga_id) ?: 'disabled')])
+                                        @include('components.html.fa-button', ['href' => route('switch.github.repository', ['project' => $project]), 'tooltip' => 'Repository on GitHub', 'class' => 'btn bg-black btn-xs '.(!is_null($project->github_repository_id) ?: 'disabled'), 'icon' => fa('github')])
+                                        @include('components.html.taiga-button', ['href' => route('switch.taiga.project', ['project' => $project]), 'tooltip' => 'Project on Taiga', 'class' => 'btn btn-grey btn-xs '.(!is_null($project->taiga_id) ?: 'disabled')])
                                     </td>
                                 </tr>
                             @endforeach

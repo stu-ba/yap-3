@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('switch') }}">
+                <a href="{{ route('switch.taiga') }}">
                     <i>{!! svg('taiga-icon', 'taiga-icon fa-lg') !!}</i>
                     <p>Switch to Taiga</p>
                 </a>

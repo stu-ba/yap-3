@@ -12,8 +12,8 @@
                     <p>
                         @includeWhen(Auth::user()->can('archive', $project), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Archive', 'class' => 'archive-project btn btn-xs '.((is_null($project->archive_at) || $project->archive_at->gt(\Carbon\Carbon::now())) ?: 'disabled'), 'icon' => fa('archive'), 'customAttributes' => 'data-reload="false" data-project='.$project->id.' data-help='.route('docs', ['page' => 'project#archive'])])
                         @includeWhen(Auth::user()->can('update', $project), 'components.html.fa-button', ['href' => route('projects.edit', ['project' => $project]), 'tooltip' => 'Edit project', 'class' => 'btn btn-xs ', 'icon' => fa('edit')])
-                        @include('components.html.fa-button', ['href' => route('switch.repository', ['project' => $project]), 'tooltip' => 'Repository on GitHub', 'class' => 'btn bg-black btn-xs '.(!is_null($project->github_repository_id) ?: 'disabled'), 'icon' => fa('github')])
-                        @include('components.html.taiga-button', ['href' => route('switch.project', ['project' => $project]), 'tooltip' => 'Project on Taiga', 'class' => 'btn btn-grey btn-xs '.(!is_null($project->taiga_id) ?: 'disabled')])
+                        @include('components.html.fa-button', ['href' => route('switch.github.repository', ['project' => $project]), 'tooltip' => 'Repository on GitHub', 'class' => 'btn bg-black btn-xs '.(!is_null($project->github_repository_id) ?: 'disabled'), 'icon' => fa('github')])
+                        @include('components.html.taiga-button', ['href' => route('switch.taiga.project', ['project' => $project]), 'tooltip' => 'Project on Taiga', 'class' => 'btn btn-grey btn-xs '.(!is_null($project->taiga_id) ?: 'disabled')])
                     </p>
                 </div>
             </div>
@@ -44,8 +44,8 @@
                                     <td>
                                         @includeWhen(true, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from project', 'class' => 'remove-user-from-project btn btn-xs btn-danger '.(!($member->pivot->to_be_deleted) ?: 'disabled'), 'icon' => fa('remove'), 'customAttributes' => 'data-username='.$member->username.' data-project-id="'.$project->id.'" data-project-name="'.$project->name.'" data-help='.route('docs', ['page' => 'detail#remove-from-project'])])
                                         @include('components.html.fa-button', ['href' => route('users.show', ['user' => $member->username]), 'tooltip' => 'Detail', 'icon' => fa('detail')])
-                                        @include('components.html.fa-button', ['href' => 'https://github.com/'.$member->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-xs external', 'icon' => fa('github')])
-                                        @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $member]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
+                                        @include('components.html.fa-button', ['href' => route('switch.github.user', ['user' => $member]), 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-xs', 'icon' => fa('github')])
+                                        @include('components.html.taiga-button', ['href' => route('switch.taiga.user', ['user' => $member]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
                                     </td>
                                 </tr>
                             @endforeach

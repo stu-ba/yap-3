@@ -63,12 +63,12 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
 
     Route::group(['middleware' => ['auth']], function () {
         Route::group(['middleware' => ['taiga:throw']], function () {
-            Route::get('switch/taiga', 'SwitchController@toTaiga')->name('switch');
-            Route::get('switch/taiga/project/{project}', 'SwitchController@toTaigaProject')->name('switch.project');
-            Route::get('switch/taiga/user/{user}', 'SwitchController@toTaigaUser')->name('switch.user');
+            Route::get('switch/taiga', 'SwitchController@toTaiga')->name('switch.taiga');
+            Route::get('switch/taiga/project/{project}', 'SwitchController@toTaigaProject')->name('switch.taiga.project');
+            Route::get('switch/taiga/user/{user}', 'SwitchController@toTaigaUser')->name('switch.taiga.user');
         });
         Route::group(['middleware' => ['github:throw']], function() {
-            Route::get('switch/github/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.repository');
+            Route::get('switch/github/repository/{project}', 'SwitchController@toGithubRepository')->name('switch.github.repository');
             Route::get('switch/github/user/{user}', 'SwitchController@toGithubUser')->name('switch.github.user');
         });
         Route::get('logout/{token?}', 'LogoutController@logout')->name('logout');

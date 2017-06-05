@@ -13,29 +13,12 @@ class ProjectPolicy
 
     public function before($user, $ability)
     {
-        if ($user->is_admin) {
-            return true;
-        }
-        return null;
+        return ($user->is_admin) ? true : null;
     }
 
     public function archive(User $user, Project $project) {
         return $user->is_admin;
     }
-
-    /**
-     * Determine whether the user can view the project.
-     *
-     * @param \Yap\Models\User     $user
-     * @param  \Yap\Models\Project $project
-     *
-     * @return mixed
-     */
-    public function view(User $user, Project $project)
-    {
-        //
-    }
-
 
     /**
      * Determine whether the user can create projects.

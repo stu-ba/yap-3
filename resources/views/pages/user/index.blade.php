@@ -80,8 +80,8 @@
                                         @includeWhen(Auth::user()->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from project', 'class' => 'remove-user btn btn-danger btn-xs', 'icon' => fa('remove'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove'])])
 
                                         @include('components.html.fa-button', ['href' => route('users.show', ['user' => $user->username]), 'tooltip' => 'Detail', 'icon' => fa('detail')])
-                                        @include('components.html.fa-button', ['href' => 'https://github.com/'.$user->username, 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black external', 'icon' => fa('github')])
-                                        @include('components.html.taiga-button', ['href' => route('switch.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
+                                        @include('components.html.fa-button', ['href' => route('switch.github.user', ['user' => $user]), 'tooltip' => 'Profile on GitHub', 'class' => 'btn btn-xs bg-black', 'icon' => fa('github')])
+                                        @include('components.html.taiga-button', ['href' => route('switch.taiga.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
                                     </td>
                                 </tr>
                             @endforeach

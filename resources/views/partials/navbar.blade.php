@@ -37,7 +37,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('profile') }}"><i class="fa fa-lg {{ fa('profile') }}"></i> <span>Profile</span></a></li>
-                        <li><a href="{{ route('switch') }}">{!! svg('taiga-icon', 'taiga-icon fa-lg') !!} <span>Switch to Taiga</span></a></li>
+                        <li><a href="{{ route('switch.taiga') }}">{!! svg('taiga-icon', 'taiga-icon fa-lg') !!} <span>Switch to Taiga</span></a></li>
                         <li><a href="{{ route('logout') }}"><i class="fa fa-lg {{ fa('logout') }}"></i> <span>Logout</span></a></li>
                     </ul>
                 </li>
