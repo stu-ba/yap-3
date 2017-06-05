@@ -27,7 +27,7 @@
             </li>
             <li class="{{ set_active_routes('users.notifications') }}">
                 <a href="{{ route('users.notifications') }}">
-                    @if($unreadNotificationsCount > 0)
+                    @if(isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
                         <span class="notification">{{ $unreadNotificationsCount }}</span>
                     @endif
                     <i class="fa fa-lg {{ fa('notification') }}"></i>
