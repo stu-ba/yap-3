@@ -2,65 +2,34 @@
 
 namespace Yap\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
 use Yap\Models\Project;
 use Yap\Models\User;
 
-class ProjectPolicy
+class ProjectPolicy extends Policy
 {
-
-    use HandlesAuthorization;
-
-    public function before($user, $ability)
-    {
-        return ($user->is_admin) ? true : null;
-    }
-
-    public function archive(User $user, Project $project) {
-        return $user->is_admin;
-    }
-
-    /**
-     * Determine whether the user can create projects.
-     *
-     * @param \Yap\Models\User $user
-     *
-     * @return mixed
-     */
-    public function create(User $user)
-    {
-        //
-    }
-
 
     /**
      * Determine whether the user can update the project.
      *
-     * @param \Yap\Models\User     $user
+     * @param \Yap\Models\User     $current
      * @param  \Yap\Models\Project $project
      *
      * @return mixed
      */
-    public function update(User $user, Project $project)
+    public function update(User $current, Project $project)
     {
-        return $project->leaders->contains('username', $user->username);
-    }
-
-    public function removeMember(User $user, Project $project) {
-        //TODO: finish me
+        return $current->isLeaderTo($project);
     }
 
 
-    /**
-     * Determine whether the user can delete the project.
-     *
-     * @param \Yap\Models\User     $user
-     * @param  \Yap\Models\Project $project
-     *
-     * @return mixed
-     */
-    public function delete(User $user, Project $project)
+    public function removeMember(User $current, Project $project)
     {
-        //
+        return $current->isLeaderTo($project);
+    }
+
+
+    public function addMember(User $current, Project $project)
+    {
+        return $current->isLeaderTo($project);
     }
 }

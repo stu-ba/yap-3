@@ -2,45 +2,25 @@
 
 namespace Yap\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
 use Yap\Models\User;
 
-class UserPolicy
+class UserPolicy extends Policy
 {
 
-    use HandlesAuthorization;
-
-
-    public function ban(User $current, User $user)
+    public function before($user, $ability)
     {
-        return $this->isAdminExceptSelf($current, $user);
+        return null;
     }
 
 
-    private function isAdminExceptSelf(User $current, User $user)
+    public function manage(User $current, User $user)
     {
-        if ($current != $user && $current->is_admin) {
-            return true;
-        }
-
-        return false;
+        return ! $current->is($user) && $current->is_admin;
     }
 
 
-    public function unban(User $current, User $user)
+    public function assignProjects(User $current)
     {
-        return $this->isAdminExceptSelf($current, $user);
-    }
-
-
-    public function promote(User $current, User $user)
-    {
-        return $this->isAdminExceptSelf($current, $user);
-    }
-
-
-    public function demote(User $current, User $user)
-    {
-        return $this->isAdminExceptSelf($current, $user);
+        return $current->isLeader();
     }
 }
