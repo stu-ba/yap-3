@@ -7,15 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class CreateProject extends FormRequest
 {
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+    use AlwaysAuthorize;
 
 
     public function all()

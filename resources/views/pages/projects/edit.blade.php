@@ -25,7 +25,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="description">Description*:</label>
-                                    <textarea id="description" class="form-control" placeholder="Brief description of project..."
+                                    <textarea autofocus id="description" class="form-control" placeholder="Brief description of project..."
                                               rows="2" name="description" required>{{ old('description', $project->description) }}</textarea>
                                 </div>
                                 <div class="form-group">
@@ -45,8 +45,9 @@
                                 @endif
                                 <div class="form-group">
                                     <label for="archive-at">Archive at:</label>
-                                    <input id="archive-at" class="form-control" type="text" name="archive_at" value="{{ old('archive_at', $project->archive_at ?? '') }}" placeholder="{{ \Carbon\Carbon::now()->format('m/d/Y') }} or leave empty"/>
+                                    <input id="archive-at" class="form-control" type="text" name="archive_at" value="{{ old('archive_at', $project->archive_at ?? '') }}" placeholder="{{ \Carbon\Carbon::now()->format('m/d/Y') }}"/>
                                 </div>
+                                {{--FIXME: below is a bug on first load it does unexpected things... :(--}}
                                 @push('components')
                                 <script type="text/javascript">
                                     $('#archive-at').datetimepicker({
@@ -66,7 +67,7 @@
                                             previous: 'fa fa-chevron-left',
                                             next: 'fa fa-chevron-right',
                                         },
-                                        minDate: moment(),
+                                        minDate: moment()
                                     });
                                 </script>
                                 @endpush

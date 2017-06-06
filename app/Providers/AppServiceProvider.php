@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
             return ! $githubApi->checkRepositoryExists(str_slug($value));
         });
 
+        \Validator::extend('not_current', function ($attribute, $value, $parameters, $validator) {
+            return auth()->user()->id != $value;
+        });
+
         \Validator::extend('array_unique', function ($attribute, $value, $parameters, $validator) {
             if (count($parameters) !== 1) {
                 throw new \InvalidArgumentException('Validation rule needs parameter.');

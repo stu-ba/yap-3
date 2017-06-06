@@ -4,6 +4,7 @@ namespace Yap\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yap\Http\Requests\BanUser;
+use Yap\Http\Requests\ManageUser;
 use Yap\Models\User;
 
 class UserController extends Controller
@@ -11,7 +12,10 @@ class UserController extends Controller
 
     public function index(User $user, Request $request)
     {
-        //TODO: add policy for filter
+        if ($request->get('filter') === 'admin' || $request->get('filter') === 'banned') {
+            $this->authorize('filter', User::class);
+        }
+
         $users = $user->filled()->filter($request->get('filter', null))->sortable(['username'])->paginate(10);
 
         return view('pages.user.index')->with([
@@ -81,9 +85,9 @@ class UserController extends Controller
     }
 
 
-    public function ban(BanUser $request, User $user)
+    public function ban(ManageUser $request, User $user)
     {
-        //TODO: add policy
+        $this->authorize('manage', $user);
         $user->ban($request->get('reason'));
 
         if ($request->isXmlHttpRequest()) {
@@ -96,9 +100,9 @@ class UserController extends Controller
     }
 
 
-    public function unban(Request $request, User $user)
+    public function unban(ManageUser $request, User $user)
     {
-        //TODO: add policy
+        $this->authorize('manage', $user);
         $user->unban();
 
         if ($request->isXmlHttpRequest()) {
@@ -111,9 +115,9 @@ class UserController extends Controller
     }
 
 
-    public function promote(Request $request, User $user)
+    public function promote(ManageUser $request, User $user)
     {
-        //TODO: add policy
+        $this->authorize('manage', $user);
         $user->promote();
 
         if ($request->isXmlHttpRequest()) {
@@ -125,9 +129,9 @@ class UserController extends Controller
     }
 
 
-    public function demote(Request $request, User $user)
+    public function demote(ManageUser $request, User $user)
     {
-        //TODO: add policy
+        $this->authorize('manage', $user);
         $user->demote();
 
         if ($request->isXmlHttpRequest()) {

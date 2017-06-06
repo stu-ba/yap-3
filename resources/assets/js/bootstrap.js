@@ -26,7 +26,8 @@ window.axios = require('axios');
 window.axios.defaults.headers.common = {
     'Authorization': 'Bearer ' + document.querySelector('meta[name="yap-token"]').getAttribute('content'),
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-    'X-Requested-With': 'XMLHttpRequest'
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json'
 };
 
 window.$.notifyDefaults({

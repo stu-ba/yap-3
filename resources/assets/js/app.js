@@ -169,6 +169,8 @@ function banUser(username, helpLink) {
                 }).catch(function (error) {
                     if (error.response.data.reason != null && typeof error.response.data.reason[0] != 'undefined')
                         reject(error.response.data.reason[0])
+                    else if(error.response.data.user != null && typeof error.response.data.user[0] != 'undefined')
+                        reject(error.response.data.user[0])
                     reject(error)
                 });
             })
@@ -203,6 +205,8 @@ function unbanUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/unban').then(function (response) {
                     resolve(response)
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined')
+                        reject(error.response.data.user[0])
                     reject(error)
                 });
             })
@@ -237,6 +241,8 @@ function promoteUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/promote').then(function (response) {
                     resolve(response)
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined')
+                        reject(error.response.data.user[0])
                     reject(error)
                 });
             })
@@ -271,6 +277,8 @@ function demoteUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/demote').then(function (response) {
                     resolve(response)
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined')
+                        reject(error.response.data.user[0])
                     reject(error)
                 });
             })

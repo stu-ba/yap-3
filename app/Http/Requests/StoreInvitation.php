@@ -7,16 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreInvitation extends FormRequest
 {
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        //authorization logic will come here // only admins are allowed to store invitation through this controller
-        return true;
-    }
+    use AlwaysAuthorize;
 
 
     /**
