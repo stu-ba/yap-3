@@ -181,11 +181,11 @@ class User extends Authenticatable
 
     public function scopeColleaguesOf(Builder $query, User $user): Builder
     {
-        return $query->whereIn('id', $user->colleaguesIds());
+        return $query->whereIn('id', $user->colleagueIds());
     }
 
 
-    protected function colleaguesIds(): array
+    public function colleagueIds(): array
     {
         return $this->projects->load([
             'participants' => function ($query) {

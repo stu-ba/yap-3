@@ -95,7 +95,7 @@ class UserTest extends TestCase
     }
 
 
-    public function testColleaguesIds()
+    public function testColleagueIds()
     {
         factory(Invitation::class, 10)->create();
 
@@ -108,9 +108,8 @@ class UserTest extends TestCase
         $projects->first()->syncMembers([], $userIds->nth(2)->all());
         $projects->last()->syncMembers([], $userIds->nth(3)->all());
 
-        $this->assertEquals([3, 5, 7, 9, 4, 10], $user->find(1)->colleaguesIds());
+        $this->assertEquals([3, 5, 7, 9, 4, 10], $user->find(1)->colleagueIds());
     }
-
 
     public function testUpdatingUserDoesNotChangeGithubId()
     {
