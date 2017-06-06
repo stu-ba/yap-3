@@ -29,11 +29,6 @@ Route::group(['middleware' => ['auth']],
     function () { //auth, for live developing disable middleware since different domain
         Route::get('/profile', 'UserController@profile')->name('profile');
         Route::get('/notifications', 'UserController@notifications')->name('users.notifications');
-
-        Route::group(['prefix' => 'users/{user}'], function () {
-            // ban // unban // promote // demote // invite
-        });
-
         Route::resource('users', 'UserController', [
             'only' => ['index', 'show', 'edit', 'store'],
         ]);
