@@ -4,6 +4,7 @@ namespace Yap\Exceptions;
 
 use Exception;
 use Github\Exception\RuntimeException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -87,7 +88,6 @@ class Handler extends ExceptionHandler
             if (\App::runningInConsole()) {
                 throw $exception;
             }
-
             alert('warning', 'GitHub seems to be offline, please try later.');
 
             return redirect()->back();
@@ -95,6 +95,11 @@ class Handler extends ExceptionHandler
             alert('warning', 'Requested repository seems to be non-existent.');
 
             return redirect()->back();
+        } elseif ($exception instanceof AuthorizationException) {
+            if ($request->isXmlHttpRequest() || $request->wantsJson()) {
+                return response()->json(['message' => $exception->getMessage()], 403);
+            }
+            throw $exception;
         }
 
         return parent::render($request, $exception);
@@ -121,7 +126,7 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() || $request->isXmlHttpRequest()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 

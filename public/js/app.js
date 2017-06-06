@@ -26961,7 +26961,7 @@ function banUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/ban', { 'reason': text }).then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
-                    if (error.response.data.reason != null && typeof error.response.data.reason[0] != 'undefined') reject(error.response.data.reason[0]);
+                    if (error.response.data.reason != null && typeof error.response.data.reason[0] != 'undefined') reject(error.response.data.reason[0]);else if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined') reject(error.response.data.user[0]);
                     reject(error);
                 });
             });
@@ -26992,6 +26992,7 @@ function unbanUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/unban').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined') reject(error.response.data.user[0]);
                     reject(error);
                 });
             });
@@ -27022,6 +27023,7 @@ function promoteUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/promote').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined') reject(error.response.data.user[0]);
                     reject(error);
                 });
             });
@@ -27052,6 +27054,7 @@ function demoteUser(username, helpLink) {
                 axios.patch('/api/users/' + username + '/demote').then(function (response) {
                     resolve(response);
                 }).catch(function (error) {
+                    if (error.response.data.user != null && typeof error.response.data.user[0] != 'undefined') reject(error.response.data.user[0]);
                     reject(error);
                 });
             });
@@ -28218,7 +28221,8 @@ window.axios = __webpack_require__(131);
 window.axios.defaults.headers.common = {
     'Authorization': 'Bearer ' + document.querySelector('meta[name="yap-token"]').getAttribute('content'),
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-    'X-Requested-With': 'XMLHttpRequest'
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json'
 };
 
 window.$.notifyDefaults({
