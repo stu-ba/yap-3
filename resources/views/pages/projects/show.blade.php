@@ -22,7 +22,6 @@
             <div class="card">
                 <div class="card-header" data-background-color="blue">
                     @include('components.html.card-support', ['page' => 'projects#users-projects'])
-                    {{--<a href="#" class="btn btn-xs btn-white pull-right add-user" data-username="{{ $user->username }}" data-help="{{route('docs', ['page' => 'detail#add-to-project'])}}"><i class="fa {{ fa('add') }}"></i> <span class="hidden-xs">Add user to project</span></a>--}}
                     <h4 class="title">Members of project '{{ $project->name }}'</h4>
                     <p class="category">Users associated to '{{ $project->name }}' project.</p>
                 </div>

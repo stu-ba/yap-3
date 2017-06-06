@@ -238,17 +238,15 @@ class User extends Authenticatable
 
     public function isLeader()
     {
-        return self::select('id')->where('id', '=', $this->id)->withCount([
-                'projects' => function ($q) {
-                    $q->where('project_user.is_leader', '=', true);
-                },
-            ])->first()->projects_count > 0;
-        //$this->withCount(['projects' => function ($q) {$q->wherePivot('is_leader', '=', true);}]);
-        //$projects =
-        //    $this->relationLoaded('projects') ? $this->projects->where('pivot.is_leader', '=', true)->count() > 0 :
-        //        $this->projects()->select('id')->wherePivot('is_leader', '=', true)->count() > 0;
-        //
-        //return $projects->count() > 0;
+        $cache = resolve(\Illuminate\Contracts\Cache\Factory::class);
+
+        return $cache->store('array')->remember('is-'.$this->id.'leader', 1, function () {
+            return self::select('id')->where('id', '=', $this->id)->withCount([
+                    'projects' => function ($q) {
+                        $q->where('project_user.is_leader', '=', true);
+                    },
+                ])->first()->projects_count > 0;
+        });
     }
 
 

@@ -21,6 +21,24 @@ class UserPolicy extends Policy
 
     public function assignProjects(User $current)
     {
-        return $current->isLeader();
+        return $current->is_admin || $current->isLeader();
+    }
+
+
+    public function unassignProjects(User $current)
+    {
+        return $current->is_admin || $current->isLeader();
+    }
+
+
+    public function filter(User $current)
+    {
+        return $current->is_admin;
+    }
+
+
+    public function seeEmail(User $current)
+    {
+        return $current->is_admin;
     }
 }
