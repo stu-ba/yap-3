@@ -123,12 +123,22 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Set column which is used for resolving user instance from route.
+     *
+     * @return string
+     */
     public function getRouteKeyName()
     {
         return 'username';
     }
 
 
+    /**
+     * Has many relationship invitations.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function invitations()
     {
         return $this->hasMany(Invitation::class);
@@ -185,6 +195,11 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Get all user's colleagues (id).
+     *
+     * @return array
+     */
     public function colleagueIds(): array
     {
         return $this->projects->load([
@@ -206,6 +221,13 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Check if user can be logged in.
+     *
+     * @return bool
+     * @throws \Yap\Exceptions\UserBannedException
+     * @throws \Yap\Exceptions\UserNotConfirmedException
+     */
     public function logginable(): bool
     {
         if ($this->isBanned()) {
@@ -220,12 +242,24 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Check if user is banned.
+     *
+     * @return bool
+     */
     public function isBanned(): bool
     {
         return ! is_null($this->ban_reason);
     }
 
 
+    /**
+     * Check if user is leader in particular project.
+     *
+     * @param \Yap\Models\Project $project
+     *
+     * @return bool
+     */
     public function isLeaderTo(Project $project): bool
     {
         if ($this->relationLoaded('members')) {
@@ -236,20 +270,31 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Check if user is leader in any of projects, we cache boolean value
+     * using array driver so its valid only for one request.
+     *
+     * @return mixed
+     */
     public function isLeader()
     {
         $cache = resolve(\Illuminate\Contracts\Cache\Factory::class);
 
-        return $cache->store('array')->remember('is-'.$this->id.'leader', 1, function () {
+        return $cache->store('array')->remember('is-'.$this->id.'-leader', 1, function () {
             return self::select('id')->where('id', '=', $this->id)->withCount([
-                    'projects' => function ($q) {
-                        $q->where('project_user.is_leader', '=', true);
+                    'projects' => function ($queue) {
+                        $queue->where('project_user.is_leader', '=', true);
                     },
                 ])->first()->projects_count > 0;
         });
     }
 
 
+    /**
+     * Make user confirmed.
+     *
+     * @return \Yap\Models\User
+     */
     public function confirm(): self
     {
         if ( ! $this->is_confirmed) {
@@ -263,6 +308,27 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Make user unconfirmed.
+     *
+     * @return \Yap\Models\User
+     */
+    public function unconfirm(): self
+    {
+        $this->is_confirmed = false;
+        $this->save();
+
+        return $this;
+    }
+
+
+    /**
+     * Make user admin.
+     *
+     * @param bool $force
+     *
+     * @return \Yap\Models\User
+     */
     public function promote($force = false): self
     {
         if (( ! $this->is_admin && ! $this->isBanned()) || $force) {
@@ -278,6 +344,11 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Make administrator basic user.
+     *
+     * @return \Yap\Models\User
+     */
     public function demote(): self
     {
         if ($this->is_admin) {
@@ -293,28 +364,13 @@ class User extends Authenticatable
     }
 
 
-    public function unconfirm(): self
-    {
-        $this->is_confirmed = false;
-        $this->save();
-
-        return $this;
-    }
-
-
-    public function unban(): self
-    {
-        if ($this->isBanned()) {
-            //TODO: user got unbanned event - add to teams etc.
-        }
-
-        $this->ban_reason = null;
-        $this->save();
-
-        return $this;
-    }
-
-
+    /**
+     * Ban user that reason is passed.
+     *
+     * @param string $reason
+     *
+     * @return \Yap\Models\User
+     */
     public function ban(string $reason): self
     {
         if ( ! $this->isBanned()) {
@@ -322,6 +378,24 @@ class User extends Authenticatable
         }
 
         $this->ban_reason = str_limit($reason, 254, '...');
+        $this->save();
+
+        return $this;
+    }
+
+
+    /**
+     * Remove ban.
+     *
+     * @return \Yap\Models\User
+     */
+    public function unban(): self
+    {
+        if ($this->isBanned()) {
+            //TODO: user got unbanned event - add to teams etc.
+        }
+
+        $this->ban_reason = null;
         $this->save();
 
         return $this;
@@ -339,12 +413,20 @@ class User extends Authenticatable
      */
     public function syncWith(array $githubUserData): self
     {
+        //TODO: finish me
         $this->update($githubUserData);
 
         return $this;
     }
 
 
+    /**
+     * Swap user instance (data).
+     *
+     * @param \Yap\Models\User $user
+     *
+     * @return \Yap\Models\User
+     */
     public function swapWith(self $user): self
     {
         if (is_null($user->email) && ! $user->is_confirmed) {
@@ -363,12 +445,22 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Swap notifications.
+     *
+     * @param \Yap\Models\User $user
+     */
     protected function swapNotifications(self $user): void
     {
         $this->notifications()->update(['notifiable_id' => $user->id]);
     }
 
 
+    /**
+     * Swap projects.
+     *
+     * @param \Yap\Models\User $user
+     */
     protected function swapProjects(self $user): void
     {
         $this->projects->pluck('id')->each(function ($item) use ($user) {
@@ -377,6 +469,11 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Many to many relationship projects.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id')
@@ -385,11 +482,9 @@ class User extends Authenticatable
     }
 
 
-    //public function sameAs(User $user): bool
-    //{
-    //    return $this->id === $user->id;
-    //}
-
+    /**
+     * @return mixed
+     */
     public function unassociatedProjects()
     {
         $projects = ($this->relationLoaded('projects')) ? $this->projects : $this->load([

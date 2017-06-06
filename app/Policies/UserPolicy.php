@@ -15,7 +15,7 @@ class UserPolicy extends Policy
 
     public function manage(User $current, User $user)
     {
-        return ! $current->is($user) && $current->is_admin;
+        return ! $current->is($user) && $current->is_admin && !$user->is(systemAccount());
     }
 
 

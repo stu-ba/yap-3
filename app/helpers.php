@@ -213,7 +213,14 @@ if ( ! function_exists('avatar')) {
 
     function avatar(\Yap\Models\User $user)
     {
-        return $user->avatar ?? 'http://api.adorable.io/avatar/'.$user->username;
+        //return 'http://api.adorable.io/avatar/'.$user->username;
+        return $user->avatar ?? asset('img/default-profile.png');
+    }
+}
+
+if (! function_exists('disabledIf')) {
+    function disabledIf(bool $condition) {
+        return (!$condition) ? ' disabled' : '';
     }
 }
 

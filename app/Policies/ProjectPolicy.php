@@ -7,7 +7,6 @@ use Yap\Models\User;
 
 class ProjectPolicy extends Policy
 {
-
     /**
      * Determine whether the user can update the project.
      *

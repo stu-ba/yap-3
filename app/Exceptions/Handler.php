@@ -3,6 +3,7 @@
 namespace Yap\Exceptions;
 
 use Exception;
+use Github\Exception\RuntimeException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -30,6 +31,7 @@ class Handler extends ExceptionHandler
         \Yap\Exceptions\InvitationRegistrarException::class,
         \Yap\Exceptions\UserBannedException::class,
         \Yap\Exceptions\UserNotConfirmedException::class,
+        \Github\Exception\RuntimeException::class,
     ];
 
 
@@ -87,6 +89,10 @@ class Handler extends ExceptionHandler
             }
 
             alert('warning', 'GitHub seems to be offline, please try later.');
+
+            return redirect()->back();
+        } elseif ($exception instanceof RuntimeException) {
+            alert('warning', 'Requested repository seems to be non-existent.');
 
             return redirect()->back();
         }

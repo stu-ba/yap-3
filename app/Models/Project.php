@@ -11,21 +11,21 @@ use Yap\Events\ProjectCreated;
 /**
  * Yap\Models\Project
  *
- * @property int $id
- * @property int $github_team_id
- * @property int $github_repository_id
- * @property int $taiga_id
- * @property int $project_type_id
- * @property string $name
- * @property string $description
- * @property bool $is_archived
- * @property \Carbon\Carbon $archive_at
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int                                                              $id
+ * @property int                                                              $github_team_id
+ * @property int                                                              $github_repository_id
+ * @property int                                                              $taiga_id
+ * @property int                                                              $project_type_id
+ * @property string                                                           $name
+ * @property string                                                           $description
+ * @property bool                                                             $is_archived
+ * @property \Carbon\Carbon                                                   $archive_at
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
- * @property-read \Yap\Models\ProjectType $type
+ * @property-read \Yap\Models\ProjectType                                     $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project confirmed()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
@@ -103,6 +103,11 @@ class Project extends Model
     }
 
 
+    /**
+     * Many to many relationship to return leaders of current project.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function leaders()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
@@ -114,7 +119,7 @@ class Project extends Model
 
     public function scopeConfirmed($query)
     {
-        //TODO:add policy to list also banned users
+        //TODO: add policy to list also banned users
         return $query->where('users.is_confirmed', '=', true);
     }
 
@@ -126,7 +131,7 @@ class Project extends Model
                 $query->select('name', 'username', 'is_confirmed')->filled()->orderBy('username');
             },
             'participants' => function ($query) {
-                $query->select('name', 'username')->filled()->orderBy('username');
+                $query->select('name', 'username', 'is_confirmed')->filled()->orderBy('username');
             },
         ]);
 
@@ -134,17 +139,21 @@ class Project extends Model
 
         switch ($filterName) {
             case 'mine':
-                $mineProjectIds = auth()->user()->projects()->select('id')->pluck('id');
-
-                return $query->whereIn('id', $mineProjectIds);//where('pivot_user_id', '=', auth()->user()->id);
+                return $query->whereIn('id', auth()->user()->projects()->select('id')->pluck('id'));
             case 'archived':
-                return $query->whereTime('archive_at', '<', Carbon::now());
+                return $query->whereDate('archive_at', '<', Carbon::now());
             default:
                 return $query;
         }
     }
 
 
+    /**
+     * Synchronize members and fire events to propagate changes in Taiga & GitHub.
+     *
+     * @param array $leaderIds
+     * @param array $participantIds
+     */
     public function syncMembers(array $leaderIds, array $participantIds)
     {
         $leaderIds      = array_fill_keys($leaderIds, ['is_leader' => true, 'to_be_deleted' => false]);
@@ -178,6 +187,11 @@ class Project extends Model
     }
 
 
+    /**
+     * @param array $ids
+     *
+     * @return array
+     */
     private function toDetach(array $ids): array
     {
         $current = $this->members->pluck('id')->all();
@@ -193,6 +207,11 @@ class Project extends Model
     }
 
 
+    /**
+     * Many to many relationship to return participants of current project.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function participants()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')

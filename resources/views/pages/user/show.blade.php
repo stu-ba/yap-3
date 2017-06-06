@@ -15,15 +15,17 @@
                         {{ $user->bio ?? config('yap.placeholders.bio') }}
                     </p>
                     <p>
-                    @if($user->isBanned())
-                        @includeWhen($current->can('manage', $user), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])
-                    @else
-                        @includeWhen($current->can('manage', $user) && !$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])
-                        @includeWhen($current->can('manage', $user) && $user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])
-                        @includeWhen($current->can('manage', $user), 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])
-                        @include('components.html.fa-button', ['href' => route('switch.github.user', ['user' => $user]), 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-xs external', 'icon' => fa('github')])
-                        @include('components.html.taiga-button', ['href' => route('switch.taiga.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
-                    @endif
+                    @can('manage', $user)
+                        @if($user->isBanned())
+                            @include('components.html.fa-button', ['href' => '#', 'tooltip' => 'Unban user', 'class' => 'unban-user btn btn-success btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#remove-ban'])])
+                        @else
+                            @includeWhen(!$user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Promote user to administrator', 'class' => 'promote-user btn btn-default btn-xs', 'icon' => fa('promote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#promote'])])
+                            @includeWhen($user->is_admin, 'components.html.fa-button', ['href' => '#', 'tooltip' => 'Remove user from administrators', 'class' => 'demote-user btn btn-warning btn-xs', 'icon' => fa('demote'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#demote'])])
+                            @include('components.html.fa-button', ['href' => '#', 'tooltip' => 'Ban user', 'class' => 'ban-user btn btn-danger btn-xs', 'icon' => fa('ban'), 'customAttributes' => 'data-username='.$user->username.' data-help='.route('docs', ['page' => 'detail#ban'])])
+                        @endif
+                    @endcan
+                    @include('components.html.fa-button', ['href' => route('switch.github.user', ['user' => $user]), 'tooltip' => 'Profile on GitHub', 'class' => 'btn bg-black btn-xs external', 'icon' => fa('github')])
+                    @include('components.html.taiga-button', ['href' => route('switch.taiga.user', ['user' => $user]), 'tooltip' => 'Profile on Taiga', 'class' => 'btn btn-xs btn-grey'])
                     </p>
                 </div>
             </div>
