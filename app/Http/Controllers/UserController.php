@@ -3,7 +3,6 @@
 namespace Yap\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Yap\Http\Requests\BanUser;
 use Yap\Http\Requests\ManageUser;
 use Yap\Models\User;
 
@@ -146,9 +145,9 @@ class UserController extends Controller
     public function availableProjects(Request $request, User $user)
     {
         //TODO: add policy
-
         if ($request->isXmlHttpRequest()) {
-            return response()->json($user->unassociatedProjects()->pluck('name', 'id'), 200);
+            return response()->json($request->user()->assignableProjectsFor($user)->where('is_archived', '!=', true)
+                                            ->pluck('name', 'id'), 200);
         }
 
         alert('info', 'Sorry, previous request is available only for XmlRequests.');

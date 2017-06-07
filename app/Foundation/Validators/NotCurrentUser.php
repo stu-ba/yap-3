@@ -2,7 +2,6 @@
 
 namespace Yap\Foundation\Validators;
 
-
 use Illuminate\Auth\AuthManager;
 
 class NotCurrentUser

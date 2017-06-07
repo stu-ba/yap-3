@@ -7,6 +7,7 @@ use Yap\Models\User;
 
 class ProjectPolicy extends Policy
 {
+
     /**
      * Determine whether the user can update the project.
      *
@@ -17,6 +18,13 @@ class ProjectPolicy extends Policy
      */
     public function update(User $current, Project $project)
     {
+        return $current->isLeaderTo($project);
+    }
+
+
+    public function edit(User $current, Project $project)
+    {
+        //TODO: forbid to update archive at date
         return $current->isLeaderTo($project);
     }
 

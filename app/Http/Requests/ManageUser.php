@@ -36,11 +36,6 @@ class ManageUser extends FormRequest
         return $rules;
     }
 
-    public function messages()
-    {
-        return ['user.not_current_user' => 'You can not do that to yourself!'];
-    }
-
 
     /**
      * @param $rules
@@ -59,6 +54,12 @@ class ManageUser extends FormRequest
         }
 
         return $rules;
+    }
+
+
+    public function messages()
+    {
+        return ['user.not_current_user' => 'You can not do that to yourself!'];
     }
 
 }

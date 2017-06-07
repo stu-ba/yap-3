@@ -12,6 +12,8 @@ class InvitationController extends Controller
 
     public function create(string $email = null, Invitation $invitation)
     {
+        $this->authorize('create', Invitation::class);
+
         if ( ! is_null($email) && ! is_email($email)) {
             $email = null;
         }
@@ -25,6 +27,8 @@ class InvitationController extends Controller
 
     public function store(StoreInvitation $request, InvitationRegistrar $registrar)
     {
+        $this->authorize('store', Invitation::class);
+
         try {
             /** @var Invitation $invitation */
             $invitation = $registrar->invite($request->get('email'), $request->only([

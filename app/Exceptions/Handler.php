@@ -95,11 +95,8 @@ class Handler extends ExceptionHandler
             alert('warning', 'Requested repository seems to be non-existent.');
 
             return redirect()->back();
-        } elseif ($exception instanceof AuthorizationException) {
-            if ($request->isXmlHttpRequest() || $request->wantsJson()) {
-                return response()->json(['message' => $exception->getMessage()], 403);
-            }
-            throw $exception;
+        } elseif ($exception instanceof AuthorizationException && ($request->isXmlHttpRequest() || $request->wantsJson())) {
+            return response()->json(['message' => $exception->getMessage()], 403);
         }
 
         return parent::render($request, $exception);

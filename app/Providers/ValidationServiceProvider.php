@@ -9,6 +9,7 @@ use Yap\Foundation\Validators\RepositoryUnique;
 
 class ValidationServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the application services.
      *
@@ -24,6 +25,7 @@ class ValidationServiceProvider extends ServiceProvider
         $validator->extend('array_unique', ArrayUnique::class);
         $validator->replacer('array_unique', ArrayUnique::class);
     }
+
 
     /**
      * Register the application services.

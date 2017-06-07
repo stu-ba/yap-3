@@ -41,4 +41,5 @@ class DatabaseNotification extends \Illuminate\Notifications\DatabaseNotificatio
                 return $query->whereNull('read_at');
         }
     }
+
 }

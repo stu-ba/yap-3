@@ -36,6 +36,8 @@ class ProjectController extends Controller
 
     public function create(ProjectType $projectType)
     {
+        $this->authorize('create', Project::class);
+
         return view('pages.projects.create')->with([
             'title'        => 'Create project',
             'projectTypes' => $projectType->all(['name', 'id'])->pluck('name', 'id'),
@@ -45,6 +47,8 @@ class ProjectController extends Controller
 
     public function store(CreateProject $request, Registrar $projectRegistrar)
     {
+        $this->authorize('store', Project::class);
+
         $members = $request->only(['team_leaders', 'participants']);
 
         $project = $projectRegistrar->create($request->only(['name', 'description', 'project_type_id', 'archive_at']),
@@ -76,6 +80,8 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+        $this->authorize('edit', $project);
+
         $members = $project->load('members.invitations')->members;
 
         foreach ($members as $member) {
@@ -97,6 +103,8 @@ class ProjectController extends Controller
 
     public function update(UpdateProject $request, Project $project, Registrar $projectRegistrar)
     {
+        $this->authorize('update', $project);
+
         $members = $request->only(['team_leaders', 'participants']);
         $projectRegistrar->update($request->only(['description', 'archive_at']), $project,
             array_get($members, 'team_leaders'), array_get($members, 'participants'));
@@ -114,9 +122,8 @@ class ProjectController extends Controller
 
     public function archive(ArchiveProject $request, Project $project)
     {
-        //TODO: add policy
-
         //$dateInstance = ->endOfDay();
+        $this->authorize('archive', Project::class);
 
         $project->update(['archive_at' => Carbon::createFromTimestamp($request->get('archive_at', time()))]);
 
@@ -134,7 +141,8 @@ class ProjectController extends Controller
 
     public function removeUser(Request $request, Project $project, User $user)
     {
-        //TODO: add policy
+        $this->authorize('removeMember', $project);
+
         $project->removeMember($user->id);
         $message = 'User \''.$user->username.'\' is scheduled to be removed from project \''.$project->name.'\'.';
         if ($request->isXmlHttpRequest()) {
@@ -149,6 +157,8 @@ class ProjectController extends Controller
 
     public function addUser(Request $request, Project $project, User $user)
     {
+        $this->authorize('addMember', $project);
+
         $project->addMember($user->id, $request->get('role', false));
 
         $message = 'User \''.$user->username.'\' was added to project \''.$project->name.'\' as '.($request->get('role',

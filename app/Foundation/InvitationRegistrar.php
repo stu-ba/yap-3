@@ -275,7 +275,7 @@ class InvitationRegistrar
         if ($user->is_confirmed) {
             throw new InvitationRegistrarException('User with email \''.$this->email.'\' is already confirmed.', 1);
         }
-        //TODO: this should never happen
+
         throw new InvitationRegistrarException('User is not confirmed but invitation is depleted. Someone has fiddled with database.',
             2);
     }

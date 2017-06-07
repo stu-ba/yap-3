@@ -16,7 +16,6 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         resolve(ViewFactory::class)->composer(['layouts.yap'], function ($view) {
-            //TODO: maybe add check if user logged in
             $view->with('unreadNotificationsCount', auth()->user()->unreadNotifications()->count());
         });
 

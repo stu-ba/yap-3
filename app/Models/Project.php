@@ -11,21 +11,22 @@ use Yap\Events\ProjectCreated;
 /**
  * Yap\Models\Project
  *
- * @property int                                                              $id
- * @property int                                                              $github_team_id
- * @property int                                                              $github_repository_id
- * @property int                                                              $taiga_id
- * @property int                                                              $project_type_id
- * @property string                                                           $name
- * @property string                                                           $description
- * @property bool                                                             $is_archived
- * @property \Carbon\Carbon                                                   $archive_at
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
+ * @property int $id
+ * @property int $github_team_id
+ * @property int $github_repository_id
+ * @property int $taiga_id
+ * @property int $project_type_id
+ * @property string $name
+ * @property string $description
+ * @property bool $is_archived
+ * @property \Carbon\Carbon $archive_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read mixed $slugged
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $leaders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|\Yap\Models\User[] $participants
- * @property-read \Yap\Models\ProjectType                                     $type
+ * @property-read \Yap\Models\ProjectType $type
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project confirmed()
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project filter($filterName = null)
  * @method static \Illuminate\Database\Query\Builder|\Yap\Models\Project sortable($defaultSortParameters = null)
@@ -86,14 +87,18 @@ class Project extends Model
 
     public function setArchiveAtAttribute($value)
     {
-        //TODO: finish this
-        if (is_null($value)) {
-            $this->attributes['archive_at'] = null;
-        } elseif (is_string($value)) {
+        if (is_string($value)) {
+            //TODO: here should be more checks
             $this->attributes['archive_at'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
         } elseif ($value instanceof Carbon) {
             $this->attributes['archive_at'] = $value->endOfDay();
         }
+    }
+
+
+    public function getSluggedAttribute()
+    {
+        return str_slug($this->attributes['name']);
     }
 
 
@@ -141,7 +146,7 @@ class Project extends Model
             case 'mine':
                 return $query->whereIn('id', auth()->user()->projects()->select('id')->pluck('id'));
             case 'archived':
-                return $query->whereDate('archive_at', '<', Carbon::now());
+                return $query->whereIsArchived(true)->whereDate('archive_at', '<', Carbon::now());
             default:
                 return $query;
         }

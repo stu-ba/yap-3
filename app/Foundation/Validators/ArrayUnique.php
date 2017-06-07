@@ -26,7 +26,9 @@ class ArrayUnique
         return false;
     }
 
-    public function replace($message, $attribute, $rule, $parameters) {
+
+    public function replace($message, $attribute, $rule, $parameters)
+    {
         return str_replace(':parameter', str_slug($parameters[0]), $message);
     }
 

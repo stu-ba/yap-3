@@ -17,7 +17,7 @@ class CreateRepository extends Github
     protected function handle(RepositoryRequested $event)
     {
         $project    = $event->project;
-        $repository = $this->github->createRepository(str_slug($project->name), str_limit($project->description),
+        $repository = $this->github->createRepository($project->slugged, str_limit($project->description),
             $project->github_team_id);
         $project->update(['github_repository_id' => $repository['id']]);
     }

@@ -8,6 +8,6 @@ class Github extends Checker
     public function __construct()
     {
         $this->url     = config('yap.github.api_limit');
-        $this->timeout = 5;
+        $this->timeout = 4;
     }
 }

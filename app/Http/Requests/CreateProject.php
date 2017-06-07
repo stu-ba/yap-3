@@ -29,7 +29,7 @@ class CreateProject extends FormRequest
     public function rules()
     {
         return [
-            'name'            => 'required|max:32|repository_unique',
+            'name'            => 'required|max:32|unique:projects,name|repository_unique',
             'description'     => 'required',
             'project_type_id' => 'required|exists:project_types,id',
             'archive_at'      => 'nullable|date_format:d/m/Y|after_or_equal:yesterday',

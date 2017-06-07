@@ -18,7 +18,7 @@ class CreateTeam extends Github
     protected function handle(TeamRequested $event)
     {
         $project = $event->project;
-        $team    = $this->github->createTeam(str_slug($project->name),
+        $team    = $this->github->createTeam($project->slugged,
             'Project '.$project->name.' participants with write permissions.');
         $project->update(['github_team_id' => $team['id']]);
         event(new RepositoryRequested($project));

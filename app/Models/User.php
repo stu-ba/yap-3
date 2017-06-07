@@ -482,17 +482,38 @@ class User extends Authenticatable
     }
 
 
+    public function assignableProjectsFor(User $user)
+    {
+        /** @var \Illuminate\Support\Collection $assignableIds */
+        $assignableIds = $this->assignableProjects()->pluck('id');
+        /** @var \Illuminate\Support\Collection $unassociatedIds */
+        $unassociatedIds = $user->unassociatedProjects()->pluck('id');
+
+        //d($assignableIds, $unassociatedIds, $assignableIds->intersect($unassociatedIds));
+        return resolve(Project::class)->select('name', 'id', 'is_archived', 'archive_at')
+                                      ->whereIn('id', $assignableIds->intersect($unassociatedIds));
+    }
+
+
+    public function assignableProjects()
+    {
+        return ($this->is_admin) ? resolve(Project::class) :
+            $this->projects()->wherePivot('is_leader', '=', true)->wherePivot('to_be_deleted', '=', false);
+    }
+
+
     /**
      * @return mixed
      */
     public function unassociatedProjects()
     {
-        $projects = ($this->relationLoaded('projects')) ? $this->projects : $this->load([
+        $projectIds = ($this->relationLoaded('projects')) ? $this->projects : $this->load([
             'projects' => function ($query) {
                 $query->select('id');
             },
-        ]);
+        ])->projects;
 
-        return resolve(Project::class)->select('name', 'id')->whereNotIn('id', $projects->pluck('id'));
+        return resolve(Project::class)->select('name', 'id', 'is_archived', 'archive_at')
+                                      ->whereNotIn('id', $projectIds->pluck('id'));
     }
 }

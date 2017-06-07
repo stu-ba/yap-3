@@ -218,9 +218,10 @@ if ( ! function_exists('avatar')) {
     }
 }
 
-if (! function_exists('disabledIf')) {
-    function disabledIf(bool $condition) {
-        return (!$condition) ? ' disabled' : '';
+if ( ! function_exists('disabledIf')) {
+    function disabledIf(bool $condition)
+    {
+        return ( ! $condition) ? ' disabled' : '';
     }
 }
 
