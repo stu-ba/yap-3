@@ -1,7 +1,7 @@
 <div class="text-center">
     <h3>
         @empty($message)
-            There are no records <i class="fa fa-frown-o"></i>, try later.
+            There are no records <i class="fa fa-smile-o"></i>.
         @else
             {!! $message !!}
         @endempty

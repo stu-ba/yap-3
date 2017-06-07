@@ -42,7 +42,7 @@
                                 <th>Team Leaders</th>
                                 <th>Participants</th>
                                 <th>@sortablelink('created_at', 'created at')</th>
-                                <th>@sortablelink('archive_at', 'archive at')</th>
+                                <th>@sortablelink('archive_at', 'archive/d at')</th>
                                 <th class="col-xs-3">Actions</th>
                             </thead>
                             <tbody>

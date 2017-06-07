@@ -53,7 +53,7 @@
                             {!! $notifications->appends(\Request::except('page'))->render() !!}
                         </div>
                     @else
-                        @include('partials.no-records')
+                        @include('partials.no-records-happy')
                     @endif
                 </div>
             </div>
