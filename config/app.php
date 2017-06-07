@@ -179,6 +179,7 @@ return [
          * Application Service Providers...
          */
         Yap\Providers\AppServiceProvider::class,
+        Yap\Providers\ValidationServiceProvider::class,
         Yap\Providers\AuthServiceProvider::class,
         Yap\Providers\EventServiceProvider::class,
         Yap\Providers\RouteServiceProvider::class,

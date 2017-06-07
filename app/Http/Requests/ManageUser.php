@@ -27,7 +27,7 @@ class ManageUser extends FormRequest
     public function rules()
     {
         $rules = [
-            'user' => 'required|not_current',
+            'user' => 'required|not_current_user',
         ];
 
         //handle special case: banning user requires also reason field
@@ -38,7 +38,7 @@ class ManageUser extends FormRequest
 
     public function messages()
     {
-        return ['user.not_current' => 'You can not do that to yourself!'];
+        return ['user.not_current_user' => 'You can not do that to yourself!'];
     }
 
 
