@@ -3,11 +3,16 @@
 namespace Yap\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Yap\Models\Invitation;
 
 class StoreInvitation extends FormRequest
 {
 
-    use AlwaysAuthorize;
+    public function authorize()
+    {
+        return auth()->guard('yap')->user()->can('store', Invitation::class) || auth()->user()
+                                                                                      ->can('store', Invitation::class);
+    }
 
 
     /**

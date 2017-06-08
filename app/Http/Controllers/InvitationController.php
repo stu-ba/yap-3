@@ -27,8 +27,6 @@ class InvitationController extends Controller
 
     public function store(StoreInvitation $request, InvitationRegistrar $registrar)
     {
-        $this->authorize('store', Invitation::class);
-
         try {
             /** @var Invitation $invitation */
             $invitation = $registrar->invite($request->get('email'), $request->only([
