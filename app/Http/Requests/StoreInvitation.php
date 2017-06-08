@@ -10,8 +10,9 @@ class StoreInvitation extends FormRequest
 
     public function authorize()
     {
-        return auth()->guard('yap')->user()->can('store', Invitation::class) || auth()->user()
-                                                                                      ->can('store', Invitation::class);
+        $user = auth()->user() ?? auth()->guard('yap')->user();
+
+        return (is_null($user)) ? false : $user->can('store', Invitation::class);
     }
 
 
