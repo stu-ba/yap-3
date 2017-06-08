@@ -3,12 +3,11 @@
 namespace Yap\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Yap\Models\Project;
 
 class UpdateProject extends FormRequest
 {
-
     use AlwaysAuthorize;
-
 
     public function all()
     {
@@ -16,6 +15,10 @@ class UpdateProject extends FormRequest
         $attributes['team_leaders']      = array_unique(extractEmails($attributes['team_leaders']) ?? []);
         $attributes['participants']      = array_unique(extractEmails($attributes['participants']) ?? []);
         $attributes['create_repository'] = $attributes['create_repository'] ?? false;
+
+        if ($this->user()->cannot('archive', Project::class)) {
+            unset($attributes['archive_at']);
+        }
 
         return $attributes;
     }
@@ -31,7 +34,7 @@ class UpdateProject extends FormRequest
         return [
             'description'  => 'required',
             'archive_at'   => 'nullable|date_format:d/m/Y|after_or_equal:yesterday',
-            'team_leaders' => 'required',
+            'team_leaders' => 'required|current_user_present:except,admin',
             'participants' => 'array_unique:team_leaders',
         ];
     }

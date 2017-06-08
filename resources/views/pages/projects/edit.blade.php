@@ -43,34 +43,36 @@
                                         @include('components.html.material-checkbox-old', ['field' => 'create_repository', 'label' => 'create repository on GitHub', 'default' => false])
                                     </div>
                                 @endif
-                                <div class="form-group">
-                                    <label for="archive-at">Archive at:</label>
-                                    <input id="archive-at" class="form-control" type="text" name="archive_at" value="{{ old('archive_at', $project->archive_at ?? '') }}" placeholder="{{ \Carbon\Carbon::now()->format('m/d/Y') }}"/>
-                                </div>
-                                {{--FIXME: below is a bug on first load it does unexpected things... :(--}}
-                                @push('components')
-                                <script type="text/javascript">
-                                    $('#archive-at').datetimepicker({
-                                        inline:true,
-                                        format: 'DD/MM/YYYY',
-                                        calendarWeeks: true,
-                                        locale: moment.locale('en', { //TODO: should use updateLocale
-                                            week: {
-                                                dow: 1
-                                            }
-                                        }),
-                                        icons: {
-                                            time: "fa fa-clock-o",
-                                            date: "fa fa-calendar",
-                                            up: "fa fa-arrow-up",
-                                            down: "fa fa-arrow-down",
-                                            previous: 'fa fa-chevron-left',
-                                            next: 'fa fa-chevron-right',
-                                        },
-                                        minDate: moment()
-                                    });
-                                </script>
-                                @endpush
+                                @can('archive', \Yap\Models\Project::class)
+                                    <div class="form-group">
+                                        <label for="archive-at">Archive at:</label>
+                                        <input id="archive-at" class="form-control" type="text" name="archive_at" value="{{ old('archive_at', $project->archive_at ?? '') }}" placeholder="{{ \Carbon\Carbon::now()->format('m/d/Y') }}"/>
+                                    </div>
+                                    {{--FIXME: below is a bug on first load it does unexpected things... :(--}}
+                                    @push('components')
+                                    <script type="text/javascript">
+                                        $('#archive-at').datetimepicker({
+                                            inline:true,
+                                            format: 'DD/MM/YYYY',
+                                            calendarWeeks: true,
+                                            locale: moment.locale('en', { //TODO: should use updateLocale
+                                                week: {
+                                                    dow: 1
+                                                }
+                                            }),
+                                            icons: {
+                                                time: "fa fa-clock-o",
+                                                date: "fa fa-calendar",
+                                                up: "fa fa-arrow-up",
+                                                down: "fa fa-arrow-down",
+                                                previous: 'fa fa-chevron-left',
+                                                next: 'fa fa-chevron-right',
+                                            },
+                                            minDate: moment()
+                                        });
+                                    </script>
+                                    @endpush
+                                @endcan
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary pull-right">Update</button>

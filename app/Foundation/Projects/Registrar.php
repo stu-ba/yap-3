@@ -31,7 +31,7 @@ class Registrar
         /**@var \Yap\Models\Project $project */
         $project               = $this->project->create($data);
         $processedLeaders      = $this->processEmails($leaders);
-        $processedParticipants = $this->processEmails($participants);
+        $processedParticipants = $this->makeUnique($processedLeaders, $this->processEmails($participants));
 
         $project->syncMembers($processedLeaders, $processedParticipants);
 
@@ -44,7 +44,7 @@ class Registrar
         if (empty($emails)) {
             return [];
         }
-
+        //Todo: catch banned user exception
         foreach ($emails as $email) {
             $userIds[] = $this->invitationRegistrar->invite($email, [], true)->user_id;
         }
@@ -53,11 +53,27 @@ class Registrar
     }
 
 
+    /**
+     * @param $processedLeaders
+     * @param $processedParticipants
+     *
+     * @return array
+     */
+    private function makeUnique($processedLeaders, $processedParticipants): array
+    {
+        if ( ! empty($intersect = array_intersect($processedLeaders, $processedParticipants))) {
+            $processedParticipants = array_diff($processedParticipants, $intersect);
+        }
+
+        return $processedParticipants;
+    }
+
+
     public function update(array $data, Project $project, array $leaders, array $participants): bool
     {
         $updated               = $project->update($data);
         $processedLeaders      = $this->processEmails($leaders);
-        $processedParticipants = $this->processEmails($participants);
+        $processedParticipants = $this->makeUnique($processedLeaders, $this->processEmails($participants));
 
         $project->syncMembers($processedLeaders, $processedParticipants);
 

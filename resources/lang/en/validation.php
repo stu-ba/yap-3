@@ -12,6 +12,7 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
+    'current_user_present' => '\':attribute\' must contain your email.',
     'not_current_user'          => 'This action can not be performed on same user as you.',
     'repository_unique'    => 'The (slugified) repository name has already been taken.',
     'array_unique'         => 'Values of the \':attribute\' and \':parameter\' arrays must be unique.',

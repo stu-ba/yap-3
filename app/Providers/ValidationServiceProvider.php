@@ -4,6 +4,7 @@ namespace Yap\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Yap\Foundation\Validators\ArrayUnique;
+use Yap\Foundation\Validators\CurrentUserPresent;
 use Yap\Foundation\Validators\NotCurrentUser;
 use Yap\Foundation\Validators\RepositoryUnique;
 
@@ -22,6 +23,7 @@ class ValidationServiceProvider extends ServiceProvider
         $validator = resolve(\Illuminate\Validation\Factory::class);
         $validator->extend('repository_unique', RepositoryUnique::class);
         $validator->extend('not_current_user', NotCurrentUser::class);
+        $validator->extend('current_user_present', CurrentUserPresent::class);
         $validator->extend('array_unique', ArrayUnique::class);
         $validator->replacer('array_unique', ArrayUnique::class);
     }
