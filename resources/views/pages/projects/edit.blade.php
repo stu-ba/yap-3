@@ -31,12 +31,12 @@
                                 <div class="form-group">
                                     <label for="team_leaders">Team leaders*:</label>
                                     <textarea id="team_leaders" class="form-control" placeholder="Comma / space separated list of team leaders (emails).."
-                                              rows="2" name="team_leaders" required>{{ implode(', ', old('team_leaders', $leaderEmails ?? [])) }}</textarea>
+                                              rows="2" name="team_leaders" required>{{ old_members('team_leaders', $leaderEmails) }}</textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="participants">Participants:</label>
                                     <textarea id="participants" class="form-control" placeholder="Comma / space separated list of participants (emails).."
-                                              rows="2" name="participants">{{ implode(', ', old('participants', $participantEmails ?? [])) }}</textarea>
+                                              rows="2" name="participants">{{ old_members('participants', $participantEmails) }}</textarea>
                                 </div>
                                 @if (is_null($project->github_team_id))
                                     <div class="form-group">

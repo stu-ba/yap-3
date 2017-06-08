@@ -28,11 +28,12 @@ class Registrar
 
     public function create(array $data, array $leaders, array $participants = []): Project
     {
-        /**@var \Yap\Models\Project $project */
-        $project               = $this->project->create($data);
+
         $processedLeaders      = $this->processEmails($leaders);
         $processedParticipants = $this->makeUnique($processedLeaders, $this->processEmails($participants));
 
+        /**@var \Yap\Models\Project $project */
+        $project = $this->project->create($data);
         $project->syncMembers($processedLeaders, $processedParticipants);
 
         return $project;
@@ -71,10 +72,11 @@ class Registrar
 
     public function update(array $data, Project $project, array $leaders, array $participants): bool
     {
-        $updated               = $project->update($data);
         $processedLeaders      = $this->processEmails($leaders);
         $processedParticipants = $this->makeUnique($processedLeaders, $this->processEmails($participants));
 
+        /**@var \Yap\Models\Project $updated */
+        $updated = $project->update($data);
         $project->syncMembers($processedLeaders, $processedParticipants);
 
         return $updated;

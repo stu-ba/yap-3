@@ -34,7 +34,7 @@ class UpdateProject extends FormRequest
         return [
             'description'  => 'required',
             'archive_at'   => 'nullable|date_format:d/m/Y|after_or_equal:yesterday',
-            'team_leaders' => 'required|current_user_present:except,admin',
+            'team_leaders' => 'required|current_user_present:skip,admin',
             'participants' => 'array_unique:team_leaders',
         ];
     }

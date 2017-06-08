@@ -158,6 +158,8 @@ class Project extends Model
      *
      * @param array $leaderIds
      * @param array $participantIds
+     *
+     * @return $this
      */
     public function syncMembers(array $leaderIds, array $participantIds)
     {
@@ -167,6 +169,7 @@ class Project extends Model
         $changed        = $this->members()->syncWithoutDetaching($memberIds);
         $this->removeMembers($this->toDetach($memberIds));
         //TODO: fire events if updated (to make leader or to make participant)
+        return $this;
     }
 
 

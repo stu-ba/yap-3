@@ -5,6 +5,7 @@ namespace Yap\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yap\Events\TeamRequested;
+use Yap\Exceptions\InvitationRegistrarException;
 use Yap\Foundation\Projects\Registrar;
 use Yap\Http\Requests\ArchiveProject;
 use Yap\Http\Requests\CreateProject;
@@ -45,14 +46,17 @@ class ProjectController extends Controller
     }
 
 
-    public function store(CreateProject $request, Registrar $projectRegistrar)
+    public function store(CreateProject $request, Registrar $registrar)
     {
         $this->authorize('store', Project::class);
 
-        $members = $request->only(['team_leaders', 'participants']);
-
-        $project = $projectRegistrar->create($request->only(['name', 'description', 'project_type_id', 'archive_at']),
-            array_get($members, 'team_leaders'), array_get($members, 'participants', []));
+        try {
+            $members = $request->only(['team_leaders', 'participants']);
+            $project = $registrar->create($request->only(['name', 'description', 'project_type_id', 'archive_at']),
+                array_get($members, 'team_leaders'), array_get($members, 'participants', []));
+        } catch (InvitationRegistrarException $exception) {
+            return redirect()->back()->withInput()->withErrors($this->formatBannedError($exception->getMessage()));
+        }
 
         if ($request->get('create_repository', false)) {
             event(new TeamRequested($project));
@@ -62,6 +66,19 @@ class ProjectController extends Controller
         alert('success', 'Project was created!');
 
         return redirect()->route('projects.show', ['project' => $project]);
+    }
+
+
+    /**
+     * @param $message
+     *
+     * @return mixed
+     */
+    private function formatBannedError($message)
+    {
+        $errors = resolve(\Illuminate\Support\MessageBag::class)->add('banned', $message);
+
+        return $errors;
     }
 
 
@@ -101,13 +118,17 @@ class ProjectController extends Controller
     }
 
 
-    public function update(UpdateProject $request, Project $project, Registrar $projectRegistrar)
+    public function update(UpdateProject $request, Project $project, Registrar $registrar)
     {
         $this->authorize('update', $project);
 
-        $members = $request->only(['team_leaders', 'participants']);
-        $projectRegistrar->update($request->only(['description', 'archive_at']), $project,
-            array_get($members, 'team_leaders'), array_get($members, 'participants'));
+        try {
+            $members = $request->only(['team_leaders', 'participants']);
+            $registrar->update($request->only(['description', 'archive_at']), $project,
+                array_get($members, 'team_leaders'), array_get($members, 'participants'));
+        } catch (InvitationRegistrarException $exception) {
+            return redirect()->back()->withInput()->withErrors($this->formatBannedError($exception->getMessage()));
+        }
 
         if ($request->get('create_repository', false)) {
             event(new TeamRequested($project));

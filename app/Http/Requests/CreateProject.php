@@ -46,5 +46,4 @@ class CreateProject extends FormRequest
             'archive_at.after_or_equal' => 'Pick a date that is in future (or today).',
         ];
     }
-
 }

@@ -30,6 +30,13 @@ if ( ! function_exists('extractEmails')) {
     }
 }
 
+if (!function_exists('old_members')) {
+    function old_members($field, $default = []) {
+        return is_string(old($field)) ? old($field) : implode(', ', old($field, $default ?? []));
+    }
+
+}
+
 if ( ! function_exists('is_email')) {
     function is_email(string $e): bool
     {
