@@ -20,7 +20,7 @@ trait DelayJob
     {
         if ($method == 'handle') {
             $args = [
-                call_user_func([$this, 'check']),
+                call_user_func_array([$this, 'check'], $parameters),
                 function () use ($parameters) {
                     call_user_func_array([$this, 'handle'], $parameters);
                 },
@@ -31,13 +31,9 @@ trait DelayJob
     }
 
 
-    public function runIf($condition, $callback)
+    public function runIf(bool $condition, $callback)
     {
-        if ($condition) {
-            $callback();
-        } else {
-            $this->release();
-        }
+        ($condition) ? $callback() : $this->release();
     }
 
 
@@ -49,7 +45,7 @@ trait DelayJob
     }
 
 
-    public function check(): bool
+    public function check($event): bool
     {
         return $this->checker->check();
     }
