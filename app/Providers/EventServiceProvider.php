@@ -15,10 +15,9 @@ use Yap\Listeners\Github\DemoteUser as GithubDemote;
 use Yap\Listeners\Github\PromoteUser as GithubPromote;
 use Yap\Listeners\SendDemotedNotification;
 use Yap\Listeners\SendPromotedNotification;
+use Yap\Listeners\Taiga\ChangeUserRole;
 use Yap\Listeners\Taiga\CreateProject;
 use Yap\Listeners\Taiga\CreateUser;
-use Yap\Listeners\Taiga\DemoteUser as TaigaDemote;
-use Yap\Listeners\Taiga\PromoteUser as TaigaPromote;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,13 +31,13 @@ class EventServiceProvider extends ServiceProvider
         UserPromoted::class => [
             SendPromotedNotification::class,
             GithubPromote::class,
-            TaigaPromote::class,
+            ChangeUserRole::class,
         ],
 
         UserDemoted::class => [
             SendDemotedNotification::class,
             GithubDemote::class,
-            TaigaDemote::class,
+            ChangeUserRole::class,
         ],
 
         UserConfirmed::class => [

@@ -17,7 +17,12 @@ class CreateUser extends Taiga
     protected function handle(UserConfirmed $event)
     {
         /** @var \Yap\Models\User $user */
-        $user      = $event->user;
+        $user = $event->user;
+
+        if ( ! is_null($user->taiga_id)) {
+            return;
+        }
+
         $taigaUser = $this->taiga->createUser($user);
         $user->update(['taiga_id' => $taigaUser->id]);
 

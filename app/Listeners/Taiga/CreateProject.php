@@ -16,9 +16,14 @@ class CreateProject extends Taiga
      */
     protected function handle(ProjectCreated $event)
     {
+        /** @var \Yap\Models\Project $project */
         $project      = $event->project;
+
+        if (!is_null($project->taiga_id)) {
+            return;
+        }
+
         $taigaProject = $this->taiga->createProject($project);
-        \Log::info('New taiga project: '.$taigaProject->id);
         $project->update(['taiga_id' => $taigaProject->id]);
     }
 }
