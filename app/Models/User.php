@@ -377,7 +377,7 @@ class User extends Authenticatable
             //TODO: user got banned event - remove from teams etc.
         }
 
-        $this->ban_reason = str_limit($reason, 254, '...');
+        $this->ban_reason = str_limit($reason, 250, '...');
         $this->save();
 
         return $this;

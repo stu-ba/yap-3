@@ -6,9 +6,11 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Yap\Events\ProjectCreated;
 use Yap\Events\RepositoryRequested;
 use Yap\Events\TeamRequested;
+use Yap\Events\UserBanned;
 use Yap\Events\UserConfirmed;
 use Yap\Events\UserDemoted;
 use Yap\Events\UserPromoted;
+use Yap\Events\UserUnbanned;
 use Yap\Listeners\Github\CreateRepository;
 use Yap\Listeners\Github\CreateTeam;
 use Yap\Listeners\Github\DemoteUser as GithubDemote;
@@ -38,6 +40,14 @@ class EventServiceProvider extends ServiceProvider
             SendDemotedNotification::class,
             GithubDemote::class,
             ChangeUserRole::class,
+        ],
+
+        UserBanned::class => [
+
+        ],
+
+        UserUnbanned::class => [
+
         ],
 
         UserConfirmed::class => [

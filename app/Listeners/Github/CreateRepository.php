@@ -21,4 +21,8 @@ class CreateRepository extends Github
             $project->github_team_id);
         $project->update(['github_repository_id' => $repository['id']]);
     }
+
+    public function queue($queue, $job, $data) {
+
+    }
 }
